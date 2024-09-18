@@ -1,9 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Oswald:wght@400;700&family=Montserrat:wght@400;700&display=swap");
 
 :root {
-  --background: #ffffff;
+  --background: #1a1a2e;
   --foreground: #171717;
 }
 
