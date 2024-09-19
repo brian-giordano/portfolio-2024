@@ -39,7 +39,7 @@ const Card: React.FC<CardProps> = ({
   };
 
   const cardContent = (
-    <div className="mb-4 mt-2">
+    <div className="m-4 p-4 py-2 bg-charcoal rounded text-sm">
       {imageUrl && (
         <img
           src={imageUrl}
@@ -48,19 +48,19 @@ const Card: React.FC<CardProps> = ({
         />
       )}
       {!isAccordion && (
-        <h2 className="text-lg font-primary font-semibold uppercase text-ivoryWhite tracking-wide mb-2">
+        <h2 className="font-primary font-semibold uppercase text-ivoryWhite tracking-wide mb-2">
           {title}
         </h2>
       )}
 
       {startDate && endDate && (
-        <h3 className="font-subheader font-semibold text-silverMist">
+        <h3 className="font-subheader text-silverMist tracking-wide">
           {startDate} - {endDate}
         </h3>
       )}
 
       {orgName && (
-        <h3 className="font-subheader font-semibold text-silverMist mb-3">
+        <h3 className="font-subheader text-silverMist mb-3 tracking-wide">
           {orgName}
         </h3>
       )}
@@ -83,7 +83,7 @@ const Card: React.FC<CardProps> = ({
     <Accordion title={title}>{cardContent}</Accordion>
   ) : (
     <div className="border rounded-lg shadow-md mb-4">
-      <h2 className="text-xl font-primary px-4 py-2">{title}</h2>
+      {/* <h2 className="text-xl font-primary px-4 py-2">{title}</h2> */}
       {cardContent}
     </div>
   );
