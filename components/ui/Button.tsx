@@ -16,10 +16,10 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
 }) => {
   const baseStyles =
-    "px-4 py-2 font-accent rounded focus:outline-none focus:ring";
+    "w-full px-4 py-4 font-accent rounded focus:outline-none focus:ring";
   const variantStyles = {
     primary:
-      "bg-crimson font-accent font-bold text-ivoryWhite uppercase hover:bg-darkCrimson focus:ring-blue-300",
+      "bg-crimson font-accent text-2xl font-bold text-ivoryWhite uppercase hover:bg-darkCrimson focus:ring-blue-300",
     secondary: "bg-gray-500 text-white hover:bg-gray-600 focus:ring-gray-300",
     accent: "bg-green-500 text-white hover:bg-green-600 focus:ring-green-300",
   };

@@ -9,7 +9,7 @@ const AboutSection: React.FC = () => {
         src={AboutImage} // Pass the AboutImage directly
         alt="About Me" // Provide a meaningful alt text
       />
-      <div className="p-4">
+      <div className="min-h-screen p-4">
         <h2 className="font-primary text-ivoryWhite font-semibold uppercase mt-4 mb-2">
           How I Got Here
         </h2>

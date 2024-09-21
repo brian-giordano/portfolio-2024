@@ -39,8 +39,7 @@ const sections: Section[] = [
   {
     id: "contact",
     name: "Contact",
-    bandColor: "gold",
-    subheader: "Get in Touch",
+    bandColor: "lightCrimson",
   },
   // Add or remove sections as needed
 ];

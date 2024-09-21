@@ -7,7 +7,7 @@ interface PillProps {
 
 const Pill: React.FC<PillProps> = ({ text, category }) => {
   const baseStyles =
-    "inline-block m-2 px-3 p-1 font-subheader text-sm font-semibold tracking-wide rounded-full";
+    "inline-block m-2 px-3 p-1 font-subheader text-sm font-semibold rounded-full";
 
   // Define color styles based on category
   const colorStyles = {

@@ -13,6 +13,7 @@ import EducationSection from "@/components/EducationSection";
 import SkillsSection from "@/components/SkillsSection";
 import ProjectSection from "@/components/ProjectsSection";
 import AboutSection from "@/components/AboutSection";
+import ContactSection from "@/components/ContactSection";
 
 const Home: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<string>("experience");
@@ -127,9 +128,10 @@ const Home: React.FC = () => {
         </section>
         <section
           id="contact"
-          className="min-h-screen bg-gray-100 flex items-start justify-center"
+          className="min-h-screen bg-gray-100 flex flex-col items-start justify-center"
         >
-          <SectionHeader name="Contact" bandColor="gold" />
+          <SectionHeader name="Contact" bandColor="lightCrimson" />
+          <ContactSection />
         </section>
       </main>
     </div>
