@@ -2,20 +2,25 @@ import React from "react";
 
 interface PillProps {
   text: string;
-  color?: "gold" | "lightCrimson" | "mysticTeal" | "silverMist";
+  category: "Frontend" | "Backend" | "Database" | "DevOps" | "Design"; // Define categories
 }
 
-const Pill: React.FC<PillProps> = ({ text, color = "silverMist" }) => {
+const Pill: React.FC<PillProps> = ({ text, category }) => {
   const baseStyles =
-    "inline-block px-3 py-1 text-sm font-semibold rounded-full";
+    "inline-block m-2 px-3 p-1 font-subheader text-sm font-semibold tracking-wide rounded-full";
+
+  // Define color styles based on category
   const colorStyles = {
-    gold: "bg-gold text-darkSlate",
-    lightCrimson: "bg-lightCrimson text-darkslate",
-    mysticTeal: "bg-mysticTeal text-darkslate",
-    silverMist: "bg-silverMist text-darkslate",
+    Frontend: "bg-mysticTeal text-darkSlate",
+    Backend: "bg-lightCrimson text-darkSlate",
+    Database: "bg-gold text-darkSlate",
+    DevOps: "bg-silverMist text-darkSlate",
+    Design: "bg-lavender text-darkSlate", // You can choose a different color if needed
   };
 
-  return <span className={`${baseStyles} ${colorStyles[color]}`}>{text}</span>;
+  return (
+    <span className={`${baseStyles} ${colorStyles[category]}`}>{text}</span>
+  );
 };
 
 export default Pill;

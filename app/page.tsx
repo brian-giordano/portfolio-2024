@@ -1,108 +1,130 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@/components/ui/Button";
-import Card from "@/components/ui/Card";
 import Header from "@/components/ui/Header";
 import SectionHeader from "@/components/ui/SectionHeader";
 import CenteredImage from "@/components/ui/CenteredImage";
-import mainImage from "../assets/images/potion-bottle.svg";
+import mainImage from "../assets/images/potion-bottle-2.svg";
 import SwipeUpOverlay from "@/components/ui/SwipeUpOverlay";
+import ExperienceSection from "@/components/ExperienceSection";
 import { PiCaretDoubleUpBold } from "react-icons/pi";
+import EducationSection from "@/components/EducationSection";
+import SkillsSection from "@/components/SkillsSection";
+import ProjectSection from "@/components/ProjectsSection";
+import AboutSection from "@/components/AboutSection";
 
 const Home: React.FC = () => {
-  console.log(mainImage);
+  const [currentSection, setCurrentSection] = useState<string>("experience");
+
+  const handleScroll = () => {
+    const scrollPosition = window.scrollY;
+
+    const sections = document.querySelectorAll("section");
+    sections.forEach((section) => {
+      const { id, offsetTop, offsetHeight } = section as HTMLElement;
+      if (
+        scrollPosition >= offsetTop &&
+        scrollPosition < offsetTop + offsetHeight
+      ) {
+        setCurrentSection(id);
+      }
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <div className="p-0">
       <Header name="Brian Giordano" />
 
       <main className="pt-12">
-        <div className="flex justify-center">
+        {/* Full-height introductory section */}
+        <section className="min-h-screen flex flex-col items-center justify-start bg-gray-100">
           <h2 className="text-lg font-subheader text-silverMist mt-8">
             Digital Alchemist
           </h2>
+          <CenteredImage
+            src={mainImage}
+            alt="illustrated potion bottle"
+            className="m-4"
+          />
+          <div className="w-full flex justify-center">
+            <SwipeUpOverlay
+              textLeft="Explore"
+              textRight="Further"
+              icon={PiCaretDoubleUpBold}
+            />
+          </div>
+        </section>
+
+        {/* Sticky Section Header */}
+        <div className="sticky top-12 z-40 bg-background">
+          <SectionHeader
+            name={
+              currentSection.charAt(0).toUpperCase() + currentSection.slice(1)
+            }
+            bandColor={
+              currentSection === "experience"
+                ? "mysticTeal"
+                : currentSection === "education"
+                ? "mysticTeal"
+                : currentSection === "skills"
+                ? "gold"
+                : currentSection === "projects"
+                ? "lightCrimson"
+                : currentSection === "about"
+                ? "mysticTeal"
+                : currentSection === "contact"
+                ? "lightCrimson"
+                : ""
+            }
+          />
         </div>
-        <CenteredImage
-          src={mainImage}
-          alt="illustrated potion bottle"
-          className="pt-12"
-        />
 
-        <SwipeUpOverlay
-          textLeft="Explore"
-          textRight="Further"
-          icon={PiCaretDoubleUpBold}
-        />
-
-        <section
-          id="home"
-          className="min-h-screen bg-gray-100 flex items-center justify-center"
-        >
-          {/* <h2 className="text-4xl font-primary text-ivoryWhite">Home</h2> */}
-          <SectionHeader
-            name="Home"
-            bandColor="lightCrimson"
-            subheader="Subheader"
-          />
-        </section>
+        {/* Experience Section */}
         <section
           id="experience"
-          className="flex flex-col min-h-screen items-start"
+          className="min-h-screen bg-gray-100 flex flex-col items-start justify-center"
         >
-          <SectionHeader
-            name="Experience"
-            bandColor="mysticTeal"
-            subheader="Work Experience"
-          />
-
-          <Card
-            title="Card Title"
-            startDate="5/2021"
-            endDate="5/2023"
-            orgName="Organization Name"
-            description="Lorem ipsum odor amet, consectetuer adipiscing elit. Egestas hendrerit justo turpis dapibus nam finibus ac. Nisl montes libero at bibendum vulputate magnis. 
-
-• Curabitur condimentum nam sollicitudin fusce tortor bibendum vel ornare. Donec augue donec pharetra morbi risus. 
-
-• Hac conubia nec suspendisse tellus proin tempor. Senectus orci commodo aenean sollicitudin ex, pretium eu cubilia."
-            pills={[
-              { text: "React", color: "mysticTeal" },
-              { text: "Typescript", color: "gold" },
-            ]}
-            isAccordion={false}
-          />
+          <SectionHeader name="Experience" bandColor="mysticTeal" />
+          <ExperienceSection />
         </section>
+
+        {/* Other Sections */}
         <section
-          id="experience"
-          className="min-h-screen bg-gray-100 flex items-start justify-center"
+          id="education"
+          className="min-h-screen bg-gray-100 flex flex-col items-start justify-center"
         >
-          <SectionHeader
-            name="Experience"
-            bandColor="mysticTeal"
-            subheader="Education"
-          />
+          <SectionHeader name="Education" bandColor="mysticTeal" />
+          <EducationSection />
         </section>
         <section
           id="skills"
-          className="min-h-screen bg-gray-100 flex items-start justify-center"
+          className="min-h-screen bg-gray-100 flex flex-col items-start justify-center"
         >
           <SectionHeader name="Skills" bandColor="gold" />
+          <SkillsSection />
         </section>
         <section
-          id="my-work"
-          className="min-h-screen bg-gray-100 flex items-start justify-center"
+          id="projects"
+          className="min-h-screen bg-gray-100 flex flex-col items-start justify-center"
         >
-          <SectionHeader name="My Work" bandColor="lightCrimson" />
+          <SectionHeader name="Projects" bandColor="lightCrimson" />
+          <ProjectSection />
         </section>
-
         <section
           id="about"
-          className="min-h-screen bg-white flex items-start justify-center"
+          className="min-h-screen bg-white flex flex-col items-start justify-center"
         >
           <SectionHeader name="About" bandColor="mysticTeal" />
+          <AboutSection />
         </section>
-
         <section
           id="contact"
           className="min-h-screen bg-gray-100 flex items-start justify-center"

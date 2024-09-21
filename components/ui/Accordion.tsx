@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 interface AccordionProps {
-  title: string;
+  title?: string;
   children: React.ReactNode;
 }
 

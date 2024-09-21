@@ -1,0 +1,96 @@
+[
+  {
+    "title": "React",
+    "level": 7,
+    "category": "Frontend"
+  },
+  {
+    "title": "Typescript",
+    "level": 7,
+    "category": "Frontend"
+  },
+  {
+    "title": "Javascript",
+    "level": 8,
+    "category": "Frontend"
+  },
+  {
+    "title": "Tailwind CSS",
+    "level": 7,
+    "category": "Frontend"
+  },
+  {
+    "title": "Electron",
+    "level": 7,
+    "category": "Frontend"
+  },
+  {
+    "title": "Databases",
+    "level": 6,
+    "category": "Database",
+    "subtitles": ["MongoDB, MySQL"]
+  },
+  {
+    "title": "Modern Frameworks",
+    "level": 7,
+    "category": "Frontend",
+    "subtitles": ["Material UI, Bootstrap, Chakra UI"]
+  },
+  {
+    "title": "HTML",
+    "level": 10,
+    "category": "Frontend"
+  },
+  {
+    "title": "CSS",
+    "level": 10,
+    "category": "Frontend"
+  },
+  {
+    "title": "C, C#, C++",
+    "level": 5,
+    "category": "Backend"
+  },
+  {
+    "title": "Java",
+    "level": 5,
+    "category": "Backend"
+  },
+  {
+    "title": "Git, Github",
+    "level": 8,
+    "category": "DevOps"
+  },
+  {
+    "title": "Unity",
+    "level": 4,
+    "category": "Backend"
+  },
+  {
+    "title": "App/Web Design",
+    "level": 9,
+    "category": "Design"
+  },
+  {
+    "title": "Design Tools",
+    "level": 10,
+    "category": "Design",
+    "subtitles": ["Adobe Suite, Sketch"]
+  },
+  {
+    "title": "Project Management",
+    "level": 8,
+    "category": "DevOps"
+  },
+  {
+    "title": "Jira",
+    "level": 8,
+    "category": "DevOps"
+  },
+  {
+    "title": "Diagramming Software",
+    "level": 8,
+    "category": "DevOps",
+    "subtitles": ["Visio, LucidChart, UML"]
+  }
+]

@@ -25,14 +25,14 @@ const SwipeUpOverlay: React.FC<SwipeUpOverlayProps> = ({
 
   return (
     <div
-      className={`columns-3 w-full flex justify-center items-center z-40 fixed my-10 transition-opacity duration-300 ease-in-out ${
+      className={`columns-3 w-full flex justify-center items-center z-40 my-10 transition-opacity delay-500 duration-300 ease-in-out ${
         isScrolled ? "opacity-0" : "opacity-100"
       }`}
     >
       <span className="font-accent text-2xl text-ivoryWhite font-semibold uppercase">
         {textLeft}
       </span>
-      <Icon className="text-8xl text-mysticTeal mx-4" />
+      <Icon className="animate-bounce text-8xl text-mysticTeal mx-4" />
       <span className="font-accent text-2xl text-ivoryWhite font-semibold uppercase">
         {textRight}
       </span>

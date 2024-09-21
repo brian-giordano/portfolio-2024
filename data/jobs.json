@@ -1,0 +1,146 @@
+[
+  {
+    "title": "Web Developer",
+    "orgName": "ZAG Interactive",
+    "startMonth": "11",
+    "startYear": "2023",
+    "endMonth": "5",
+    "endYear": "2024",
+    "cityTown": "Remote / Glastonbury",
+    "locationState": "CT",
+    "description": [
+      "Used provided Figma designs to develop interactive web experiences",
+      "Modeled data for MVC implementation with Kentico CMS"
+    ],
+    "stackUsed": [
+      { "name": "IIS", "category": "Backend" },
+      { "name": "MySQL", "category": "Database" },
+      { "name": "Kentico", "category": "Backend" },
+      { "name": ".Net Core", "category": "Backend" },
+      { "name": "Bootstrap", "category": "Frontend" },
+      { "name": "CSS", "category": "Frontend" },
+      { "name": "Sass", "category": "Frontend" },
+      { "name": "HTML", "category": "Frontend" },
+      { "name": "JavaScript", "category": "Frontend" }
+    ]
+  },
+  {
+    "title": "Software Engineer II",
+    "orgName": "HII",
+    "startMonth": "11",
+    "startYear": "2021",
+    "endMonth": "2",
+    "endYear": "2023",
+    "cityTown": "Remote / Pocassett",
+    "locationState": "MA",
+    "description": [
+      "Developed and enhanced the front-end of a UUV simulator/controller system",
+      "Collaborated closely with the team, leading walkthroughs to ensure seamless integration of simulator hardware and software components",
+      "Conducted testing to ensure software met user specifications and requirements"
+    ],
+    "stackUsed": [
+      { "name": "React", "category": "Frontend" },
+      { "name": "Typescript", "category": "Frontend" },
+      { "name": "MongoDB", "category": "Database" },
+      { "name": "Material UI", "category": "Frontend" }
+    ]
+  },
+  {
+    "title": "Software Engineering Intern",
+    "orgName": "HII",
+    "startMonth": "1",
+    "startYear": "2021",
+    "endMonth": "6",
+    "endYear": "2021",
+    "cityTown": "Remote / Pocassett",
+    "locationState": "MA",
+    "description": [
+      "Led the design and development of a UI/UX for a proprietary image/sonar data annotation tool, utilizing Electron, React, and Typescript",
+      "Presented regular updates in team meetings and collaborated on potential improvements for tool iterations"
+    ],
+    "stackUsed": [
+      { "name": "React", "category": "Frontend" },
+      { "name": "Typescript", "category": "Frontend" },
+      { "name": "Electron", "category": "Frontend" },
+      { "name": "Material UI", "category": "Frontend" }
+    ]
+  },
+  {
+    "title": "UI/UX App Design Lead / PM / Developer",
+    "orgName": "Wearsafe Labs",
+    "startMonth": "9",
+    "startYear": "2019",
+    "endMonth": "10",
+    "endYear": "2021",
+    "cityTown": "Hartford",
+    "locationState": "CT",
+    "description": [
+      "Developed interactive data visualizations using JavaScript, React, and Node, focusing on product battery data",
+      "Spearheaded the transition of the internal design workflow to incorporate GitHub for design asset version control"
+    ],
+    "stackUsed": [
+      { "name": "React", "category": "Frontend" },
+      { "name": "JavaScript", "category": "Frontend" },
+      { "name": "MySQL", "category": "Database" },
+      { "name": "Sketch", "category": "Design" },
+      { "name": "Git", "category": "DevOps" },
+      { "name": "AWS CLI", "category": "DevOps" }
+    ]
+  },
+  {
+    "title": "Project Manager",
+    "orgName": "ZAG Interactive",
+    "startMonth": "7",
+    "startYear": "2016",
+    "endMonth": "6",
+    "endYear": "2018",
+    "cityTown": "Glastonbury",
+    "locationState": "CT",
+    "description": [
+      "Developed and managed project plans, working with team leads and project team to execute on plans",
+      "Managed schedules, budgets, assets, and overall project organization and deliverable dates",
+      "Effectively and efficiently planned and prioritized all deliverables and resources working across projects based on scope of work and project goals",
+      "Communicated and documented project statuses and strategic recommendations to clients and team members on a regular basis",
+      "Identified and administered process improvements"
+    ],
+    "stackUsed": [{ "name": "WorkFront", "category": "DevOps" }]
+  },
+  {
+    "title": "Sr. Digital Production Project Manager",
+    "orgName": "Cengage Group",
+    "startMonth": "10",
+    "startYear": "2014",
+    "endMonth": "7",
+    "endYear": "2016",
+    "cityTown": "Remote / Boston",
+    "locationState": "MA",
+    "description": [
+      "Managed the production of digital products from conception through product release. Project lead for 50 - 60 major digital educational technology products per year, spanning 2-6 months in production per project",
+      "Managed a team of 4 Media Project Managers. Resource manager for team, ensuring tasks were manageable. Worked with other departments as necessary in order to help them with project management of projects outside of my team, including vendors",
+      "Planned projects and managed schedules. Ran master planning and scheduling meetings, weekly status meetings and daily stand-up/scrum meetings for stakeholders. Updated project documents. Served as point of contact between departments",
+      "Wrote statements of work (SOW), approved vendor invoices and updated project documents"
+    ],
+    "stackUsed": [{ "name": "Jira", "category": "DevOps" }]
+  },
+  {
+    "title": "Media Producer",
+    "orgName": "Cengage Group",
+    "startMonth": "9",
+    "startYear": "2012",
+    "endMonth": "10",
+    "endYear": "2014",
+    "cityTown": "Boston",
+    "locationState": "MA",
+    "description": [
+      "Managed the production of high-profile digital web projects. Liaison between stakeholder and internal vendors from product launch through final release",
+      "Monitored digital product delivery and presented in status meetings",
+      "Managed vendors and organized digital media asset creation",
+      "Ensured quality of final product. Worked closely with overseas Quality Assurance team responsible for identifying product defects. Helped to resolve software defects"
+    ],
+    "stackUsed": [
+      { "name": "Adobe Photoshop", "category": "Design" },
+      { "name": "Adobe Illustrator", "category": "Design" },
+      { "name": "Jira", "category": "DevOps" }
+    ]
+  }
+]

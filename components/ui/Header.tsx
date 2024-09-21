@@ -40,8 +40,8 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
       color: "text-gold",
     },
     {
-      label: "My Work",
-      sectionId: "my-work",
+      label: "Projects",
+      sectionId: "projects",
       icon: FaBriefcase,
       color: "text-gold",
     },
@@ -85,8 +85,8 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
       style={{ height: isScrolled ? "48px" : "" }} // Shrink height on scroll
     >
       <div
-        className={`w-[96%] max-w-7xl ml-4 relative flex items-center justify-between h-full transition-colors duration-300 ${
-          isScrolled ? "bg-[#000000]" : "bg-darkSlate"
+        className={`max-w-7xl ml-4 relative flex items-center justify-between h-full transition-colors duration-300 ${
+          isScrolled ? "w-[96%] bg-[#000000]" : "w-full bg-darkSlate"
         }`}
       >
         <h1
@@ -116,7 +116,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
       </div>
       {isScrolled && (
         <nav
-          className={`bg-charcoal shadow-md mt-2 w-full transition-all duration-300 ${
+          className={`bg-charcoal shadow-md mt-2 w-full opacity-90 transition-all duration-300 z-50 ${
             isMenuOpen ? "max-h-96" : "max-h-0 overflow-hidden"
           }`}
         >

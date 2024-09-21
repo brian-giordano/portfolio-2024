@@ -25,6 +25,8 @@ const config: Config = {
         lightCrimson: "#E57373",
         darkCrimson: "#B22222",
         mysticTeal: "#00BFA6",
+        lavender: "#D6A4E0",
+        lightSkyBlue: "#A0C4FF",
         charcoal: "#29293E",
         background: "var(--background)",
         foreground: "var(--foreground)",

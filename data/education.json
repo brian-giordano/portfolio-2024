@@ -1,0 +1,37 @@
+[
+  {
+    "orgName": "UMass Dartmouth",
+    "startMonth": "10",
+    "startYear": "2018",
+    "endMonth": "01",
+    "endYear": "2022",
+    "degree": "MS",
+    "discipline": "Computer Science",
+    "cityTown": "Remote",
+    "locationState": "MA",
+    "description": "Specialized coursework: Advanced Algorithm Design, Software Systems Design, Mobile Robotics, and more."
+  },
+  {
+    "orgName": "UMass Dartmouth",
+    "startMonth": "09",
+    "startYear": "2017",
+    "endMonth": "01",
+    "endYear": "2020",
+    "degree": "Graduate Certificate",
+    "discipline": "Computer Science",
+    "cityTown": "Remote",
+    "locationState": "MA",
+    "description": "In-depth bridge coursework prior to MS in CS."
+  },
+  {
+    "orgName": "Rhode Island College",
+    "startMonth": "09",
+    "startYear": "2002",
+    "endMonth": "05",
+    "endYear": "2007",
+    "degree": "BA",
+    "discipline": "Art - Graphic Design",
+    "cityTown": "Providence",
+    "locationState": "RI"
+  }
+]
