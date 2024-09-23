@@ -14,6 +14,7 @@ import SkillsSection from "@/components/SkillsSection";
 import ProjectSection from "@/components/ProjectsSection";
 import AboutSection from "@/components/AboutSection";
 import ContactSection from "@/components/ContactSection";
+import PotionSvg from "@/components/PotionSvg";
 
 const Home: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<string>("experience");
@@ -50,11 +51,14 @@ const Home: React.FC = () => {
           <h2 className="text-lg font-subheader text-silverMist mt-8">
             Digital Alchemist
           </h2>
-          <CenteredImage
+
+          <PotionSvg />
+
+          {/* <CenteredImage
             src={mainImage}
             alt="illustrated potion bottle"
             className="m-4"
-          />
+          /> */}
           <div className="w-full flex justify-center">
             <SwipeUpOverlay
               textLeft="Explore"
@@ -91,7 +95,7 @@ const Home: React.FC = () => {
         {/* Experience Section */}
         <section
           id="experience"
-          className="min-h-screen bg-gray-100 flex flex-col items-start justify-center"
+          className="bg-gray-100 flex flex-col items-start justify-center md:pb-6"
         >
           <SectionHeader name="Experience" bandColor="mysticTeal" />
           <ExperienceSection />
@@ -100,35 +104,36 @@ const Home: React.FC = () => {
         {/* Other Sections */}
         <section
           id="education"
-          className="min-h-screen bg-gray-100 flex flex-col items-start justify-center"
+          className="bg-gray-100 flex flex-col items-start justify-center md:pb-6"
         >
           <SectionHeader name="Education" bandColor="mysticTeal" />
           <EducationSection />
         </section>
         <section
           id="skills"
-          className="min-h-screen bg-gray-100 flex flex-col items-start justify-center"
+          className="flex flex-col items-start justify-center md:pb-6"
         >
           <SectionHeader name="Skills" bandColor="gold" />
           <SkillsSection />
         </section>
         <section
           id="projects"
-          className="min-h-screen bg-gray-100 flex flex-col items-start justify-center"
+          className="w-full bg-gray-100 flex flex-col items-start justify-center md:pb-6"
         >
           <SectionHeader name="Projects" bandColor="lightCrimson" />
           <ProjectSection />
         </section>
         <section
           id="about"
-          className="min-h-screen bg-white flex flex-col items-start justify-center"
+          className="bg-gray-100 flex flex-col items-start justify-center md:pb-6"
         >
           <SectionHeader name="About" bandColor="mysticTeal" />
           <AboutSection />
         </section>
         <section
           id="contact"
-          className="min-h-screen bg-gray-100 flex flex-col items-start justify-center"
+          // className="w-full bg-gray-100 flex flex-col items-start justify-center  md:pb-6"
+          className="flex flex-col items-start justify-center md:pb-6"
         >
           <SectionHeader name="Contact" bandColor="lightCrimson" />
           <ContactSection />

@@ -53,13 +53,13 @@ const Card: React.FC<CardProps> = ({
   };
 
   const cardContent = (
-    <div className="m-4 p-4 bg-charcoal rounded text-sm">
+    <div className="m-4 p-4 bg-charcoal rounded-lg text-sm md:mx-8 md:p-6">
       {imageUrl && (
         <Image
           src={imageUrl}
           alt={alt}
           className="w-full h-48 object-cover mb-4 rounded"
-          layout="responsive"
+          // layout="responsive"
         />
       )}
       {!isAccordion && (
@@ -118,7 +118,9 @@ const Card: React.FC<CardProps> = ({
   return isAccordion ? (
     <Accordion title={title}>{cardContent}</Accordion>
   ) : (
-    <div className="rounded-lg shadow-md mx-4 mb-6">{cardContent}</div>
+    <div className="container mx-auto rounded-lg shadow-md mb-6">
+      {cardContent}
+    </div>
   );
 };
 

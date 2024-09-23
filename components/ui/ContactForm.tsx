@@ -23,7 +23,7 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-6 bg-darkSlate rounded-lg shadow-lg">
+    <div className="w-full bg-charcoal rounded-lg shadow-lg px-8 py-8 mb-10">
       {/* <h2 className="text-2xl font-bold text-ivoryWhite mb-4">Contact Me</h2> */}
       <form onSubmit={handleSubmit}>
         <div className="mb-6">

@@ -32,7 +32,7 @@ const EducationSection: React.FC = () => {
   }, []);
 
   return (
-    <div className="education-section">
+    <div className="education-section container mx-auto">
       {programs.map((program, index) => (
         <Card
           key={index}

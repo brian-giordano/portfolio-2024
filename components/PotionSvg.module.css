@@ -1,0 +1,129 @@
+/* PotionSvg.module.css */
+.container {
+  position: absolute;
+  margin-top: 60px;
+  width: 90%;
+  height: 500px;
+}
+
+.stardustLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 95%;
+  height: 95%;
+  animation: growStardust 0.5s ease-in-out forwards,
+    twinkle 3s ease-in-out infinite;
+}
+
+.potionLayerWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.potionLayer {
+  width: 100%;
+  height: 100%;
+  animation: growPotion 1s ease-in-out forwards;
+}
+
+.potionLayer path {
+  animation: colorChange 5s ease-in-out infinite;
+}
+
+.starsLayer {
+  /* position: absolute; */
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 75%;
+  /* top: -50px;
+  left: 25%; */
+  opacity: 0;
+  /* animation: growStars 6s ease-in-out forwards 1s,
+    twinkleStars 1.5s ease-in-out infinite; Delay the growth */
+  animation: fadeIn 12s ease-in-out forwards; /* Fade in over 6 seconds */
+}
+
+@keyframes growStardust {
+  0% {
+    transform: scale(0.5);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes growPotion {
+  0% {
+    transform: scale(0.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes colorChange {
+  0% {
+    fill: #f8f8ff; /* Start with Ivory White */
+  }
+  14% {
+    fill: #b0c4de; /* Silver Mist */
+  }
+  28% {
+    fill: #e57373; /* Light Crimson */
+  }
+  42% {
+    fill: #00bfa6; /* Mystic Teal */
+  }
+  57% {
+    fill: #d6a4e0; /* Lavender */
+  }
+  71% {
+    fill: #a0c4ff; /* Light Sky Blue */
+  }
+  100% {
+    fill: #f8f8ff; /* Loop back to Ivory White */
+  }
+}
+
+@keyframes growStars {
+  0% {
+    transform: scale(0.5); /* Start slightly smaller */
+  }
+  100% {
+    transform: scale(1); /* End at full size */
+  }
+}
+
+@keyframes twinkleStars {
+  0%,
+  100% {
+    opacity: 1; /* Full opacity */
+  }
+  50% {
+    opacity: 0.5; /* Dimmed */
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0; /* Start hidden */
+  }
+  100% {
+    opacity: 1; /* End fully visible */
+  }
+}

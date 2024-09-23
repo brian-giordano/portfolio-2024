@@ -14,7 +14,6 @@ const config: Config = {
         800: "#1A1A2E",
       },
     },
-
     extend: {
       colors: {
         darkSlate: "#1A1A2E",
@@ -40,4 +39,5 @@ const config: Config = {
   },
   plugins: [],
 };
+
 export default config;

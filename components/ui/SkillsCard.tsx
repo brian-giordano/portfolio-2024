@@ -13,11 +13,11 @@ interface SkillsCardProps {
 
 const SkillsCard: React.FC<SkillsCardProps> = ({ skills }) => {
   return (
-    <div className="skills-card m-2 p-4 rounded text-sm grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <div className="skills-card rounded text-sm grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-8">
       {skills.map((skill, index) => (
         <div
           key={index}
-          className="skill-item bg-charcoal rounded-lg p-4 flex flex-col hover:border-solid hover:bg-[#474757]"
+          className="skill-item bg-charcoal rounded-lg p-4 flex flex-col hover:border-solid hover:bg-[#474757] md:p-6"
         >
           <span className="skill-title font-semibold text-ivoryWhite text-sm uppercase">
             {skill.title}
