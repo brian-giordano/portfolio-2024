@@ -1,8 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
 import {
-  FaBuilding,
-  FaBrain,
   FaBriefcase,
   FaAddressCard,
   FaEnvelope,
@@ -79,46 +77,88 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
 
   return (
     <header
-      className={`fixed w-full transition-all duration-300 p-0 m-0 z-50 ${
+      className={`w-full fixed transition-all duration-300 z-50 ${
         isScrolled ? "bg-[#000000] shadow-md py-2" : "bg-darkSlate pb-4 pt-8"
       }`}
-      style={{ height: isScrolled ? "48px" : "" }} // Shrink height on scroll
     >
       <div
-        className={`max-w-7xl ml-4 relative flex items-center justify-between h-full transition-colors duration-300 ${
-          isScrolled ? "w-[96%] bg-[#000000]" : "w-full bg-darkSlate"
+        className={`container mx-auto ${
+          isScrolled
+            ? "flex items-center justify-between"
+            : "flex flex-col items-center"
         }`}
       >
-        <h1
-          className={`font-primary font-extrabold tracking-wide transition-all duration-300 uppercase ${
-            isScrolled
-              ? "text-2xl text-ivoryWhite ml-2"
-              : "text-3xl text-ivoryWhite flex w-full justify-center"
-          }`}
-          style={{ marginLeft: "0", marginRight: "0" }} // Align to the left
-        >
-          {name}
-        </h1>
+        {/* Non-Scrolled View */}
+        {!isScrolled && (
+          <>
+            <nav className="mb-2 w-full opacity-90 transition-all duration-300 z-50 hidden lg:block">
+              <ul className="flex justify-center space-x-4 py-2">
+                {MenuItems.map((item) => (
+                  <li key={item.sectionId}>
+                    <button
+                      onClick={() => scrollToSection(item.sectionId)}
+                      className="text-ivoryWhite hover:text-gray-300 flex items-center"
+                    >
+                      <item.icon className={`text-xl mr-2 ${item.color}`} />
+                      {item.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            <h1
+              className={`font-primary font-extrabold tracking-wide transition-all duration-300 uppercase text-3xl text-ivoryWhite lg:text-6xl`}
+            >
+              {name}
+            </h1>
+          </>
+        )}
 
+        {/* Scrolled View */}
+        {isScrolled && (
+          <div className="flex items-center justify-between w-full">
+            <h1
+              className={`font-primary font-extrabold tracking-wide transition-all duration-300 uppercase text-2xl text-ivoryWhite`}
+            >
+              {name}
+            </h1>
+            <nav className="opacity-90 transition-all duration-300 z-50 hidden lg:flex">
+              <ul className="flex space-x-6 py-2">
+                {MenuItems.map((item) => (
+                  <li key={item.sectionId}>
+                    <button
+                      onClick={() => scrollToSection(item.sectionId)}
+                      className="text-ivoryWhite hover:text-gray-300 flex items-center"
+                    >
+                      <item.icon className={`text-xl mr-2 ${item.color}`} />
+                      {item.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+        )}
+
+        {/* Hamburger Menu Button for Mobile */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className={`text-xl pt-0 focus:outline-none flex items-center justify-center transition-all duration-300 ${
-            isScrolled ? "opacity-100 mr-1" : "opacity-0"
+          className={`text-xl pt-0 focus:outline-none flex items-center justify-center transition-all duration-300 lg:hidden ${
+            isScrolled ? "opacity-100" : "opacity-0"
           }`}
           aria-label="Toggle menu"
           aria-expanded={isMenuOpen}
-          style={{ marginRight: "1rem", lineHeight: "normal", padding: 0 }} // Uniform margin from the right
         >
           <span className="text-ivoryWhite">
             {isMenuOpen ? <FaXmark /> : <FaBars />}
           </span>
         </button>
       </div>
-      {isScrolled && (
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
         <nav
-          className={`bg-charcoal shadow-md mt-2 w-full opacity-90 transition-all duration-300 z-50 ${
-            isMenuOpen ? "max-h-96" : "max-h-0 overflow-hidden"
-          }`}
+          className={`bg-charcoal shadow-md mt-2 w-full opacity-90 transition-all duration-300 z-50 lg:hidden`}
         >
           <ul className="w-10/12 max-w-7xl mx-auto py-2">
             {MenuItems.map((item) => (

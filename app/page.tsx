@@ -45,10 +45,10 @@ const Home: React.FC = () => {
     <div className="p-0">
       <Header name="Brian Giordano" />
 
-      <main className="pt-12">
+      <main className="container mx-auto pt-12 lg:pt-24">
         {/* Full-height introductory section */}
         <section className="min-h-screen flex flex-col items-center justify-start bg-gray-100">
-          <h2 className="text-lg font-subheader text-silverMist mt-8">
+          <h2 className="text-lg font-subheader text-silverMist mt-8 lg:text-2xl">
             Digital Alchemist
           </h2>
 
@@ -69,7 +69,7 @@ const Home: React.FC = () => {
         </section>
 
         {/* Sticky Section Header */}
-        <div className="sticky top-12 z-40 bg-background">
+        <div className="sticky top-12 z-40 bg-background lg:top-[72px]">
           <SectionHeader
             name={
               currentSection.charAt(0).toUpperCase() + currentSection.slice(1)

@@ -9,7 +9,7 @@ import PotionLayerSvg from "./PotionLayerSvg"; // Adjust the path for the Potion
 
 const PotionSvg: React.FC = () => {
   return (
-    <div className="w-3/4 p-4 m-10">
+    <div className="w-3/4 p-4 m-10 lg:w-[33%] xl:w-[33%] 2xl:w-[33%]">
       {/* Stardust Layer */}
       <Image
         src={StardustLayerSvg}
