@@ -116,7 +116,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
 
         {/* Scrolled View */}
         {isScrolled && (
-          <div className="flex items-center justify-between w-full">
+          <div className="flex items-center justify-between w-full px-4">
             <h1
               className={`font-primary font-extrabold tracking-wide transition-all duration-300 uppercase text-2xl text-ivoryWhite`}
             >
@@ -143,7 +143,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
         {/* Hamburger Menu Button for Mobile */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className={`text-xl pt-0 focus:outline-none flex items-center justify-center transition-all duration-300 lg:hidden ${
+          className={`text-xl pt-0 px-4 focus:outline-none flex items-center justify-center transition-all duration-300 lg:hidden ${
             isScrolled ? "opacity-100" : "opacity-0"
           }`}
           aria-label="Toggle menu"
