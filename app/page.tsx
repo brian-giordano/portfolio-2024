@@ -15,6 +15,8 @@ import ProjectSection from "@/components/ProjectsSection";
 import AboutSection from "@/components/AboutSection";
 import ContactSection from "@/components/ContactSection";
 import PotionSvg from "@/components/PotionSvg";
+import FollowMeSection from "@/components/FollowMeSection";
+import Footer from "@/components/ui/Footer";
 
 const Home: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<string>("experience");
@@ -45,10 +47,10 @@ const Home: React.FC = () => {
     <div className="p-0">
       <Header name="Brian Giordano" />
 
-      <main className="container mx-auto pt-12 lg:pt-24">
+      <main className="container mx-auto pt-20 lg:pt-24">
         {/* Full-height introductory section */}
         <section className="min-h-screen flex flex-col items-center justify-start bg-gray-100">
-          <h2 className="text-lg font-subheader text-silverMist mt-8 lg:text-2xl">
+          <h2 className="text-lg font-subheader text-silverMist mt-8 lg:text-2xl lg:mt-20">
             Digital Alchemist
           </h2>
 
@@ -69,7 +71,7 @@ const Home: React.FC = () => {
         </section>
 
         {/* Sticky Section Header */}
-        <div className="sticky top-12 z-40 bg-background lg:top-[72px]">
+        <div className="sticky top-12 z-40 bg-background lg:top-[56px]">
           <SectionHeader
             name={
               currentSection.charAt(0).toUpperCase() + currentSection.slice(1)
@@ -132,12 +134,27 @@ const Home: React.FC = () => {
         </section>
         <section
           id="contact"
-          // className="w-full bg-gray-100 flex flex-col items-start justify-center  md:pb-6"
           className="flex flex-col items-start justify-center md:pb-6"
         >
           <SectionHeader name="Contact" bandColor="lightCrimson" />
-          <ContactSection />
+          <div className="w-full flex flex-col lg:flex-row">
+            {" "}
+            {/* Change to flex-row on lg and above */}
+            <div className="w-full lg:w-1/2 mb-4 lg:mb-0">
+              {" "}
+              {/* Full width on small screens, half on lg and above */}
+              <ContactSection />
+            </div>
+            <div className="w-full lg:w-1/2 mx-auto">
+              {" "}
+              {/* Full width on small screens, half on lg and above */}
+              <FollowMeSection />
+            </div>
+          </div>
         </section>
+        <div>
+          <Footer />
+        </div>
       </main>
     </div>
   );

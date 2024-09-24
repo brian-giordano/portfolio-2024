@@ -3,7 +3,7 @@ import ContactForm from "./ui/ContactForm";
 
 const ContactSection: React.FC = () => {
   return (
-    <div className="container mx-auto bg-darkSlate p-4 md:p-8">
+    <div className="container mx-auto min-h-screen bg-darkSlate p-4 md:p-8">
       <ContactForm />
     </div>
   );
