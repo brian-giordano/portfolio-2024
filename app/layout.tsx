@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "../components/ui/Button.module.css";
 
 export const metadata: Metadata = {
   title: "Brian Giordano",

@@ -12,7 +12,7 @@ const typedSkillsData = skillsData as Array<{
 
 const SkillsSection: React.FC = () => {
   return (
-    <div className="skills-section container mx-auto rounded p-4 m-4 md:p-8">
+    <div className="skills-section container mx-auto rounded p-4 m-4 mb-10 md:p-8">
       <SkillsCard skills={typedSkillsData} />
     </div>
   );

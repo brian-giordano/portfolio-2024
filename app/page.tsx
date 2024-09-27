@@ -140,7 +140,7 @@ const Home: React.FC = () => {
           <div className="w-full flex flex-col lg:flex-row">
             {" "}
             {/* Change to flex-row on lg and above */}
-            <div className="w-full lg:w-1/2 mb-4 lg:mb-0">
+            <div className="w-full lg:w-1/2 lg:mb-0">
               {" "}
               {/* Full width on small screens, half on lg and above */}
               <ContactSection />

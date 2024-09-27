@@ -15,6 +15,7 @@ const PotionSvg: React.FC = () => {
         src={StardustLayerSvg}
         alt="Stardust Layer"
         className={styles.stardustLayer} // Apply the growth and twinkle animation class
+        priority={true}
         //layout="intrinsic" // Use intrinsic layout for images
         // width={500} // Set a larger width (adjust as needed)
         // height={500} // Set a larger height (adjust as needed)

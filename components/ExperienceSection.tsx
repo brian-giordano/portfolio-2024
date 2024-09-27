@@ -30,7 +30,7 @@ const ExperienceSection: React.FC = () => {
   }, []);
 
   return (
-    <div className="experience-section container mx-auto">
+    <div className="experience-section container mx-auto mb-10">
       {jobs.map((job, index) => (
         <Card
           key={index}

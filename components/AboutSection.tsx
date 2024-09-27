@@ -5,13 +5,13 @@ import Card from "./ui/Card";
 
 const AboutSection: React.FC = () => {
   return (
-    <div className="container mx-auto md:p-4">
+    <div className="container mx-auto mb-10 md:p-4">
       <div className="flex flex-col m-4 p-4 bg-charcoal rounded-lg text-sm">
         <div className="flex justify-center h-1/2">
           <Image
             src={AboutImage} // Pass the AboutImage directly
             alt="About Me" // Provide a meaningful alt text
-            objectFit="cover"
+            // objectFit="cover"
             className="w-full h-full overflow-hidden rounded p-4"
           />
         </div>
