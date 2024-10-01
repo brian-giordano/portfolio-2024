@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useMemo } from "react";
 import {
   FaBriefcase,
   FaAddressCard,
@@ -21,42 +21,46 @@ interface MenuItem {
 }
 
 const Header: React.FC<HeaderProps> = ({ name }) => {
-  const isScrolled = useScrollPosition(); // This should preserve the shrinking behavior
+  const isScrolled = useScrollPosition();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentSection, setCurrentSection] = useState<string>("experience"); // Initialize to the first section
+  const [currentSection, setCurrentSection] = useState<string>("experience");
 
-  const MenuItems: MenuItem[] = [
-    {
-      label: "Experience",
-      sectionId: "experience",
-      icon: PiGraduationCapFill,
-      color: "text-gold",
-    },
-    {
-      label: "Skills",
-      sectionId: "skills",
-      icon: PiLightningFill,
-      color: "text-gold",
-    },
-    {
-      label: "Projects",
-      sectionId: "projects",
-      icon: FaBriefcase,
-      color: "text-gold",
-    },
-    {
-      label: "About",
-      sectionId: "about",
-      icon: FaAddressCard,
-      color: "text-gold",
-    },
-    {
-      label: "Contact",
-      sectionId: "contact",
-      icon: FaEnvelope,
-      color: "text-gold",
-    },
-  ];
+  // Memoize the MenuItems array so it's stable and doesn't cause unnecessary re-renders
+  const MenuItems: MenuItem[] = useMemo(
+    () => [
+      {
+        label: "Experience",
+        sectionId: "experience",
+        icon: PiGraduationCapFill,
+        color: "text-gold",
+      },
+      {
+        label: "Skills",
+        sectionId: "skills",
+        icon: PiLightningFill,
+        color: "text-gold",
+      },
+      {
+        label: "Projects",
+        sectionId: "projects",
+        icon: FaBriefcase,
+        color: "text-gold",
+      },
+      {
+        label: "About",
+        sectionId: "about",
+        icon: FaAddressCard,
+        color: "text-gold",
+      },
+      {
+        label: "Contact",
+        sectionId: "contact",
+        icon: FaEnvelope,
+        color: "text-gold",
+      },
+    ],
+    []
+  );
 
   const scrollToSection = useCallback((sectionId: string) => {
     const section = document.getElementById(sectionId);
@@ -75,7 +79,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
 
       const scrollPosition = window.scrollY + window.innerHeight / 2;
 
-      for (let section of sections) {
+      for (const section of sections) {
         if (section) {
           const sectionTop = section.offsetTop;
           const sectionHeight = section.offsetHeight;
@@ -84,7 +88,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
             scrollPosition >= sectionTop &&
             scrollPosition < sectionTop + sectionHeight
           ) {
-            setCurrentSection(section.id); // Update the current section
+            setCurrentSection(section.id);
             break;
           }
         }
@@ -96,7 +100,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [MenuItems]); // Adding MenuItems as a dependency
 
   return (
     <header
