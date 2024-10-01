@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
 
 interface SwipeUpOverlayProps {
@@ -12,16 +12,7 @@ const SwipeUpOverlay: React.FC<SwipeUpOverlayProps> = ({
   textRight,
   icon: Icon,
 }) => {
-  //   const [isVisible, setIsVisible] = useState(true);
   const isScrolled = useScrollPosition();
-
-  //   useEffect(() => {
-  //     if (scrollPosition > 0) {
-  //       setIsVisible(false); // Hide overlay if scrolled
-  //     } else {
-  //       setIsVisible(true); // Show the overlay if at top
-  //     }
-  //   }, [scrollPosition]); // Run whenever scrollPosition changes
 
   return (
     <div

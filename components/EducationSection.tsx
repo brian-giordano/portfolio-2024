@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import educationData from "../data/education.json";
-import Card from "./ui/Card";
 import CardsList from "./ui/CardsList";
 
 const EducationSection: React.FC = () => {

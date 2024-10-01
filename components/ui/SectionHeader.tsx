@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  FaBriefcase,
-  FaAddressCard,
-  FaEnvelope,
-  FaBars,
-  FaXmark,
-} from "react-icons/fa6";
+import { FaBriefcase, FaAddressCard, FaEnvelope } from "react-icons/fa6";
 import { PiLightningFill, PiGraduationCapFill } from "react-icons/pi";
 
 interface SectionHeaderProps {

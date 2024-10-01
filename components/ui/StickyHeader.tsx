@@ -1,5 +1,5 @@
 // components/ui/StickyHeader.tsx
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import SectionHeader from "./SectionHeader";
 
 interface Section {
