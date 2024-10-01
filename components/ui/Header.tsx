@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { useScrollPosition } from "@/hooks/useScrollPosition";
 import {
   FaBriefcase,
   FaAddressCard,
@@ -8,6 +7,7 @@ import {
   FaXmark,
 } from "react-icons/fa6";
 import { PiLightningFill, PiGraduationCapFill } from "react-icons/pi";
+import { useScrollPosition } from "@/hooks/useScrollPosition";
 
 interface HeaderProps {
   name: string;
@@ -21,8 +21,9 @@ interface MenuItem {
 }
 
 const Header: React.FC<HeaderProps> = ({ name }) => {
-  const isScrolled = useScrollPosition();
+  const isScrolled = useScrollPosition(); // This should preserve the shrinking behavior
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [currentSection, setCurrentSection] = useState<string>("experience"); // Initialize to the first section
 
   const MenuItems: MenuItem[] = [
     {
@@ -65,15 +66,37 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
     }
   }, []);
 
+  // Scroll listener to update the current section based on visibility
   useEffect(() => {
-    const closeMenu = (e: MouseEvent) => {
-      if (isMenuOpen && !(e.target as Element).closest("nav")) {
-        setIsMenuOpen(false);
+    const handleScroll = () => {
+      const sections = MenuItems.map((item) =>
+        document.getElementById(item.sectionId)
+      );
+
+      const scrollPosition = window.scrollY + window.innerHeight / 2;
+
+      for (let section of sections) {
+        if (section) {
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.offsetHeight;
+
+          if (
+            scrollPosition >= sectionTop &&
+            scrollPosition < sectionTop + sectionHeight
+          ) {
+            setCurrentSection(section.id); // Update the current section
+            break;
+          }
+        }
       }
     };
-    document.addEventListener("click", closeMenu);
-    return () => document.removeEventListener("click", closeMenu);
-  }, [isMenuOpen]);
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <header
@@ -97,14 +120,20 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
                   <li key={item.sectionId} className="group">
                     <button
                       onClick={() => scrollToSection(item.sectionId)}
-                      className="text-ivoryWhite hover:text-gray-300 group-hover:bg-gold group-hover:rounded-full px-4 py-2 flex items-center group-hover:text-charcoal transform transition-all duration-200 ease-in-out"
+                      className={`${
+                        currentSection === item.sectionId
+                          ? "text-gold font-bold"
+                          : "text-ivoryWhite"
+                      } hover:text-gray-300 group-hover:bg-gold group-hover:rounded-full px-4 py-2 flex items-center group-hover:text-charcoal transform transition-all duration-200 ease-in-out`}
                     >
                       <item.icon
-                        className={`text-xl mr-3 ${item.color} group-hover:text-charcoal group-hover:scale-110 ransform transition-transform duration-200`}
+                        className={`text-xl mr-3 ${
+                          currentSection === item.sectionId
+                            ? "text-gold"
+                            : item.color
+                        } group-hover:text-charcoal`}
                       />
-                      <div className="group-hover:scale-110 ransform transition-transform duration-200">
-                        {item.label}
-                      </div>
+                      {item.label}
                     </button>
                   </li>
                 ))}
@@ -132,14 +161,20 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
                   <li key={item.sectionId} className="group">
                     <button
                       onClick={() => scrollToSection(item.sectionId)}
-                      className="text-ivoryWhite hover:text-gray-300 group-hover:bg-gold group-hover:rounded-full px-4 py-2 flex items-center group-hover:text-charcoal transform transition-all duration-200 ease-in-out"
+                      className={`${
+                        currentSection === item.sectionId
+                          ? "text-gold font-bold"
+                          : "text-ivoryWhite"
+                      } hover:text-gray-300 group-hover:bg-gold group-hover:rounded-full px-4 py-2 flex items-center group-hover:text-charcoal transform transition-all duration-200 ease-in-out`}
                     >
                       <item.icon
-                        className={`text-xl mr-3 ${item.color} group-hover:text-charcoal group-hover:scale-110 ransform transition-transform duration-200`}
+                        className={`text-xl mr-3 ${
+                          currentSection === item.sectionId
+                            ? "text-gold"
+                            : item.color
+                        } group-hover:text-charcoal`}
                       />
-                      <div className="group-hover:scale-110 ransform transition-transform duration-200">
-                        {item.label}
-                      </div>
+                      {item.label}
                     </button>
                   </li>
                 ))}
@@ -176,9 +211,19 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
               >
                 <button
                   onClick={() => scrollToSection(item.sectionId)}
-                  className="text-ivoryWhite w-full text-left flex items-center"
+                  className={`${
+                    currentSection === item.sectionId
+                      ? "text-gold font-bold"
+                      : "text-ivoryWhite"
+                  } w-full text-left flex items-center`}
                 >
-                  <item.icon className={`text-xl mr-4 ${item.color}`} />
+                  <item.icon
+                    className={`text-xl mr-4 ${
+                      currentSection === item.sectionId
+                        ? "text-gold"
+                        : item.color
+                    }`}
+                  />
                   {item.label}
                 </button>
               </li>
