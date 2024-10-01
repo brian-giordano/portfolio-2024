@@ -8,12 +8,12 @@
   --foreground: ;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 body {
   color: var(--foreground);
@@ -25,4 +25,46 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+h2 {
+  font-size: 1rem; /* 16px */
+  line-height: 1.5rem; /* 24px */
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+}
+
+p {
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.25rem; /* 20px */
+  margin-bottom: 0.5rem;
+}
+
+ul {
+  list-style-type: disc; /* Use bullets for unordered lists */
+  padding-left: 1.25rem; /* Add padding to the left for better visibility */
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+}
+
+ol {
+  list-style-type: decimal; /* Use numbers for ordered lists */
+  padding-left: 1.25rem; /* Add padding to the left for better visibility */
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #00bfa6;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f8f8ff;
+  border-radius: 10px;
 }

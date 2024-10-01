@@ -5,8 +5,7 @@
     "startYear": "2018",
     "endMonth": "01",
     "endYear": "2022",
-    "degree": "MS",
-    "discipline": "Computer Science",
+    "degree": "MS in Computer Science",
     "cityTown": "Remote",
     "locationState": "MA",
     "description": "Specialized coursework: Advanced Algorithm Design, Software Systems Design, Mobile Robotics, and more."
@@ -17,8 +16,7 @@
     "startYear": "2017",
     "endMonth": "01",
     "endYear": "2020",
-    "degree": "Graduate Certificate",
-    "discipline": "Computer Science",
+    "degree": "Graduate Certificate in Computer Science",
     "cityTown": "Remote",
     "locationState": "MA",
     "description": "In-depth bridge coursework prior to MS in CS."
@@ -29,9 +27,9 @@
     "startYear": "2002",
     "endMonth": "05",
     "endYear": "2007",
-    "degree": "BA",
-    "discipline": "Art - Graphic Design",
+    "degree": "BA - Art - Graphic Design",
     "cityTown": "Providence",
-    "locationState": "RI"
+    "locationState": "RI",
+    "description": "Traditional art education and double-minor in communications and film studies."
   }
 ]

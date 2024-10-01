@@ -27,7 +27,9 @@ const config: Config = {
         lavender: "#D6A4E0",
         lightSkyBlue: "#A0C4FF",
         charcoal: "#29293E",
+        mediumCharcoal: "#6c6e80",
         pink: "#ffebeb",
+        eggplant: "#110040",
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
@@ -38,6 +40,7 @@ const config: Config = {
       },
     },
   },
+
   plugins: [],
 };
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import educationData from "../data/education.json";
 import Card from "./ui/Card";
+import CardsList from "./ui/CardsList";
 
 const EducationSection: React.FC = () => {
   interface StackUsed {
@@ -9,20 +10,20 @@ const EducationSection: React.FC = () => {
   }
 
   interface Program {
-    imageUrl?: string; // Optional
+    key?: number;
+    logoUrl?: string;
+    title: string;
     alt: string;
     orgName: string;
-    startMonth?: string; // Optional
-    startYear?: string; // Optional
-    endMonth?: string; // Optional
-    endYear?: string; // Optional
-    cityTown?: string; // Optional
-    locationState?: string; // Optional
-    description?: string | string[]; // Optional
-    stackUsed?: StackUsed[]; // Optional for experience section
-    degree?: string; // Optional for education section
-    discipline?: string; // Optional for education section
-    isAccordion: boolean;
+    startMonth: string;
+    startYear: string;
+    endMonth: string;
+    endYear: string;
+    degree: string;
+    cityTown?: string;
+    locationState?: string;
+    description: string | string[]; // Ensure this is defined
+    stackUsed?: StackUsed[];
   }
 
   const [programs, setPrograms] = useState<Program[]>([]);
@@ -31,25 +32,24 @@ const EducationSection: React.FC = () => {
     setPrograms(educationData as Program[]);
   }, []);
 
+  const cardsData = programs.map((program, index) => ({
+    key: index,
+    imageUrl: program.logoUrl,
+    alt: program.alt,
+    title: program.degree,
+    orgName: program.orgName,
+    startMonth: program.startMonth,
+    startYear: program.startYear,
+    endMonth: program.endMonth,
+    endYear: program.endYear,
+    description: program.description || "", // Ensure description is always defined
+    stackUsed: program.stackUsed,
+    isAccordion: false, // Set to false for the experience section
+  }));
+
   return (
-    <div className="education-section container mx-auto mb-10">
-      {programs.map((program, index) => (
-        <Card
-          key={index}
-          orgName={program.orgName}
-          alt={program.alt}
-          startMonth={program.startMonth}
-          startYear={program.startYear}
-          endMonth={program.endMonth}
-          endYear={program.endYear}
-          cityTown={program.cityTown}
-          locationState={program.locationState}
-          description={program.description}
-          degree={program.degree}
-          discipline={program.discipline}
-          isAccordion={false} // Set to false for the experience section
-        />
-      ))}
+    <div className="education-section container mx-auto mb-10 p-4">
+      <CardsList cards={cardsData} />
     </div>
   );
 };

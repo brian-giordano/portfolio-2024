@@ -78,7 +78,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
   return (
     <header
       className={`w-full fixed transition-all duration-300 z-50 ${
-        isScrolled ? "bg-[#000000] shadow-md py-2" : "bg-darkSlate pb-4 pt-8"
+        isScrolled ? "bg-darkSlate py-4" : "bg-darkSlate pb-4 pt-8"
       }`}
     >
       <div
@@ -92,15 +92,19 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
         {!isScrolled && (
           <>
             <nav className="mb-2 w-full opacity-90 transition-all duration-300 z-50 hidden lg:block">
-              <ul className="flex justify-center space-x-4 py-2">
+              <ul className="flex justify-center space-x-4 py-2 list-none">
                 {MenuItems.map((item) => (
-                  <li key={item.sectionId}>
+                  <li key={item.sectionId} className="group">
                     <button
                       onClick={() => scrollToSection(item.sectionId)}
-                      className="text-ivoryWhite hover:text-gray-300 flex items-center"
+                      className="text-ivoryWhite hover:text-gray-300 group-hover:bg-gold group-hover:rounded-full px-4 py-2 flex items-center group-hover:text-charcoal transform transition-all duration-200 ease-in-out"
                     >
-                      <item.icon className={`text-xl mr-2 ${item.color}`} />
-                      {item.label}
+                      <item.icon
+                        className={`text-xl mr-3 ${item.color} group-hover:text-charcoal group-hover:scale-110 ransform transition-transform duration-200`}
+                      />
+                      <div className="group-hover:scale-110 ransform transition-transform duration-200">
+                        {item.label}
+                      </div>
                     </button>
                   </li>
                 ))}
@@ -123,15 +127,19 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
               {name}
             </h1>
             <nav className="opacity-90 transition-all duration-300 z-50 hidden lg:flex">
-              <ul className="flex space-x-6 py-2">
+              <ul className="flex space-x-6 py-2 list-none">
                 {MenuItems.map((item) => (
-                  <li key={item.sectionId}>
+                  <li key={item.sectionId} className="group">
                     <button
                       onClick={() => scrollToSection(item.sectionId)}
-                      className="text-ivoryWhite hover:text-gray-300 flex items-center"
+                      className="text-ivoryWhite hover:text-gray-300 group-hover:bg-gold group-hover:rounded-full px-4 py-2 flex items-center group-hover:text-charcoal transform transition-all duration-200 ease-in-out"
                     >
-                      <item.icon className={`text-xl mr-2 ${item.color}`} />
-                      {item.label}
+                      <item.icon
+                        className={`text-xl mr-3 ${item.color} group-hover:text-charcoal group-hover:scale-110 ransform transition-transform duration-200`}
+                      />
+                      <div className="group-hover:scale-110 ransform transition-transform duration-200">
+                        {item.label}
+                      </div>
                     </button>
                   </li>
                 ))}
@@ -158,14 +166,17 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <nav
-          className={`bg-charcoal shadow-md mt-2 w-full opacity-90 transition-all duration-300 z-50 lg:hidden`}
+          className={`bg-darkSlate shadow-md mt-2 w-full transition-all duration-300 z-50 lg:hidden`}
         >
-          <ul className="w-10/12 max-w-7xl mx-auto py-2">
+          <ul className="w-full max-w-7xl list-none p-0">
             {MenuItems.map((item) => (
-              <li key={item.sectionId} className="py-2">
+              <li
+                key={item.sectionId}
+                className="w-full py-2 px-8 hover:bg-mediumCharcoal"
+              >
                 <button
                   onClick={() => scrollToSection(item.sectionId)}
-                  className="text-ivoryWhite hover:text-gray-300 w-full text-left flex items-center"
+                  className="text-ivoryWhite w-full text-left flex items-center"
                 >
                   <item.icon className={`text-xl mr-4 ${item.color}`} />
                   {item.label}

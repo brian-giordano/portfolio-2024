@@ -22,9 +22,9 @@ const SkillsCard: React.FC<SkillsCardProps> = ({ skills }) => {
           <span className="skill-title font-semibold text-ivoryWhite text-sm uppercase">
             {skill.title}
           </span>
-          <div className="skill-level-container mt-2">
+          <div className="skill-level-container mt-2 bg-eggplant rounded h-2 relative">
             <div
-              className="skill-level bg-gold rounded h-2"
+              className="skill-level bg-gold rounded h-2 absolute top-0 left-0"
               style={{ width: `${skill.level * 10}%` }} // Scale level to width
             />
           </div>

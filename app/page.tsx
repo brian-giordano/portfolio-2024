@@ -49,18 +49,17 @@ const Home: React.FC = () => {
 
       <main className="container mx-auto pt-20 lg:pt-24">
         {/* Full-height introductory section */}
-        <section className="min-h-screen flex flex-col items-center justify-start bg-gray-100">
-          <h2 className="text-lg font-subheader text-silverMist mt-8 lg:text-2xl lg:mt-20">
+        <section className="flex flex-col items-center justify-center bg-gray-100 p-4 lg:py-20 min-h-[60vh]">
+          {/* Subheader */}
+          <h2 className="text-xl font-subheader font-light text-silverMist mt-8 lg:text-2xl">
             Digital Alchemist
           </h2>
 
+          {/* Main Image or Animated PotionSvg */}
+
           <PotionSvg />
 
-          {/* <CenteredImage
-            src={mainImage}
-            alt="illustrated potion bottle"
-            className="m-4"
-          /> */}
+          {/* Swipe up overlay */}
           <div className="w-full flex justify-center">
             <SwipeUpOverlay
               textLeft="Explore"
@@ -71,7 +70,7 @@ const Home: React.FC = () => {
         </section>
 
         {/* Sticky Section Header */}
-        <div className="sticky top-12 z-40 bg-background lg:top-[56px]">
+        <div className="sticky top-16 z-40 bg-background lg:top-[112px]">
           <SectionHeader
             name={
               currentSection.charAt(0).toUpperCase() + currentSection.slice(1)
@@ -134,7 +133,7 @@ const Home: React.FC = () => {
         </section>
         <section
           id="contact"
-          className="flex flex-col items-start justify-center md:pb-6"
+          className="min-h-screen flex flex-col items-start justify-center md:pb-6"
         >
           <SectionHeader name="Contact" bandColor="lightCrimson" />
           <div className="w-full flex flex-col lg:flex-row">

@@ -42,7 +42,7 @@ const ProjectSection: React.FC = () => {
   ];
 
   return (
-    <div className="container mx-auto mb-10">
+    <div className="container mx-auto mb-10 p-4">
       <CardsList cards={projects} />{" "}
       {/* Use CardsList to render the projects */}
     </div>

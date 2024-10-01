@@ -1,8 +1,8 @@
 // components/ui/Card.tsx
 import React from "react";
-import Pill from "./Pill";
 import Image from "next/image";
 import { StaticImageData } from "next/image";
+import Pill from "./Pill";
 
 export interface StackUsed {
   name: string;
@@ -10,49 +10,71 @@ export interface StackUsed {
 }
 
 export interface CardProps {
-  imageUrl?: string | StaticImageData; // Optional
-  title: string; // Required
-  alt: string; // Required
-  orgName: string; // Required
-  description: string | string[]; // Required
-  stackUsed?: StackUsed[]; // Optional
+  imageUrl?: string | StaticImageData;
+  logoUrl?: string; // For job listings
+  title: string;
+  alt: string;
+  orgName: string;
+  startMonth?: string;
+  startYear?: string;
+  endMonth?: string;
+  endYear?: string;
+  degree?: string;
+  discipline?: string;
+  description: string | string[];
+  stackUsed?: StackUsed[];
 }
 
 const Card: React.FC<CardProps> = ({
   imageUrl,
+  logoUrl,
   title,
   alt,
   orgName,
+  startMonth,
+  startYear,
+  endMonth,
+  endYear,
   description,
   stackUsed = [],
 }) => {
+  const imageSource = imageUrl || logoUrl;
+
   return (
-    <div className="flex flex-col bg-charcoal rounded-lg shadow-md p-4 h-full lg:p-6">
-      {" "}
-      {/* Consistent padding */}
-      {imageUrl && (
+    <div className="flex flex-col bg-charcoal rounded-lg shadow-md p-4 h-full">
+      {imageSource && (
         <div className="relative w-full aspect-[1.618] mb-4">
-          {" "}
-          {/* Maintain golden ratio */}
           <Image
-            src={imageUrl}
+            src={imageSource}
             alt={alt}
-            layout="fill" // Use fill to cover the parent div
-            className="absolute top-0 left-0 w-full h-full object-cover rounded" // Cover the parent div
+            layout="fill"
+            objectFit="cover"
+            className="rounded"
           />
         </div>
       )}
       <h2 className="font-primary font-semibold text-ivoryWhite uppercase mb-2">
         {title}
       </h2>
-      <h3 className="font-subheader text-silverMist mb-2">{orgName}</h3>
-      <div className="text-ivoryWhite mb-4 flex-grow">
-        {" "}
-        {/* Allow description to grow */}
+      <h3 className="font-subheader text-sm text-silverMist mb-2">{orgName}</h3>
+      {(startMonth || startYear) && (
+        <p className="font-subheader text-sm text-silverMist mb-2">
+          {`${startMonth || ""}${startMonth && startYear ? "/" : ""}${
+            startYear || ""
+          }`}
+          {(endMonth || endYear) &&
+            ` - ${endMonth || ""}${endMonth && endYear ? "/" : ""}${
+              endYear || ""
+            }`}
+        </p>
+      )}
+      <div className="text-ivoryWhite mb-4 flex-grow font-normal text-sm">
         {Array.isArray(description) ? (
-          <ul className="list-disc pl-5">
+          <ul className="list-disc pl-5 space-y-3">
             {description.map((item, index) => (
-              <li key={index}>{item}</li>
+              <li key={index} className="mb-2">
+                {item}
+              </li>
             ))}
           </ul>
         ) : (
