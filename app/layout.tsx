@@ -1,8 +1,28 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import "../components/ui/Button.module.css";
+// app/layout.tsx
+import { Poppins, Oswald, Montserrat } from "next/font/google"; // Import fonts from next/font
+import "./globals.css"; // Import global styles
+import "../components/ui/Button.module.css"; // Import specific styles for buttons
 
-export const metadata: Metadata = {
+// Load fonts with next/font
+const poppins = Poppins({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const oswald = Oswald({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const montserrat = Montserrat({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
+export const metadata = {
   title: "Brian Giordano",
   description: "Digital Alchemist Portfolio",
 };
@@ -14,13 +34,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Oswald:wght@400;700&family=Montserrat:wght@400;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="">{children}</body>
+      <head>{/* No need to add font links here */}</head>
+      <body
+        className={`${poppins.className} ${oswald.className} ${montserrat.className}`}
+      >
+        {children}
+      </body>{" "}
+      {/* Apply font classes */}
     </html>
   );
 }

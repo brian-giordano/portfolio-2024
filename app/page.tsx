@@ -1,11 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Button from "@/components/ui/Button";
 import Header from "@/components/ui/Header";
 import SectionHeader from "@/components/ui/SectionHeader";
-import CenteredImage from "@/components/ui/CenteredImage";
-import mainImage from "../assets/images/potion-bottle-2.svg";
 import SwipeUpOverlay from "@/components/ui/SwipeUpOverlay";
 import ExperienceSection from "@/components/ExperienceSection";
 import { PiCaretDoubleUpBold } from "react-icons/pi";

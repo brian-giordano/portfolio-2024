@@ -10,10 +10,10 @@ const AboutSection: React.FC = () => {
         {/* Text container */}
         <div className="flex flex-col justify-between w-full md:w-1/2 p-4">
           <p className="font-primary text-ivoryWhite font-light leading-relaxed mb-2">
-            Hi! I'm Brian, a Frontend Developer and passionate digital creator.
-            With 3+ years of experience crafting visually appealing and highly
-            functional web components, I'm driven by a love of problem solving,
-            with user experience (UX) at the forefront.
+            Hi! I&apos;m Brian, a Frontend Developer and passionate digital
+            creator. With 3+ years of experience crafting visually appealing and
+            highly functional web components, I&apos;m driven by a love of
+            problem solving, with user experience (UX) at the forefront.
           </p>
           <p className="font-primary text-ivoryWhite font-light leading-relaxed mb-2">
             I specialize in building responsive, high-performing websites and
@@ -23,15 +23,15 @@ const AboutSection: React.FC = () => {
             aesthetics and usability.
           </p>
           <p className="font-primary text-ivoryWhite font-light leading-relaxed mb-2">
-            With a Master's degree in Computer Science, I've gained a deep
-            understanding of the principles that underpin software development,
-            from algorithms and data structures to modern web technologies like
-            robotics and distributed systems.
+            With a Master&apos;s degree in Computer Science, I&apos;ve gained a
+            deep understanding of the principles that underpin software
+            development, from algorithms and data structures to modern web
+            technologies like robotics and distributed systems.
           </p>
           <p className="font-primary text-ivoryWhite font-light leading-relaxed mb-2">
-            My Bachelor's of Art undergrad degree allows me to bring a unique
-            combination of creative and technical expertise to my work. My
-            design background enables me to create intuitive and visually
+            My Bachelor&apos;s of Art undergrad degree allows me to bring a
+            unique combination of creative and technical expertise to my work.
+            My design background enables me to create intuitive and visually
             compelling interfaces, while my technical training ensures that
             these designs are supported by clean, efficient code - a winning
             combination!
@@ -41,12 +41,12 @@ const AboutSection: React.FC = () => {
             UUV (Unmanned Underwater Vehicles), built full stack websites for
             banks, and visualized battery data for a panic button IoT product.
             My career has led me from web design to project management, all the
-            way over to my forever home, frontend engineering, where I've picked
-            up valuable skills along the way!
+            way over to my forever home, frontend engineering, where I&apos;ve
+            picked up valuable skills along the way!
           </p>
           <p className="font-primary text-ivoryWhite font-light leading-relaxed mb-2">
             At this point in my career, I value autonomy and putting my best
-            work out there. I'm eager to join a creative team where I can
+            work out there. I&apos;m eager to join a creative team where I can
             leverage my dual expertise in design and development to tackle
             complex challenges. I bring a unique perspective that bridges the
             gap between aesthetics and functionality, ensuring that every

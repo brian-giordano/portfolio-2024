@@ -338,7 +338,7 @@ const ContactForm: React.FC = () => {
               <p>
                 We may also release information when its release is appropriate
                 to comply with the law, enforce our site policies, or protect
-                ours or others' rights, property, or safety.
+                ours or others&apos; rights, property, or safety.
               </p>
 
               <h2>Your Consent</h2>

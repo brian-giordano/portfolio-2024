@@ -9,7 +9,7 @@ export interface ToastContainerRef {
 
 const ToastContainer = forwardRef<
   ToastContainerRef,
-  React.PropsWithChildren<{}>
+  React.PropsWithChildren<unknown>
 >((_, ref) => {
   const [toasts, setToasts] = useState<{ id: number; message: string }[]>([]);
   let toastId = 0; // Simple ID counter for toasts
@@ -34,11 +34,13 @@ const ToastContainer = forwardRef<
         <Toast
           key={toast.id}
           message={toast.message}
-          onClose={() => removeToast(toast.id)} // Ensure this is a valid function
+          onClose={() => removeToast(toast.id)}
         />
       ))}
     </div>
   );
 });
+
+ToastContainer.displayName = "ToastContainer";
 
 export default ToastContainer;
