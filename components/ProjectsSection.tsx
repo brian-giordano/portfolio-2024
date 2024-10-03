@@ -52,19 +52,20 @@ const ProjectSection: React.FC = () => {
           <h3>Key Responsibilities:</h3>
           <p>
             I handled every aspect of the project, from the initial concept to
-            deployment. This included <strong>full stack development</strong>,
+            deployment. This included <strong>full stack development</strong>
+            ,&nbsp;
             <strong>UI/UX design</strong>, performance optimization, and
             ensuring the site was responsive across all devices. Additionally, I
-            focused on
+            focused on&nbsp;
             <strong>motion design</strong> to create a fluid user experience.
           </p>
 
           <h3>Challenges:</h3>
           <p>
             One challenge was balancing visual impact with performance. I used
-            Next.js’s optimization features to maintain fast load times. I also
-            ensured consistency across devices, spending extra time on the
-            site’s responsiveness.
+            Next.js&apos;s optimization features to maintain fast load times. I
+            also ensured consistency across devices, spending extra time on the
+            site&apos;s responsiveness.
           </p>
 
           <h3>Outcome/Impact:</h3>
