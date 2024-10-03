@@ -21,7 +21,7 @@ const EducationSection: React.FC = () => {
     degree: string;
     cityTown?: string;
     locationState?: string;
-    description: string | string[]; // Ensure this is defined
+    description: string | string[];
     stackUsed?: StackUsed[];
   }
 
@@ -41,9 +41,17 @@ const EducationSection: React.FC = () => {
     startYear: program.startYear,
     endMonth: program.endMonth,
     endYear: program.endYear,
-    description: program.description || "", // Ensure description is always defined
+    description: Array.isArray(program.description) ? (
+      <ul>
+        {program.description.map((item, i) => (
+          <li key={i}>{item}</li>
+        ))}
+      </ul>
+    ) : (
+      <p>{program.description || ""}</p>
+    ),
     stackUsed: program.stackUsed,
-    isAccordion: false, // Set to false for the experience section
+    isAccordion: false,
   }));
 
   return (
