@@ -1,7 +1,7 @@
 // components/ExperienceSection.tsx
 import React, { useEffect, useState } from "react";
-import CardsList from "./ui/CardsList"; // Import CardsList
-import jobData from "../data/jobs.json"; // Import job data
+import CardsList from "./ui/CardsList";
+import jobData from "../data/jobs.json";
 
 const ExperienceSection: React.FC = () => {
   interface StackUsed {
@@ -20,7 +20,7 @@ const ExperienceSection: React.FC = () => {
     endYear: string;
     cityTown?: string;
     locationState?: string;
-    description: string | string[]; // Ensure this is defined
+    description: string | string[];
     stackUsed?: StackUsed[];
   }
 
@@ -30,10 +30,21 @@ const ExperienceSection: React.FC = () => {
     setJobs(jobData as Job[]);
   }, []);
 
+  const renderDescription = (description: string | string[]): JSX.Element => {
+    if (Array.isArray(description)) {
+      return (
+        <ul>
+          {description.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
+      );
+    }
+    return <p>{description}</p>;
+  };
+
   return (
     <div className="experience-section container mx-auto mb-10 p-4">
-      {" "}
-      {/* Added padding to the container */}
       <CardsList
         cards={jobs.map((job) => ({
           imageUrl: job.logoUrl,
@@ -44,12 +55,11 @@ const ExperienceSection: React.FC = () => {
           startYear: job.startYear,
           endMonth: job.endMonth,
           endYear: job.endYear,
-          description: job.description || "", // Ensure description is always defined
+          description: renderDescription(job.description),
           stackUsed: job.stackUsed,
-          isAccordion: false, // Set to false for the experience section
+          isAccordion: false,
         }))}
-      />{" "}
-      {/* Use CardsList to render the jobs */}
+      />
     </div>
   );
 };

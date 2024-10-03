@@ -31,6 +31,19 @@ const EducationSection: React.FC = () => {
     setPrograms(educationData as Program[]);
   }, []);
 
+  const renderDescription = (description: string | string[]): JSX.Element => {
+    if (Array.isArray(description)) {
+      return (
+        <ul>
+          {description.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
+      );
+    }
+    return <p>{description}</p>;
+  };
+
   const cardsData = programs.map((program, index) => ({
     key: index,
     imageUrl: program.logoUrl,
@@ -41,15 +54,7 @@ const EducationSection: React.FC = () => {
     startYear: program.startYear,
     endMonth: program.endMonth,
     endYear: program.endYear,
-    description: Array.isArray(program.description) ? (
-      <ul>
-        {program.description.map((item, i) => (
-          <li key={i}>{item}</li>
-        ))}
-      </ul>
-    ) : (
-      <p>{program.description || ""}</p>
-    ),
+    description: renderDescription(program.description),
     stackUsed: program.stackUsed,
     isAccordion: false,
   }));
