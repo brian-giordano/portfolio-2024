@@ -38,6 +38,9 @@ const config: Config = {
         accent: ["Oswald", "sans-serif"],
         subheader: ["Montserrat", "sans-serif"],
       },
+      boxShadow: {
+        "text-shadow": "0px 0px 2px #FFD700", // Customize for your needs
+      },
     },
   },
 

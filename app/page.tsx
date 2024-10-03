@@ -67,7 +67,7 @@ const Home: React.FC = () => {
         </section>
 
         {/* Sticky Section Header */}
-        <div className="sticky top-16 z-40 bg-background lg:top-[112px]">
+        <div className="sticky top-16 z-40 bg-background lg:top-[108px]">
           <SectionHeader
             name={
               currentSection.charAt(0).toUpperCase() + currentSection.slice(1)
