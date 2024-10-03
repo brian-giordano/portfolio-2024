@@ -1,25 +1,26 @@
-// app/layout.tsx
-import { Poppins, Oswald, Montserrat } from "next/font/google"; // Import fonts from next/font
-import "./globals.css"; // Import global styles
-import "../components/ui/Button.module.css"; // Import specific styles for buttons
+import { Poppins, Oswald, Montserrat } from "next/font/google";
+import "./globals.css";
+import "../components/ui/Button.module.css";
 
-// Load fonts with next/font
 const poppins = Poppins({
-  weight: ["400", "700"],
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-poppins",
+  weight: ["400", "600", "700"],
 });
 
 const oswald = Oswald({
-  weight: ["400", "700"],
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-oswald",
+  weight: ["400", "700"],
 });
 
 const montserrat = Montserrat({
-  weight: ["400", "700"],
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-montserrat",
+  weight: ["400", "700"],
 });
 
 export const metadata = {
@@ -33,14 +34,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <head>{/* No need to add font links here */}</head>
-      <body
-        className={`${poppins.className} ${oswald.className} ${montserrat.className}`}
-      >
-        {children}
-      </body>{" "}
-      {/* Apply font classes */}
+    <html
+      lang="en"
+      className={`${poppins.variable} ${oswald.variable} ${montserrat.variable}`}
+    >
+      <body>{children}</body>
     </html>
   );
 }

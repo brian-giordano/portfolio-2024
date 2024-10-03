@@ -34,9 +34,9 @@ const config: Config = {
         foreground: "var(--foreground)",
       },
       fontFamily: {
-        primary: ["Poppins", "sans-serif"],
-        accent: ["Oswald", "sans-serif"],
-        subheader: ["Montserrat", "sans-serif"],
+        primary: ["var(--font-poppins)", "sans-serif"],
+        accent: ["var(--font-oswald)", "sans-serif"],
+        subheader: ["var(--font-montserrat)", "sans-serif"],
       },
       boxShadow: {
         "text-shadow": "0px 0px 2px #FFD700", // Customize for your needs
