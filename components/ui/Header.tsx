@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useMemo } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import {
   FaBriefcase,
   FaAddressCard,
@@ -8,119 +8,110 @@ import {
 } from "react-icons/fa6";
 import { PiLightningFill, PiGraduationCapFill } from "react-icons/pi";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 interface HeaderProps {
   name: string;
+  currentSection: string;
+  onNavClick?: (sectionId: string) => void;
+  showStickyHeader?: boolean;
 }
 
 interface MenuItem {
   label: string;
   sectionId: string;
-  icon: React.ReactElement;
-  color: string;
+  bandColor: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ name }) => {
+const Header: React.FC<HeaderProps> = ({
+  name,
+  currentSection,
+  onNavClick,
+  showStickyHeader = false,
+}) => {
   const isScrolled = useScrollPosition();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentSection, setCurrentSection] = useState<string>("");
 
   const MenuItems: MenuItem[] = useMemo(
     () => [
       {
         label: "Experience",
         sectionId: "experience",
-        icon: <PiGraduationCapFill />,
-        color: "text-gold",
+        bandColor: "mysticTeal",
+      },
+      {
+        label: "Education",
+        sectionId: "education",
+        bandColor: "mysticTeal",
       },
       {
         label: "Skills",
         sectionId: "skills",
-        icon: <PiLightningFill />,
-        color: "text-gold",
+        bandColor: "gold",
       },
       {
         label: "Projects",
         sectionId: "projects",
-        icon: <FaBriefcase />,
-        color: "text-gold",
+        bandColor: "lightCrimson",
       },
       {
         label: "About",
         sectionId: "about",
-        icon: <FaAddressCard />,
-        color: "text-gold",
+        bandColor: "mysticTeal",
       },
       {
         label: "Contact",
         sectionId: "contact",
-        icon: <FaEnvelope />,
-        color: "text-gold",
+        bandColor: "lightCrimson",
       },
     ],
     []
   );
 
-  const scrollToSection = useCallback((sectionId: string) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-      setIsMenuOpen(false);
-    }
-  }, []);
-
-  const scrollToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    setCurrentSection("");
-  }, []);
-
-  useEffect(() => {
-    const observerOptions = {
-      root: null,
-      rootMargin: "-10% 0px -90% 0px",
-      threshold: 0,
-    };
-
-    const handleIntersect = (entries: IntersectionObserverEntry[]) => {
-      const visibleSections = entries.filter((entry) => entry.isIntersecting);
-
-      if (visibleSections.length === 0) {
-        setCurrentSection("");
-      } else {
-        const topSection = visibleSections.reduce((prev, current) => {
-          return prev.boundingClientRect.top > current.boundingClientRect.top
-            ? current
-            : prev;
-        });
-        setCurrentSection(topSection.target.id);
+  const scrollToSection = useCallback(
+    (sectionId: string) => {
+      // Immediately update the current section in the parent component
+      if (onNavClick) {
+        onNavClick(sectionId);
       }
-    };
 
-    const observer = new IntersectionObserver(handleIntersect, observerOptions);
-
-    MenuItems.forEach((item) => {
-      const section = document.getElementById(item.sectionId);
+      const section = document.getElementById(sectionId);
       if (section) {
-        observer.observe(section);
-      }
-    });
+        // Get the current scroll position to determine header state
+        const isCurrentlyScrolled = window.scrollY > 50;
 
-    return () => {
-      MenuItems.forEach((item) => {
-        const section = document.getElementById(item.sectionId);
-        if (section) {
-          observer.unobserve(section);
-        }
-      });
-    };
-  }, [MenuItems]);
+        // Calculate the header height in the target state (after scrolling)
+        // When clicking from unscrolled state, the header will be in compact mode after scrolling
+        const targetHeaderHeight = 64; // Always use compact header height (4rem) for target position
+
+        // Calculate position - use the exact section offset minus the target header height
+        const offsetPosition = section.offsetTop - targetHeaderHeight;
+
+        // Immediately scroll to the calculated position
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "auto", // Immediate positioning
+        });
+
+        // Close mobile menu if open
+        setIsMenuOpen(false);
+      }
+    },
+    [onNavClick]
+  );
 
   const renderNavItems = (isMobile = false) => (
     <>
       {MenuItems.map((item) => (
         <li key={item.sectionId} className={isMobile ? "w-full" : "group"}>
           <button
-            onClick={() => scrollToSection(item.sectionId)}
+            onClick={() => {
+              // Force the current section to be updated immediately
+              if (onNavClick) {
+                onNavClick(item.sectionId);
+              }
+              scrollToSection(item.sectionId);
+            }}
             className={`
               ${
                 currentSection === item.sectionId
@@ -136,16 +127,18 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
               ${isMobile ? "" : "justify-center"}
             `}
           >
-            <span
-              className={`text-xl ${isMobile ? "mr-4" : "mr-2"} ${
-                currentSection === item.sectionId ? "text-gold" : item.color
-              }`}
-            >
-              {React.cloneElement(item.icon, {
-                className: `${
-                  currentSection === item.sectionId ? "text-gold" : item.color
-                }`,
-              })}
+            <span className={`text-xl ${isMobile ? "mr-4" : "mr-2"} text-gold`}>
+              {React.cloneElement(
+                {
+                  Experience: <PiGraduationCapFill />,
+                  Education: <PiGraduationCapFill />,
+                  Skills: <PiLightningFill />,
+                  Projects: <FaBriefcase />,
+                  About: <FaAddressCard />,
+                  Contact: <FaEnvelope />,
+                }[item.label] || <></>,
+                { className: "text-gold" }
+              )}
             </span>
             <span className={isMobile ? "" : "whitespace-nowrap"}>
               {item.label}
@@ -156,20 +149,19 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
     </>
   );
 
+  const currentSectionData = MenuItems.find(
+    (item) => item.sectionId === currentSection
+  );
+
   return (
-    <header
-      className={`w-full fixed transition-all duration-300 z-50 ${
-        isScrolled ? "bg-darkSlate py-4" : "bg-darkSlate pb-4 pt-8"
-      }`}
-    >
+    <header className="w-full fixed top-0 z-50 bg-darkSlate">
       <div
         className={`container mx-auto ${
           isScrolled
-            ? "flex items-center justify-between"
-            : "flex flex-col items-center"
+            ? "flex items-center justify-between py-4 px-4"
+            : "flex flex-col items-center py-8 px-4"
         }`}
       >
-        {/* Non-Scrolled View */}
         {!isScrolled && (
           <>
             <nav className="mb-2 w-full opacity-90 transition-all duration-300 z-50 hidden lg:block">
@@ -185,11 +177,10 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
           </>
         )}
 
-        {/* Scrolled View */}
         {isScrolled && (
-          <div className="flex items-center justify-between w-full px-4">
+          <div className="flex items-center justify-between w-full">
             <h1
-              onClick={scrollToTop}
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               className={`font-primary font-extrabold tracking-wide transition-all duration-300 uppercase text-2xl text-ivoryWhite cursor-pointer`}
             >
               {name}
@@ -202,7 +193,6 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
           </div>
         )}
 
-        {/* Hamburger Menu Button for Mobile */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className={`text-xl pt-0 px-4 focus:outline-none flex items-center justify-center transition-all duration-300 lg:hidden ${
@@ -217,16 +207,37 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
         </button>
       </div>
 
-      {/* Mobile Menu */}
-      <nav
-        className={`bg-darkSlate shadow-md w-full transition-all duration-300 ease-in-out z-50 lg:hidden overflow-hidden ${
-          isMenuOpen ? "max-h-screen" : "max-h-0"
-        }`}
-      >
-        <ul className="w-full max-w-7xl list-none p-0">
-          {renderNavItems(true)}
-        </ul>
-      </nav>
+      {/* Mobile menu */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 bg-darkSlate bg-opacity-95 z-50 lg:hidden">
+          <div className="flex justify-end p-4">
+            <button
+              onClick={() => setIsMenuOpen(false)}
+              className="text-xl text-ivoryWhite"
+              aria-label="Close menu"
+            >
+              <FaXmark />
+            </button>
+          </div>
+          <nav className="flex flex-col items-center justify-center h-full">
+            <ul className="flex flex-col items-start w-full">
+              {renderNavItems(true)}
+            </ul>
+          </nav>
+        </div>
+      )}
+
+      {/* Sticky header - use absolute positioning when hidden to remove from document flow */}
+      {showStickyHeader && currentSectionData && currentSection !== "home" ? (
+        <div className="sticky top-[4rem] z-40 bg-darkSlate transition-all duration-200">
+          <div className="container mx-auto">
+            <SectionHeader
+              name={currentSectionData.label}
+              bandColor={currentSectionData.bandColor}
+            />
+          </div>
+        </div>
+      ) : null}
     </header>
   );
 };
