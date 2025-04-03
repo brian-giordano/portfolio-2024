@@ -8,12 +8,12 @@ interface Section {
 }
 
 const sections: Section[] = [
-  { id: "experience", name: "Experience", bandColor: "mysticTeal" },
-  { id: "education", name: "Education", bandColor: "mysticTeal" },
+  { id: "experience", name: "Experience", bandColor: "gold" },
+  { id: "education", name: "Education", bandColor: "gold" },
   { id: "skills", name: "Skills", bandColor: "gold" },
-  { id: "projects", name: "Projects", bandColor: "lightCrimson" },
-  { id: "about", name: "About", bandColor: "mysticTeal" },
-  { id: "contact", name: "Contact", bandColor: "lightCrimson" },
+  { id: "projects", name: "Projects", bandColor: "gold" },
+  { id: "about", name: "About", bandColor: "gold" },
+  { id: "contact", name: "Contact", bandColor: "gold" },
 ];
 
 interface StickyHeaderProps {

@@ -7,6 +7,7 @@ import {
   FaXmark,
 } from "react-icons/fa6";
 import { PiLightningFill, PiGraduationCapFill } from "react-icons/pi";
+import { motion } from "framer-motion";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
 import SectionHeader from "@/components/ui/SectionHeader";
 
@@ -23,6 +24,20 @@ interface MenuItem {
   bandColor: string;
 }
 
+const headerVariants = {
+  hidden: { y: -100, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 15,
+      delay: 0.1,
+    },
+  },
+};
+
 const Header: React.FC<HeaderProps> = ({
   name,
   currentSection,
@@ -37,12 +52,12 @@ const Header: React.FC<HeaderProps> = ({
       {
         label: "Experience",
         sectionId: "experience",
-        bandColor: "mysticTeal",
+        bandColor: "gold",
       },
       {
         label: "Education",
         sectionId: "education",
-        bandColor: "mysticTeal",
+        bandColor: "gold",
       },
       {
         label: "Skills",
@@ -52,17 +67,17 @@ const Header: React.FC<HeaderProps> = ({
       {
         label: "Projects",
         sectionId: "projects",
-        bandColor: "lightCrimson",
+        bandColor: "gold",
       },
       {
         label: "About",
         sectionId: "about",
-        bandColor: "mysticTeal",
+        bandColor: "gold",
       },
       {
         label: "Contact",
         sectionId: "contact",
-        bandColor: "lightCrimson",
+        bandColor: "gold",
       },
     ],
     []
@@ -78,7 +93,7 @@ const Header: React.FC<HeaderProps> = ({
       const section = document.getElementById(sectionId);
       if (section) {
         // Get the current scroll position to determine header state
-        const isCurrentlyScrolled = window.scrollY > 50;
+        // const isCurrentlyScrolled = window.scrollY > 50;
 
         // Calculate the header height in the target state (after scrolling)
         // When clicking from unscrolled state, the header will be in compact mode after scrolling
@@ -104,8 +119,10 @@ const Header: React.FC<HeaderProps> = ({
     <>
       {MenuItems.map((item) => (
         <li key={item.sectionId} className={isMobile ? "w-full" : "group"}>
-          <button
-            onClick={() => {
+          <a
+            href={`#${item.sectionId}`}
+            onClick={(e) => {
+              e.preventDefault();
               // Force the current section to be updated immediately
               if (onNavClick) {
                 onNavClick(item.sectionId);
@@ -125,6 +142,7 @@ const Header: React.FC<HeaderProps> = ({
               }
               hover:text-gold transition-all duration-200 ease-in-out flex items-center
               ${isMobile ? "" : "justify-center"}
+              cursor-pointer
             `}
           >
             <span className={`text-xl ${isMobile ? "mr-4" : "mr-2"} text-gold`}>
@@ -143,7 +161,7 @@ const Header: React.FC<HeaderProps> = ({
             <span className={isMobile ? "" : "whitespace-nowrap"}>
               {item.label}
             </span>
-          </button>
+          </a>
         </li>
       ))}
     </>
@@ -154,7 +172,13 @@ const Header: React.FC<HeaderProps> = ({
   );
 
   return (
-    <header className="w-full fixed top-0 z-50 bg-darkSlate">
+    // <header className="w-full fixed top-0 z-50 bg-darkSlate">
+    <motion.header
+      className="w-full fixed top-0 z-50 bg-darkSlate"
+      initial="hidden"
+      animate="visible"
+      variants={headerVariants}
+    >
       <div
         className={`container mx-auto ${
           isScrolled
@@ -170,7 +194,7 @@ const Header: React.FC<HeaderProps> = ({
               </ul>
             </nav>
             <h1
-              className={`font-primary font-extrabold tracking-wide transition-all duration-300 uppercase text-3xl text-ivoryWhite lg:text-6xl`}
+              className={`font-primary font-extrabold tracking-wide transition-all duration-300 uppercase text-3xl text-ivoryWhite z-20 lg:text-6xl`}
             >
               {name}
             </h1>
@@ -238,7 +262,7 @@ const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
       ) : null}
-    </header>
+    </motion.header>
   );
 };
 

@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useEffect, useState, useRef, useCallback } from "react";
+import { motion } from "framer-motion";
 import Header from "@/components/ui/Header";
-import SwipeUpOverlay from "@/components/ui/SwipeUpOverlay";
+// import SwipeUpOverlay from "@/components/ui/SwipeUpOverlay";
 import ExperienceSection from "@/components/ExperienceSection";
-import { PiCaretDoubleUpBold } from "react-icons/pi";
+// import { PiCaretDoubleUpBold } from "react-icons/pi";
 import EducationSection from "@/components/EducationSection";
 import SkillsSection from "@/components/SkillsSection";
 import ProjectSection from "@/components/ProjectsSection";
@@ -14,10 +15,51 @@ import PotionSvg from "@/components/PotionSvg";
 import FollowMeSection from "@/components/FollowMeSection";
 import Footer from "@/components/ui/Footer";
 import SectionHeader from "@/components/ui/SectionHeader";
+import ScrollIndicator from "@/components/ui/ScrollIndicator";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      when: "beforeChildren",
+      staggerChildren: 0.3,
+      delayChildren: 0.5,
+      duration: 0.5,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.7, ease: "easeOut" },
+  },
+};
+
+const svgVariants = {
+  hidden: { scale: 0.8, opacity: 0 },
+  visible: {
+    scale: 1,
+    opacity: 1,
+    transition: { duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] },
+  },
+};
+
+// const overlayVariants = {
+//   hidden: { y: 30, opacity: 0 },
+//   visible: {
+//     y: 0,
+//     opacity: 1,
+//     transition: { duration: 0.5, delay: 1.5, ease: "easeOut" },
+//   },
+// };
 
 const Home: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<string>("");
-  const [isPageLoaded, setIsPageLoaded] = useState(false);
+  // const [isPageLoaded, setIsPageLoaded] = useState(false);
   const [showStickyHeader, setShowStickyHeader] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
   const sectionHeaderRefs = useRef<{ [key: string]: HTMLDivElement | null }>(
@@ -151,7 +193,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     // Prevent flash of scrolled state by setting the initial state after the page loads
-    setIsPageLoaded(true);
+    // setIsPageLoaded(true);
 
     // Initial check for the current section
     handleScroll();
@@ -185,7 +227,41 @@ const Home: React.FC = () => {
 
       <main className="container mx-auto pt-20 lg:pt-24">
         {/* Full-height introductory section */}
-        <section
+        <motion.section
+          ref={(el) => {
+            introSectionRef.current = el;
+          }}
+          className="flex flex-col items-center bg-gray-100 p-4 lg:py-20 min-h-[85vh] relative"
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+        >
+          {/* Digital Alchemist */}
+          <motion.h2
+            className="text-xl font-subheader font-light text-silverMist mt-12 mb-8 lg:text-2xl z-30 relative"
+            variants={itemVariants}
+          >
+            Digital Alchemist
+          </motion.h2>
+
+          {/* SVG container */}
+          <motion.div
+            className="w-full flex justify-center items-center z-10"
+            variants={svgVariants}
+          >
+            <PotionSvg />
+          </motion.div>
+
+          {/* Scroll indicator - fixed at bottom */}
+          <div className="fixed bottom-8 left-0 right-0 flex justify-center z-30">
+            <ScrollIndicator
+              targetSectionId="experience"
+              onNavClick={handleNavClick}
+            />
+          </div>
+        </motion.section>
+
+        {/* <section
           ref={(el) => {
             introSectionRef.current = el;
           }}
@@ -202,7 +278,7 @@ const Home: React.FC = () => {
               icon={PiCaretDoubleUpBold}
             />
           </div>
-        </section>
+        </section> */}
 
         {/* Experience Section */}
         <section
@@ -215,7 +291,7 @@ const Home: React.FC = () => {
               sectionHeaderRefs.current["experience"] = el;
             }}
           >
-            <SectionHeader name="Experience" bandColor="mysticTeal" />
+            <SectionHeader name="Experience" bandColor="gold" />
           </div>
           <ExperienceSection />
         </section>
@@ -231,7 +307,7 @@ const Home: React.FC = () => {
               sectionHeaderRefs.current["education"] = el;
             }}
           >
-            <SectionHeader name="Education" bandColor="mysticTeal" />
+            <SectionHeader name="Education" bandColor="gold" />
           </div>
           <EducationSection />
         </section>
@@ -263,7 +339,7 @@ const Home: React.FC = () => {
               sectionHeaderRefs.current["projects"] = el;
             }}
           >
-            <SectionHeader name="Projects" bandColor="lightCrimson" />
+            <SectionHeader name="Projects" bandColor="gold" />
           </div>
           <ProjectSection />
         </section>
@@ -279,7 +355,7 @@ const Home: React.FC = () => {
               sectionHeaderRefs.current["about"] = el;
             }}
           >
-            <SectionHeader name="About" bandColor="mysticTeal" />
+            <SectionHeader name="About" bandColor="gold" />
           </div>
           <AboutSection />
         </section>
@@ -295,7 +371,7 @@ const Home: React.FC = () => {
               sectionHeaderRefs.current["contact"] = el;
             }}
           >
-            <SectionHeader name="Contact" bandColor="lightCrimson" />
+            <SectionHeader name="Contact" bandColor="gold" />
           </div>
           <div className="w-full flex flex-col lg:flex-row">
             <div className="w-full lg:w-1/2 lg:mb-0">

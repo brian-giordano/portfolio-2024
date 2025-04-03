@@ -1,6 +1,6 @@
 // components/AboutSection.tsx
 import React from "react";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import AboutImage from "../assets/images/about-me-illustration-2.png"; // Import your image
 
 const AboutSection: React.FC = () => {

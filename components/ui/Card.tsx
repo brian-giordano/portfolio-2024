@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Image from "next/image";
-import { StaticImageData } from "next/image";
+import Image from "next/legacy/image";
+import { StaticImageData } from "next/legacy/image";
 import Pill from "./Pill";
 import { FaChevronUp, FaChevronDown, FaExternalLinkAlt } from "react-icons/fa"; // Import external link icon
 
@@ -96,7 +96,6 @@ const Card: React.FC<CardProps> = ({
       <div className="text-ivoryWhite mb-4 flex-grow font-normal text-sm">
         {description} {/* Render JSX directly */}
       </div>
-
       {stackUsed.length > 0 && (
         <div className="flex flex-wrap mb-4">
           {stackUsed.map((tech, index) => (
@@ -104,7 +103,6 @@ const Card: React.FC<CardProps> = ({
           ))}
         </div>
       )}
-
       {moreDetails && (
         <div>
           <button
@@ -113,9 +111,9 @@ const Card: React.FC<CardProps> = ({
           >
             {isExpanded ? "Less Details" : "More Details"}
             {isExpanded ? (
-              <FaChevronUp className="ml-2" /> // Chevron up when expanded
+              (<FaChevronUp className="ml-2" />) // Chevron up when expanded
             ) : (
-              <FaChevronDown className="ml-2" /> // Chevron down when collapsed
+              (<FaChevronDown className="ml-2" />) // Chevron down when collapsed
             )}
           </button>
           {isExpanded && (
