@@ -174,7 +174,7 @@ const Header: React.FC<HeaderProps> = ({
   return (
     // <header className="w-full fixed top-0 z-50 bg-darkSlate">
     <motion.header
-      className="w-full fixed top-0 z-50 bg-darkSlate"
+      className="w-full fixed top-0 bg-darkSlate z-40"
       initial="hidden"
       animate="visible"
       variants={headerVariants}
@@ -194,7 +194,7 @@ const Header: React.FC<HeaderProps> = ({
               </ul>
             </nav>
             <h1
-              className={`font-primary font-extrabold tracking-wide transition-all duration-300 uppercase text-3xl text-ivoryWhite z-20 lg:text-6xl`}
+              className={`font-primary font-extrabold tracking-wide transition-all duration-300 uppercase text-3xl text-ivoryWhite z-20 cursor-pointer lg:text-6xl`}
             >
               {name}
             </h1>
@@ -217,18 +217,18 @@ const Header: React.FC<HeaderProps> = ({
           </div>
         )}
 
-        <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className={`text-xl pt-0 px-4 focus:outline-none flex items-center justify-center transition-all duration-300 lg:hidden ${
-            isScrolled ? "opacity-100" : "opacity-0"
-          }`}
-          aria-label="Toggle menu"
-          aria-expanded={isMenuOpen}
-        >
-          <span className="text-ivoryWhite">
-            {isMenuOpen ? <FaXmark /> : <FaBars />}
-          </span>
-        </button>
+        {isScrolled && (
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="text-xl pt-0 px-4 focus:outline-none flex items-center justify-center transition-all duration-300 lg:hidden"
+            aria-label="Toggle menu"
+            aria-expanded={isMenuOpen}
+          >
+            <span className="text-ivoryWhite">
+              {isMenuOpen ? <FaXmark /> : <FaBars />}
+            </span>
+          </button>
+        )}
       </div>
 
       {/* Mobile menu */}
@@ -243,7 +243,7 @@ const Header: React.FC<HeaderProps> = ({
               <FaXmark />
             </button>
           </div>
-          <nav className="flex flex-col items-center justify-center h-full">
+          <nav className="flex flex-col items-center justify-start h-[calc(100%-4rem)] pt-8">
             <ul className="flex flex-col items-start w-full">
               {renderNavItems(true)}
             </ul>

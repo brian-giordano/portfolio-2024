@@ -69,11 +69,12 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = ({
     setIsVisible(false);
   };
 
+  // Remove the fixed positioning from the ScrollIndicator component
   return (
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          className="cursor-pointer flex flex-col items-center"
+          className="cursor-pointer flex flex-col items-center py-4" // Simplified padding
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.8 }}
           exit={{ opacity: 0, y: 20, transition: { duration: 0.3 } }}
@@ -97,6 +98,16 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = ({
             }
           }}
         >
+          {/* Text label ABOVE the icon for better visibility */}
+          <motion.span
+            className="text-gold text-xs md:text-sm mb-2 font-medium"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.9 }}
+            transition={{ delay: delay + 0.3, duration: 0.5 }}
+          >
+            Explore
+          </motion.span>
+
           {/* Animated icon with glow effect */}
           <motion.div
             animate={{ y: [0, 8, 0] }}
@@ -113,16 +124,6 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = ({
               className={`${color} text-2xl md:text-3xl lg:text-4xl relative z-10`}
             />
           </motion.div>
-
-          {/* Text label */}
-          <motion.span
-            className="text-silverMist text-xs md:text-sm mt-2 font-light"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.7 }}
-            transition={{ delay: delay + 0.3, duration: 0.5 }}
-          >
-            Explore
-          </motion.span>
         </motion.div>
       )}
     </AnimatePresence>

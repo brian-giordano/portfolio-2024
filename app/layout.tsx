@@ -1,7 +1,6 @@
 import { Poppins, Oswald, Montserrat } from "next/font/google";
 import "./globals.css";
 import "../components/ui/Button.module.css";
-import Script from "next/script";
 
 const poppins = Poppins({
   subsets: ["latin"],

@@ -1,31 +1,22 @@
+// Updated CardsList.tsx with modern grid layout
 import React from "react";
 import Card, { CardProps } from "./Card";
+import { motion } from "framer-motion";
 
 const CardsList: React.FC<{ cards: CardProps[] }> = ({ cards }) => {
   return (
-    <div className="flex flex-wrap gap-6">
-      {" "}
-      {/* Changed to flexbox with gap */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {cards.map((card, index) => (
-        <div key={index} className="w-full lg:w-[calc(50%-1.5rem)]">
-          {" "}
-          {/* Each card takes half width on large screens */}
-          <Card
-            imageUrl={card.imageUrl || card.logoUrl} // Handle both project and job images
-            title={card.title}
-            alt={card.alt}
-            orgName={card.orgName}
-            orgLink={card.orgLink}
-            startMonth={card.startMonth}
-            startYear={card.startYear}
-            endMonth={card.endMonth}
-            endYear={card.endYear}
-            description={card.description}
-            stackUsed={card.stackUsed}
-            moreDetails={card.moreDetails}
-            sizes={card.sizes}
-          />
-        </div>
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: index * 0.1 }}
+          viewport={{ once: true, margin: "-50px" }}
+          className="h-full"
+        >
+          <Card {...card} />
+        </motion.div>
       ))}
     </div>
   );

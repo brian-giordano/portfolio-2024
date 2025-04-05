@@ -62,6 +62,8 @@ const Home: React.FC = () => {
   // const [isPageLoaded, setIsPageLoaded] = useState(false);
   const [showStickyHeader, setShowStickyHeader] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [backgroundGlowColor, setBackgroundGlowColor] = useState("mysticTeal");
+
   const sectionHeaderRefs = useRef<{ [key: string]: HTMLDivElement | null }>(
     {}
   );
@@ -192,6 +194,24 @@ const Home: React.FC = () => {
   }, [currentSection, isNavigating, updateStickyHeaderVisibility]);
 
   useEffect(() => {
+    const colors = [
+      "mysticTeal",
+      "gold",
+      "lightCrimson",
+      "lavender",
+      "lightSkyBlue",
+    ];
+    let colorIndex = 0;
+
+    const interval = setInterval(() => {
+      colorIndex = (colorIndex + 1) % colors.length;
+      setBackgroundGlowColor(colors[colorIndex]);
+    }, 5000); // Change color every 5 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
     // Prevent flash of scrolled state by setting the initial state after the page loads
     // setIsPageLoaded(true);
 
@@ -227,40 +247,49 @@ const Home: React.FC = () => {
 
       <main className="container mx-auto pt-20 lg:pt-24">
         {/* Full-height introductory section */}
+        {/* Full-height introductory section */}
+        {/* Full-height introductory section */}
+
         <motion.section
           ref={(el) => {
             introSectionRef.current = el;
           }}
-          className="flex flex-col items-center bg-gray-100 p-4 lg:py-20 min-h-[85vh] relative"
+          className="flex flex-col items-center justify-between bg-gray-100 p-4 lg:py-20 min-h-[85vh] relative"
           initial="hidden"
           animate="visible"
           variants={containerVariants}
         >
+          <div
+            className="absolute inset-0 opacity-15 transition-all duration-3000 ease-in-out pulse-animation"
+            style={{
+              background: `radial-gradient(circle at 50% 50%, var(--color-${backgroundGlowColor}) 0%, transparent 70%)`,
+              filter: "blur(60px)",
+            }}
+          />
           {/* Digital Alchemist */}
           <motion.h2
-            className="text-xl font-subheader font-light text-silverMist mt-12 mb-8 lg:text-2xl z-30 relative"
+            className="text-xl font-subheader font-light text-silverMist mt-2 mb-8 md:mt-8 md:mb-4 lg:text-2xl z-50 relative"
             variants={itemVariants}
           >
             Digital Alchemist
           </motion.h2>
 
-          {/* SVG container */}
+          {/* SVG container with improved responsive sizing */}
           <motion.div
-            className="w-full flex justify-center items-center z-10"
+            className="w-full flex-grow flex justify-center items-center z-10"
             variants={svgVariants}
           >
             <PotionSvg />
           </motion.div>
 
-          {/* Scroll indicator - fixed at bottom */}
-          <div className="fixed bottom-8 left-0 right-0 flex justify-center z-30">
+          {/* Scroll indicator with better positioning */}
+          <div className="w-full flex justify-center mt-4 md:mt-8 mb-4 md:mb-8 z-20">
             <ScrollIndicator
               targetSectionId="experience"
               onNavClick={handleNavClick}
             />
           </div>
         </motion.section>
-
         {/* <section
           ref={(el) => {
             introSectionRef.current = el;
@@ -279,7 +308,6 @@ const Home: React.FC = () => {
             />
           </div>
         </section> */}
-
         {/* Experience Section */}
         <section
           id="experience"
@@ -295,7 +323,6 @@ const Home: React.FC = () => {
           </div>
           <ExperienceSection />
         </section>
-
         {/* Education Section */}
         <section
           id="education"
@@ -311,7 +338,6 @@ const Home: React.FC = () => {
           </div>
           <EducationSection />
         </section>
-
         {/* Skills Section */}
         <section
           id="skills"
@@ -327,7 +353,6 @@ const Home: React.FC = () => {
           </div>
           <SkillsSection />
         </section>
-
         {/* Projects Section */}
         <section
           id="projects"
@@ -343,7 +368,6 @@ const Home: React.FC = () => {
           </div>
           <ProjectSection />
         </section>
-
         {/* About Section */}
         <section
           id="about"
@@ -359,7 +383,6 @@ const Home: React.FC = () => {
           </div>
           <AboutSection />
         </section>
-
         {/* Contact Section */}
         <section
           id="contact"
@@ -382,7 +405,6 @@ const Home: React.FC = () => {
             </div>
           </div>
         </section>
-
         {/* Footer */}
         <Footer />
       </main>
