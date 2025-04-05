@@ -3,9 +3,7 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import Header from "@/components/ui/Header";
-// import SwipeUpOverlay from "@/components/ui/SwipeUpOverlay";
 import ExperienceSection from "@/components/ExperienceSection";
-// import { PiCaretDoubleUpBold } from "react-icons/pi";
 import EducationSection from "@/components/EducationSection";
 import SkillsSection from "@/components/SkillsSection";
 import ProjectSection from "@/components/ProjectsSection";
@@ -49,15 +47,6 @@ const svgVariants = {
   },
 };
 
-// const overlayVariants = {
-//   hidden: { y: 30, opacity: 0 },
-//   visible: {
-//     y: 0,
-//     opacity: 1,
-//     transition: { duration: 0.5, delay: 1.5, ease: "easeOut" },
-//   },
-// };
-
 const Home: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<string>("");
   // const [isPageLoaded, setIsPageLoaded] = useState(false);
@@ -73,17 +62,6 @@ const Home: React.FC = () => {
   const introSectionRef = useRef<HTMLElement | null>(null);
   // const lastScrollY = useRef(0);
   const stickyHeaderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Debounced function to update sticky header visibility
-  // const updateStickyHeaderVisibility = useCallback((shouldShow: boolean) => {
-  //   // Clear any existing timeout
-  //   if (stickyHeaderTimeoutRef.current) {
-  //     clearTimeout(stickyHeaderTimeoutRef.current);
-  //   }
-
-  //   // Set a timeout to update the sticky header visibility
-  //   setShowStickyHeader(shouldShow);
-  // }, []);
 
   // Function to handle navigation clicks from the Header component
   const handleNavClick = (sectionId: string) => {
@@ -122,39 +100,6 @@ const Home: React.FC = () => {
       }, 50);
     }
   };
-
-  // const handleNavClick = (sectionId: string) => {
-  //   // Set navigating state to true to prevent scroll handling during navigation
-  //   setIsNavigating(true);
-
-  //   // Immediately update the current section
-  //   setCurrentSection(sectionId);
-
-  //   // Show the sticky header immediately
-  //   setShowStickyHeader(true);
-
-  //   const section = document.getElementById(sectionId);
-  //   if (section) {
-  //     // Get the main header height
-  //     const header = document.querySelector("header") as HTMLElement;
-  //     const headerHeight = header ? header.offsetHeight : 64;
-
-  //     // Calculate position to scroll to
-  //     // This is the position where the sticky header would be shown
-  //     const offsetPosition = section.offsetTop - headerHeight;
-
-  //     // Scroll immediately
-  //     window.scrollTo({
-  //       top: offsetPosition,
-  //       behavior: "auto",
-  //     });
-
-  //     // Reset navigating state after scrolling completes
-  //     setTimeout(() => {
-  //       setIsNavigating(false);
-  //     }, 50);
-  //   }
-  // };
 
   const handleScroll = useCallback(() => {
     if (isNavigating) return;
@@ -328,31 +273,14 @@ const Home: React.FC = () => {
           </div>
 
           {/* Bottom row - minimal height */}
-          <div className="pb-4 flex justify-center">
+          <div className="pb-4 flex justify-center lg:pb-12">
             <ScrollIndicator
               targetSectionId="experience"
               onNavClick={handleNavClick}
             />
           </div>
         </motion.section>
-        {/* <section
-          ref={(el) => {
-            introSectionRef.current = el;
-          }}
-          className="flex flex-col items-center justify-center bg-gray-100 p-4 lg:py-20 min-h-[60vh]"
-        >
-          <h2 className="text-xl font-subheader font-light text-silverMist mt-8 lg:text-2xl">
-            Digital Alchemist
-          </h2>
-          <PotionSvg />
-          <div className="w-full flex justify-center">
-            <SwipeUpOverlay
-              textLeft="Explore"
-              textRight="Further"
-              icon={PiCaretDoubleUpBold}
-            />
-          </div>
-        </section> */}
+
         {/* Experience Section */}
         <section
           id="experience"
