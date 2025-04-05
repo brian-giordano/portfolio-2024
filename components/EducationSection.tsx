@@ -44,8 +44,7 @@ const EducationSection: React.FC = () => {
     return <p>{description}</p>;
   };
 
-  const cardsData = programs.map((program, index) => ({
-    key: index,
+  const cardsData = programs.map((program) => ({
     imageUrl: program.logoUrl,
     alt: program.alt,
     title: program.degree,

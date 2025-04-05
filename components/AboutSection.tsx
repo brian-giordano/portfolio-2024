@@ -69,6 +69,7 @@ const AboutSection: React.FC = () => {
             layout="fill" // Use fill to cover the parent div
             className="absolute top-0 left-0 w-full h-full object-cover rounded" // Cover the parent div
             sizes="(max-width: 768px) 100vw, (min-width: 768px) 50vw"
+            priority={true}
           />
         </div>
       </div>

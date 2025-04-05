@@ -7,13 +7,8 @@ const CardsList: React.FC<{ cards: CardProps[] }> = ({ cards }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {cards.map((card, index) => {
-        const cardProps = { ...card };
-
-        // Remove the key if it exists (TypeScript safe approach)
-        if ("key" in cardProps) {
-          delete (cardProps as any).key;
-        }
-
+        // Instead of trying to manipulate the props, just pass them directly
+        // but add a key to the Card component itself
         return (
           <motion.div
             key={index}
@@ -23,7 +18,7 @@ const CardsList: React.FC<{ cards: CardProps[] }> = ({ cards }) => {
             viewport={{ once: true, margin: "-50px" }}
             className="h-full"
           >
-            <Card {...cardProps} />
+            <Card {...card} />
           </motion.div>
         );
       })}
