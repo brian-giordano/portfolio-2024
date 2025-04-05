@@ -126,3 +126,50 @@ ol {
 .pulse-animation {
   animation: pulse 8s ease-in-out infinite;
 }
+
+.text-shadow-lg {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 4px 8px rgba(0, 0, 0, 0.6);
+}
+
+.nav-backdrop a {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  background-color: rgba(20, 20, 30, 0.4);
+  backdrop-filter: blur(3px);
+}
+
+/* Prevent transitions on sticky header for immediate appearance */
+.sticky-header-no-transition {
+  transition: none !important;
+}
+
+/* In your globals.css */
+.section-header-container {
+  position: relative;
+  z-index: 30; /* Lower than header but higher than regular content */
+  background-color: var(--background); /* Match your site background */
+}
+
+.section-header-container {
+  height: 48px; /* Set to the exact height of your section headers */
+  overflow: hidden;
+  transition: opacity 0.1s ease-out, visibility 0.1s ease-out;
+}
+
+/* This class will be applied by JavaScript during navigation */
+.hidden-section-header {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Add to globals.css */
+.digital-alchemist-title {
+  margin-top: 8px !important;
+}
+
+/* Add to globals.css */
+.intro-section h2 {
+  margin-top: 8px !important;
+  padding-top: 0 !important;
+}

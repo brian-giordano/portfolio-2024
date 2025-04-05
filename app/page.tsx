@@ -16,6 +16,7 @@ import FollowMeSection from "@/components/FollowMeSection";
 import Footer from "@/components/ui/Footer";
 import SectionHeader from "@/components/ui/SectionHeader";
 import ScrollIndicator from "@/components/ui/ScrollIndicator";
+import { throttle } from "lodash";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -63,135 +64,146 @@ const Home: React.FC = () => {
   const [showStickyHeader, setShowStickyHeader] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
   const [backgroundGlowColor, setBackgroundGlowColor] = useState("mysticTeal");
+  const [isProgrammaticNavigation, setIsProgrammaticNavigation] =
+    useState(false);
 
   const sectionHeaderRefs = useRef<{ [key: string]: HTMLDivElement | null }>(
     {}
   );
   const introSectionRef = useRef<HTMLElement | null>(null);
-  const lastScrollY = useRef(0);
+  // const lastScrollY = useRef(0);
   const stickyHeaderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Debounced function to update sticky header visibility
-  const updateStickyHeaderVisibility = useCallback((shouldShow: boolean) => {
-    // Clear any existing timeout
-    if (stickyHeaderTimeoutRef.current) {
-      clearTimeout(stickyHeaderTimeoutRef.current);
-    }
+  // const updateStickyHeaderVisibility = useCallback((shouldShow: boolean) => {
+  //   // Clear any existing timeout
+  //   if (stickyHeaderTimeoutRef.current) {
+  //     clearTimeout(stickyHeaderTimeoutRef.current);
+  //   }
 
-    // Set a timeout to update the sticky header visibility
-    stickyHeaderTimeoutRef.current = setTimeout(() => {
-      setShowStickyHeader(shouldShow);
-    }, 50); // Small delay to prevent flickering
-  }, []);
+  //   // Set a timeout to update the sticky header visibility
+  //   setShowStickyHeader(shouldShow);
+  // }, []);
 
   // Function to handle navigation clicks from the Header component
   const handleNavClick = (sectionId: string) => {
-    // Immediately update the current section when a nav link is clicked
+    // Set both navigating flags
+    setIsNavigating(true);
+    setIsProgrammaticNavigation(true);
+
+    // Immediately update the current section
     setCurrentSection(sectionId);
 
-    // Set navigating state to true to hide section headers temporarily
-    setIsNavigating(true);
+    // Always show the sticky header during navigation
+    setShowStickyHeader(true);
 
-    // Hide the sticky header during navigation
-    setShowStickyHeader(false);
+    const section = document.getElementById(sectionId);
+    if (section) {
+      // Get the main header height
+      const header = document.querySelector("header") as HTMLElement;
+      const headerHeight = header ? header.offsetHeight : 64;
 
-    // Reset navigating state immediately after the scroll completes
-    // Since we're using behavior: "auto", this should be almost immediate
-    setTimeout(() => {
-      setIsNavigating(false);
-      // Re-evaluate if the sticky header should be shown
-      handleScroll();
-    }, 50); // Very short timeout since scrolling is now immediate
+      // Calculate position - add a small offset to ensure content is visible
+      const offsetPosition = section.offsetTop - headerHeight - 10;
+
+      // Scroll immediately
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "auto",
+      });
+
+      // Reset navigation states after scrolling completes
+      setTimeout(() => {
+        setIsNavigating(false);
+        // Keep isProgrammaticNavigation true for a bit longer
+        setTimeout(() => {
+          setIsProgrammaticNavigation(false);
+        }, 300); // Keep it true for 300ms after navigation completes
+      }, 50);
+    }
   };
 
+  // const handleNavClick = (sectionId: string) => {
+  //   // Set navigating state to true to prevent scroll handling during navigation
+  //   setIsNavigating(true);
+
+  //   // Immediately update the current section
+  //   setCurrentSection(sectionId);
+
+  //   // Show the sticky header immediately
+  //   setShowStickyHeader(true);
+
+  //   const section = document.getElementById(sectionId);
+  //   if (section) {
+  //     // Get the main header height
+  //     const header = document.querySelector("header") as HTMLElement;
+  //     const headerHeight = header ? header.offsetHeight : 64;
+
+  //     // Calculate position to scroll to
+  //     // This is the position where the sticky header would be shown
+  //     const offsetPosition = section.offsetTop - headerHeight;
+
+  //     // Scroll immediately
+  //     window.scrollTo({
+  //       top: offsetPosition,
+  //       behavior: "auto",
+  //     });
+
+  //     // Reset navigating state after scrolling completes
+  //     setTimeout(() => {
+  //       setIsNavigating(false);
+  //     }, 50);
+  //   }
+  // };
+
   const handleScroll = useCallback(() => {
-    // Skip scroll handling during navigation to prevent flickering
     if (isNavigating) return;
 
-    // Get the current scroll position
-    const currentScrollY = window.scrollY;
-
-    // Determine scroll direction
-    const isScrollingDown = currentScrollY > lastScrollY.current;
-    lastScrollY.current = currentScrollY;
-
-    // Get the height of the main header
+    const scrollY = window.scrollY;
     const header = document.querySelector("header") as HTMLElement;
-    const headerHeight = header ? header.offsetHeight : 0;
+    const headerHeight = header ? header.offsetHeight : 64;
 
-    // Calculate the position where we want to detect section changes
-    const detectionPosition = currentScrollY + headerHeight + 50;
+    // Check if we're in the intro section
+    if (scrollY < 300) {
+      setCurrentSection("");
+      setShowStickyHeader(false);
+      return;
+    }
 
-    // Check if we're at the top of the page or in the intro section
-    const introSection = introSectionRef.current;
-    if (introSection) {
-      const introBottom = introSection.offsetTop + introSection.offsetHeight;
-      if (currentScrollY < introBottom - headerHeight) {
-        setCurrentSection("");
-        updateStickyHeaderVisibility(false);
+    // Find which section we're currently viewing
+    const sections = document.querySelectorAll("section[id]");
+
+    for (const section of sections) {
+      const sectionEl = section as HTMLElement;
+      const sectionTop = sectionEl.offsetTop - headerHeight;
+      const sectionBottom = sectionTop + sectionEl.offsetHeight;
+
+      if (scrollY >= sectionTop && scrollY < sectionBottom) {
+        if (sectionEl.id !== currentSection) {
+          setCurrentSection(sectionEl.id);
+        }
+
+        // Find the section header
+        const sectionHeader = sectionEl.querySelector(
+          ".section-header-container"
+        ) as HTMLElement;
+
+        if (sectionHeader) {
+          // Calculate the position of the section header relative to the viewport
+          const sectionHeaderRect = sectionHeader.getBoundingClientRect();
+
+          // Show sticky header when the section header is about to go behind the main header
+          // or is already behind it
+          setShowStickyHeader(sectionHeaderRect.top <= headerHeight);
+        }
+
         return;
       }
     }
 
-    const sections = document.querySelectorAll("section[id]");
-    let foundCurrentSection = false;
-
-    // Find the section that's currently at or just below the detection position
-    for (let i = 0; i < sections.length; i++) {
-      const section = sections[i] as HTMLElement;
-      const sectionTop = section.offsetTop;
-      const sectionBottom = sectionTop + section.offsetHeight;
-
-      // Use a more precise detection method
-      if (
-        (detectionPosition >= sectionTop &&
-          detectionPosition < sectionBottom) ||
-        (i < sections.length - 1 &&
-          detectionPosition >= sectionBottom &&
-          detectionPosition < (sections[i + 1] as HTMLElement).offsetTop)
-      ) {
-        if (section.id && currentSection !== section.id) {
-          setCurrentSection(section.id);
-        }
-
-        foundCurrentSection = true;
-
-        // Check if the section's header is still visible in the viewport
-        const sectionHeader = sectionHeaderRefs.current[section.id];
-        if (sectionHeader) {
-          const sectionHeaderRect = sectionHeader.getBoundingClientRect();
-
-          // Add a buffer zone to prevent flickering
-          const bufferZone = 10; // pixels
-
-          // Only show the sticky header if the section's own header is completely out of view
-          // with a buffer zone to prevent flickering
-          const isHeaderOutOfView =
-            sectionHeaderRect.bottom <= headerHeight + bufferZone;
-
-          // Add hysteresis - require more movement to toggle state based on scroll direction
-          if (isScrollingDown) {
-            // When scrolling down, require header to be fully out of view
-            if (isHeaderOutOfView) {
-              updateStickyHeaderVisibility(true);
-            }
-          } else {
-            // When scrolling up, require header to be more visible before hiding sticky header
-            if (sectionHeaderRect.top > headerHeight - bufferZone) {
-              updateStickyHeaderVisibility(false);
-            }
-          }
-        }
-
-        break;
-      }
-    }
-
-    // If no section was found, hide the sticky header
-    if (!foundCurrentSection) {
-      updateStickyHeaderVisibility(false);
-    }
-  }, [currentSection, isNavigating, updateStickyHeaderVisibility]);
+    // If we're not in any section, hide the sticky header
+    setShowStickyHeader(false);
+  }, [currentSection, isNavigating]);
 
   useEffect(() => {
     const colors = [
@@ -212,21 +224,51 @@ const Home: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Prevent flash of scrolled state by setting the initial state after the page loads
-    // setIsPageLoaded(true);
+    const throttledHandleScroll = throttle(handleScroll, 16); // ~60fps
 
     // Initial check for the current section
     handleScroll();
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", throttledHandleScroll);
+
+    // Store the current ref value in a variable inside the effect
+    const currentTimeoutRef = stickyHeaderTimeoutRef;
+
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      // Clear any pending timeouts
-      if (stickyHeaderTimeoutRef.current) {
-        clearTimeout(stickyHeaderTimeoutRef.current);
+      window.removeEventListener("scroll", throttledHandleScroll);
+
+      // Use the captured variable instead of accessing the ref directly
+      if (currentTimeoutRef.current) {
+        clearTimeout(currentTimeoutRef.current);
       }
     };
   }, [handleScroll]);
+
+  // section header visibility
+  useEffect(() => {
+    if (isProgrammaticNavigation) {
+      // Hide all section headers when in programmatic navigation
+      const sectionHeaders = document.querySelectorAll(
+        ".section-header-container"
+      );
+      sectionHeaders.forEach((header) => {
+        (header as HTMLElement).style.opacity = "0";
+        (header as HTMLElement).style.visibility = "hidden";
+      });
+
+      // Clean up function to restore visibility when navigation ends
+      return () => {
+        if (!isProgrammaticNavigation) {
+          setTimeout(() => {
+            sectionHeaders.forEach((header) => {
+              (header as HTMLElement).style.opacity = "1";
+              (header as HTMLElement).style.visibility = "visible";
+            });
+          }, 50); // Small delay to ensure smooth transition
+        }
+      };
+    }
+  }, [isProgrammaticNavigation]);
 
   // Update handleScroll when currentSection changes to check visibility of the new section's header
   useEffect(() => {
@@ -243,47 +285,50 @@ const Home: React.FC = () => {
         currentSection={currentSection}
         onNavClick={handleNavClick}
         showStickyHeader={showStickyHeader && !isNavigating}
+        isProgrammaticNavigation={isProgrammaticNavigation}
       />
 
-      <main className="container mx-auto pt-20 lg:pt-24">
+      <main className="container mx-auto lg:pt-2">
         {/* Full-height introductory section */}
-        {/* Full-height introductory section */}
-        {/* Full-height introductory section */}
-
         <motion.section
           ref={(el) => {
             introSectionRef.current = el;
           }}
-          className="flex flex-col items-center justify-between bg-gray-100 p-4 lg:py-20 min-h-[85vh] relative"
+          className="min-h-[85vh] relative grid grid-rows-[auto_1fr_auto]"
           initial="hidden"
           animate="visible"
           variants={containerVariants}
         >
           <div
-            className="absolute inset-0 opacity-15 transition-all duration-3000 ease-in-out pulse-animation"
+            className="absolute inset-0 opacity-15 transition-all duration-3000 ease-in-out"
             style={{
               background: `radial-gradient(circle at 50% 50%, var(--color-${backgroundGlowColor}) 0%, transparent 70%)`,
               filter: "blur(60px)",
             }}
           />
-          {/* Digital Alchemist */}
-          <motion.h2
-            className="text-xl font-subheader font-light text-silverMist mt-2 mb-8 md:mt-8 md:mb-4 lg:text-2xl z-50 relative"
-            variants={itemVariants}
-          >
-            Digital Alchemist
-          </motion.h2>
 
-          {/* SVG container with improved responsive sizing */}
-          <motion.div
-            className="w-full flex-grow flex justify-center items-center z-10"
-            variants={svgVariants}
-          >
-            <PotionSvg />
-          </motion.div>
+          {/* Top row - minimal height */}
+          <div className="pt-1">
+            <motion.h2
+              className="text-xl font-subheader font-light text-silverMist z-30 text-center"
+              variants={itemVariants}
+            >
+              Digital Alchemist
+            </motion.h2>
+          </div>
 
-          {/* Scroll indicator with better positioning */}
-          <div className="w-full flex justify-center mt-4 md:mt-8 mb-4 md:mb-8 z-20">
+          {/* Middle row - takes all available space */}
+          <div className="flex items-center justify-center">
+            <motion.div
+              className="w-4/5 md:w-4/5 lg:w-2/5"
+              variants={svgVariants}
+            >
+              <PotionSvg />
+            </motion.div>
+          </div>
+
+          {/* Bottom row - minimal height */}
+          <div className="pb-4 flex justify-center">
             <ScrollIndicator
               targetSectionId="experience"
               onNavClick={handleNavClick}
@@ -314,7 +359,7 @@ const Home: React.FC = () => {
           className="bg-gray-100 flex flex-col items-start justify-center md:pb-6 pt-16 mt-8"
         >
           <div
-            className="container mx-auto"
+            className="container mx-auto section-header-container"
             ref={(el) => {
               sectionHeaderRefs.current["experience"] = el;
             }}
@@ -329,7 +374,7 @@ const Home: React.FC = () => {
           className="bg-gray-100 flex flex-col items-start justify-center md:pb-6 min-h-[50vh] pt-16 mt-8"
         >
           <div
-            className="container mx-auto"
+            className="container mx-auto section-header-container"
             ref={(el) => {
               sectionHeaderRefs.current["education"] = el;
             }}
@@ -344,7 +389,7 @@ const Home: React.FC = () => {
           className="flex flex-col items-start justify-center md:pb-6 min-h-[50vh] pt-16 mt-8"
         >
           <div
-            className="container mx-auto"
+            className="container mx-auto section-header-container"
             ref={(el) => {
               sectionHeaderRefs.current["skills"] = el;
             }}
@@ -359,7 +404,7 @@ const Home: React.FC = () => {
           className="w-full bg-gray-100 flex flex-col items-start justify-center md:pb-6 min-h-[50vh] pt-16 mt-8"
         >
           <div
-            className="container mx-auto"
+            className="container mx-auto section-header-container"
             ref={(el) => {
               sectionHeaderRefs.current["projects"] = el;
             }}
@@ -374,7 +419,7 @@ const Home: React.FC = () => {
           className="bg-gray-100 flex flex-col items-start justify-center md:pb-6 pt-16 mt-8"
         >
           <div
-            className="container mx-auto"
+            className="container mx-auto section-header-container"
             ref={(el) => {
               sectionHeaderRefs.current["about"] = el;
             }}
@@ -389,7 +434,7 @@ const Home: React.FC = () => {
           className="min-h-screen flex flex-col items-start justify-center md:pb-6 pt-16 mt-8"
         >
           <div
-            className="container mx-auto"
+            className="container mx-auto section-header-container"
             ref={(el) => {
               sectionHeaderRefs.current["contact"] = el;
             }}

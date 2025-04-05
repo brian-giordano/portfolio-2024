@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  useRef,
+} from "react";
 import {
   FaBriefcase,
   FaAddressCard,
@@ -9,19 +15,20 @@ import {
 import { PiLightningFill, PiGraduationCapFill } from "react-icons/pi";
 import { motion } from "framer-motion";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
-import SectionHeader from "@/components/ui/SectionHeader";
 
 interface HeaderProps {
   name: string;
   currentSection: string;
   onNavClick?: (sectionId: string) => void;
   showStickyHeader?: boolean;
+  isProgrammaticNavigation?: boolean;
 }
 
 interface MenuItem {
   label: string;
   sectionId: string;
   bandColor: string;
+  icon: React.ReactNode;
 }
 
 const headerVariants = {
@@ -42,10 +49,65 @@ const Header: React.FC<HeaderProps> = ({
   name,
   currentSection,
   onNavClick,
-  showStickyHeader = false,
+  showStickyHeader = false, // Provide default value here
+  isProgrammaticNavigation = false,
 }) => {
+  // Use the hook for general scroll state
   const isScrolled = useScrollPosition();
+  const [isMinimallyScrolled, setIsMinimallyScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const [headerHeight, setHeaderHeight] = useState(64);
+
+  // this effect handles the section header visibility during programmatic navigation
+  useEffect(() => {
+    if (isProgrammaticNavigation) {
+      // Hide all section headers when in programmatic navigation
+      const sectionHeaders = document.querySelectorAll(
+        ".section-header-container"
+      );
+      sectionHeaders.forEach((header) => {
+        (header as HTMLElement).style.display = "none";
+      });
+
+      // Clean up function to restore visibility when navigation ends
+      return () => {
+        if (!isProgrammaticNavigation) {
+          sectionHeaders.forEach((header) => {
+            (header as HTMLElement).style.display = "";
+          });
+        }
+      };
+    }
+  }, [isProgrammaticNavigation]);
+
+  // Effect to measure header height
+  useEffect(() => {
+    if (headerRef.current) {
+      setHeaderHeight(headerRef.current.offsetHeight);
+    }
+
+    const handleResize = () => {
+      if (headerRef.current) {
+        setHeaderHeight(headerRef.current.offsetHeight);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [isScrolled]);
+
+  // Add this effect to detect even minimal scrolling
+  useEffect(() => {
+    const handleMinimalScroll = () => {
+      setIsMinimallyScrolled(window.scrollY > 5);
+    };
+
+    window.addEventListener("scroll", handleMinimalScroll);
+    handleMinimalScroll();
+
+    return () => window.removeEventListener("scroll", handleMinimalScroll);
+  }, []);
 
   const MenuItems: MenuItem[] = useMemo(
     () => [
@@ -53,31 +115,37 @@ const Header: React.FC<HeaderProps> = ({
         label: "Experience",
         sectionId: "experience",
         bandColor: "gold",
+        icon: <PiGraduationCapFill className="text-gold" />,
       },
       {
         label: "Education",
         sectionId: "education",
         bandColor: "gold",
+        icon: <PiGraduationCapFill className="text-gold" />,
       },
       {
         label: "Skills",
         sectionId: "skills",
         bandColor: "gold",
+        icon: <PiLightningFill className="text-gold" />,
       },
       {
         label: "Projects",
         sectionId: "projects",
         bandColor: "gold",
+        icon: <FaBriefcase className="text-gold" />,
       },
       {
         label: "About",
         sectionId: "about",
         bandColor: "gold",
+        icon: <FaAddressCard className="text-gold" />,
       },
       {
         label: "Contact",
         sectionId: "contact",
         bandColor: "gold",
+        icon: <FaEnvelope className="text-gold" />,
       },
     ],
     []
@@ -85,30 +153,27 @@ const Header: React.FC<HeaderProps> = ({
 
   const scrollToSection = useCallback(
     (sectionId: string) => {
-      // Immediately update the current section in the parent component
       if (onNavClick) {
         onNavClick(sectionId);
       }
 
       const section = document.getElementById(sectionId);
       if (section) {
-        // Get the current scroll position to determine header state
-        // const isCurrentlyScrolled = window.scrollY > 50;
+        // Get the main header height
+        const header = document.querySelector("header") as HTMLElement;
+        const headerHeight = header ? header.offsetHeight : 64;
 
-        // Calculate the header height in the target state (after scrolling)
-        // When clicking from unscrolled state, the header will be in compact mode after scrolling
-        const targetHeaderHeight = 64; // Always use compact header height (4rem) for target position
+        // Calculate position - this is critical to get right
+        // We want to position the section content exactly where it should be
+        // with the sticky header already visible
+        const offsetPosition = section.offsetTop - headerHeight;
 
-        // Calculate position - use the exact section offset minus the target header height
-        const offsetPosition = section.offsetTop - targetHeaderHeight;
-
-        // Immediately scroll to the calculated position
+        // Scroll immediately
         window.scrollTo({
           top: offsetPosition,
-          behavior: "auto", // Immediate positioning
+          behavior: "auto",
         });
 
-        // Close mobile menu if open
         setIsMenuOpen(false);
       }
     },
@@ -123,7 +188,6 @@ const Header: React.FC<HeaderProps> = ({
             href={`#${item.sectionId}`}
             onClick={(e) => {
               e.preventDefault();
-              // Force the current section to be updated immediately
               if (onNavClick) {
                 onNavClick(item.sectionId);
               }
@@ -146,17 +210,7 @@ const Header: React.FC<HeaderProps> = ({
             `}
           >
             <span className={`text-xl ${isMobile ? "mr-4" : "mr-2"} text-gold`}>
-              {React.cloneElement(
-                {
-                  Experience: <PiGraduationCapFill />,
-                  Education: <PiGraduationCapFill />,
-                  Skills: <PiLightningFill />,
-                  Projects: <FaBriefcase />,
-                  About: <FaAddressCard />,
-                  Contact: <FaEnvelope />,
-                }[item.label] || <></>,
-                { className: "text-gold" }
-              )}
+              {item.icon}
             </span>
             <span className={isMobile ? "" : "whitespace-nowrap"}>
               {item.label}
@@ -171,65 +225,107 @@ const Header: React.FC<HeaderProps> = ({
     (item) => item.sectionId === currentSection
   );
 
-  return (
-    // <header className="w-full fixed top-0 z-50 bg-darkSlate">
-    <motion.header
-      className="w-full fixed top-0 bg-darkSlate z-40"
-      initial="hidden"
-      animate="visible"
-      variants={headerVariants}
-    >
-      <div
-        className={`container mx-auto ${
-          isScrolled
-            ? "flex items-center justify-between py-4 px-4"
-            : "flex flex-col items-center py-8 px-4"
-        }`}
-      >
-        {!isScrolled && (
-          <>
-            <nav className="mb-2 w-full opacity-90 transition-all duration-300 z-50 hidden lg:block">
-              <ul className="flex justify-center space-x-4 py-2 list-none">
-                {renderNavItems()}
-              </ul>
-            </nav>
-            <h1
-              className={`font-primary font-extrabold tracking-wide transition-all duration-300 uppercase text-3xl text-ivoryWhite z-20 cursor-pointer lg:text-6xl`}
-            >
-              {name}
-            </h1>
-          </>
-        )}
+  const isHomeSection = currentSection === "" || currentSection === "home";
+  const showHeaderBackground = !isHomeSection || isMinimallyScrolled;
 
-        {isScrolled && (
-          <div className="flex items-center justify-between w-full">
-            <h1
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className={`font-primary font-extrabold tracking-wide transition-all duration-300 uppercase text-2xl text-ivoryWhite cursor-pointer`}
-            >
-              {name}
-            </h1>
-            <nav className="opacity-90 transition-all duration-300 z-50 hidden lg:flex">
-              <ul className="flex space-x-6 py-2 list-none">
-                {renderNavItems()}
-              </ul>
-            </nav>
+  // Use the prop instead of calculating it internally
+  const showSectionHeader =
+    showStickyHeader && currentSectionData && !isHomeSection;
+
+  return (
+    <>
+      {/* Main header */}
+      <motion.header
+        ref={headerRef}
+        className={`w-full fixed top-0 left-0 right-0 z-40 ${
+          showHeaderBackground ? "bg-darkSlate" : ""
+        }`}
+        style={{
+          background: !showHeaderBackground
+            ? "linear-gradient(to bottom, rgba(20, 20, 30, 0.8) 0%, rgba(20, 20, 30, 0.4) 50%, transparent 100%)"
+            : "",
+          backdropFilter: !showHeaderBackground ? "blur(5px)" : "",
+        }}
+        initial="hidden"
+        animate="visible"
+        variants={headerVariants}
+      >
+        <div
+          className={`container mx-auto ${
+            isScrolled
+              ? "flex items-center justify-between py-4 px-4"
+              : "flex flex-col items-center py-8 px-4"
+          }`}
+        >
+          {!isScrolled && (
+            <>
+              <nav
+                className={`mb-2 w-full opacity-90 transition-all duration-300 z-50 hidden lg:block ${
+                  !showHeaderBackground ? "nav-backdrop" : ""
+                }`}
+              >
+                <ul className="flex justify-center space-x-4 py-2 list-none">
+                  {renderNavItems()}
+                </ul>
+              </nav>
+              <h1
+                className={`font-primary font-extrabold tracking-wide transition-all duration-300 uppercase text-3xl text-ivoryWhite z-20 cursor-pointer lg:text-6xl ${
+                  !showHeaderBackground ? "text-shadow-lg" : ""
+                }`}
+              >
+                {name}
+              </h1>
+            </>
+          )}
+
+          {isScrolled && (
+            <>
+              <div className="flex items-center justify-between w-full">
+                <h1
+                  onClick={() =>
+                    window.scrollTo({ top: 0, behavior: "smooth" })
+                  }
+                  className={`font-primary font-extrabold tracking-wide transition-all duration-300 uppercase text-2xl text-ivoryWhite cursor-pointer`}
+                >
+                  {name}
+                </h1>
+                <nav className="opacity-90 transition-all duration-300 z-50 hidden lg:flex">
+                  <ul className="flex space-x-6 py-2 list-none">
+                    {renderNavItems()}
+                  </ul>
+                </nav>
+              </div>
+
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="text-xl pt-0 px-4 focus:outline-none flex items-center justify-center transition-all duration-300 lg:hidden"
+                aria-label="Toggle menu"
+                aria-expanded={isMenuOpen}
+              >
+                <span className="text-ivoryWhite">
+                  {isMenuOpen ? <FaXmark /> : <FaBars />}
+                </span>
+              </button>
+            </>
+          )}
+        </div>
+
+        {/* Section header - directly in the main header */}
+        {showSectionHeader && currentSectionData && (
+          <div className="w-full bg-darkSlate border-t-4 border-gold">
+            <div className="container mx-auto">
+              <div className="flex items-center px-4 py-2">
+                <span className="text-3xl text-gold mr-3">
+                  {currentSectionData.icon}
+                </span>
+                <h2 className="text-lg font-primary text-ivoryWhite uppercase font-semibold">
+                  {currentSectionData.label}
+                </h2>
+              </div>
+            </div>
           </div>
         )}
-
-        {isScrolled && (
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="text-xl pt-0 px-4 focus:outline-none flex items-center justify-center transition-all duration-300 lg:hidden"
-            aria-label="Toggle menu"
-            aria-expanded={isMenuOpen}
-          >
-            <span className="text-ivoryWhite">
-              {isMenuOpen ? <FaXmark /> : <FaBars />}
-            </span>
-          </button>
-        )}
-      </div>
+      </motion.header>
 
       {/* Mobile menu */}
       {isMenuOpen && (
@@ -251,18 +347,9 @@ const Header: React.FC<HeaderProps> = ({
         </div>
       )}
 
-      {/* Sticky header - use absolute positioning when hidden to remove from document flow */}
-      {showStickyHeader && currentSectionData && currentSection !== "home" ? (
-        <div className="sticky top-[4rem] z-40 bg-darkSlate transition-all duration-200">
-          <div className="container mx-auto">
-            <SectionHeader
-              name={currentSectionData.label}
-              bandColor={currentSectionData.bandColor}
-            />
-          </div>
-        </div>
-      ) : null}
-    </motion.header>
+      {/* Add padding to the top of the page to account for the fixed header */}
+      <div style={{ height: headerHeight + (showSectionHeader ? 48 : 0) }} />
+    </>
   );
 };
 

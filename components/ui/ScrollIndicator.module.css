@@ -1,0 +1,38 @@
+/* ScrollIndicator.module.css */
+.scrollIndicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px;
+  transition: transform 0.3s ease;
+}
+
+.exploreText {
+  color: var(--color-gold);
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.chevronContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chevron {
+  color: var(--color-gold);
+  font-size: 1.5rem;
+  filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.3));
+}
+
+@media (max-width: 768px) {
+  .scrollIndicator {
+    padding: 12px;
+  }
+
+  .exploreText {
+    font-size: 1rem;
+  }
+}

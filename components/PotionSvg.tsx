@@ -1,30 +1,41 @@
-// PotionSvg.tsx with improved responsive sizing
+// PotionSvg.tsx with animations preserved and size fixed
 import React from "react";
 import Image from "next/legacy/image";
+import { motion } from "framer-motion";
 import styles from "./PotionSvg.module.css";
 import StardustLayerSvg from "../assets/images/potion-bottle-2-stardust.svg";
 import PotionLayerSvg from "./PotionLayerSvg";
 
 const PotionSvg: React.FC = () => {
   return (
-    <div className="relative w-4/5 md:w-2/5 lg:w-1/3 p-0 flex items-center justify-center">
-      {/* Container with responsive sizing */}
-      <div
-        className="relative w-full"
-        style={{
-          minHeight: "30vh",
-          maxHeight: "45vh",
-          // This ensures the potion scales better on tablets
-          height: "clamp(250px, 40vh, 500px)",
+    <motion.div
+      className="relative w-full p-0 flex items-center justify-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+    >
+      <motion.div
+        className="absolute inset-0 rounded-full blur-xl opacity-30 z-0"
+        animate={{
+          opacity: [0.2, 0.4, 0.2],
         }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        style={{
+          background:
+            "radial-gradient(circle, rgba(0,255,213,0.4) 0%, transparent 70%)",
+        }}
+      />
+
+      <motion.div
+        className="relative w-full h-[200px] md:h-[300px] lg:h-[280px] flex items-center justify-center"
+        animate={{ y: [0, -5, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
       >
-        {/* Potion Layer (Base Layer) */}
-        <div className="relative h-full">
+        <div className="relative h-full flex items-center justify-center">
           <PotionLayerSvg className={styles.potionLayer} />
         </div>
 
-        {/* Stardust Layer (Overlay Layer) */}
-        <div className="absolute top-0 left-0 w-full h-full">
+        <div className="absolute inset-0 flex items-center justify-center">
           <Image
             src={StardustLayerSvg}
             alt="Stardust Layer"
@@ -32,8 +43,10 @@ const PotionSvg: React.FC = () => {
             priority={true}
           />
         </div>
-      </div>
-    </div>
+
+        <div className={styles.particles}></div>
+      </motion.div>
+    </motion.div>
   );
 };
 
