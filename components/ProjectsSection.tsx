@@ -238,11 +238,12 @@ const ProjectsSection: React.FC = () => {
             <h3 className="text-xl font-bold">Reflections</h3>
             <p className="mt-2">
               Building my own portfolio allowed me to experiment with techniques
-              I've wanted to try but rarely had the opportunity to implement in
-              client work. It was liberating to make design decisions based
-              solely on my preferences while still adhering to accessibility and
-              performance best practices. This project reinforced my belief that
-              the best work happens when technical skill meets creative freedom.
+              It&apos;ve wanted to try but rarely had the opportunity to
+              implement in client work. It was liberating to make design
+              decisions based solely on my preferences while still adhering to
+              accessibility and performance best practices. This project
+              reinforced my belief that the best work happens when technical
+              skill meets creative freedom.
             </p>
           </div>
         </div>
