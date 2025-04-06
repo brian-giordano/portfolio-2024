@@ -1,113 +1,305 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-/* @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Oswald:wght@400;700&family=Montserrat:wght@400;700&display=swap"); */
 
+/* ===== ROOT VARIABLES ===== */
 :root {
+  /* Colors */
   --background: #1a1a2e;
-  --foreground: ;
-}
-
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
-
-html {
-  scroll-behavior: smooth; /* Global smooth scroll */
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: var(--font-poppins), Arial, Helvetica, sans-serif;
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
-
-h2 {
-  font-size: 1rem; /* 16px */
-  line-height: 1.5rem; /* 24px */
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  margin-top: 1rem;
-}
-
-h3 {
-  font-size: 0.875rem; /* 16px */
-  line-height: 1.5rem; /* 24px */
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  margin-top: 1rem;
-}
-
-p {
-  font-size: 0.875rem; /* 14px */
-  line-height: 1.625;
-  margin-bottom: 0.75rem;
-  color: #f8f8ff;
-}
-
-ul {
-  list-style-type: disc; /* Use bullets for unordered lists */
-  padding-left: 1.25rem; /* Add padding to the left for better visibility */
-  margin-bottom: 0.5rem;
-  margin-top: 1rem;
-}
-
-ol {
-  list-style-type: decimal; /* Use numbers for ordered lists */
-  padding-left: 1.25rem; /* Add padding to the left for better visibility */
-  margin-bottom: 0.5rem;
-  margin-top: 1rem;
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #00bfa6;
-  border-radius: 10px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: #f8f8ff;
-  border-radius: 10px;
-}
-
-.text-shadow {
-  text-shadow: 0px 0px 2px #ffd700;
-}
-
-:root {
+  --foreground: #f8f8ff;
   --color-mysticTeal: #00bfa6;
   --color-gold: #ffd700;
   --color-lightCrimson: #e57373;
   --color-lavender: #d6a4e0;
   --color-lightSkyBlue: #a0c4ff;
 
-  /* Add this for smoother transitions */
+  /* Layout */
+  --header-height: 64px;
+
+  /* Transitions */
   --transition-duration-long: 3000ms;
+  --transition-duration-short: 200ms;
 }
 
-/* Add this utility class */
+/* ===== BASE STYLES ===== */
+html {
+  scroll-behavior: smooth;
+  height: 100%;
+  scroll-padding-top: var(--header-height);
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-poppins), Arial, Helvetica, sans-serif;
+  height: 100%;
+  overflow-y: auto;
+  scroll-snap-type: y proximity;
+}
+
+/* Typography */
+h2 {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+}
+
+h3 {
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+}
+
+p {
+  font-size: 0.875rem;
+  line-height: 1.625;
+  margin-bottom: 0.75rem;
+  color: var(--foreground);
+}
+
+/* ===== LIST STYLES ===== */
+/* Only apply list styles to content areas */
+.section-content ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+}
+
+.section-content ol {
+  list-style-type: decimal;
+  padding-left: 1.25rem;
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+}
+
+/* Override default list styles for navigation */
+nav ul,
+nav li,
+header ul,
+header li {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* ===== LAYOUT & SECTIONS ===== */
+section {
+  scroll-margin-top: var(--header-height);
+  position: relative;
+  margin-top: 0;
+  padding-top: 0;
+  scroll-snap-align: start;
+}
+
+section:last-of-type {
+  scroll-snap-align: end;
+  scroll-snap-stop: always;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.section-content {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+#contact {
+  min-height: calc(100vh - var(--header-height));
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+  scroll-snap-align: none;
+  position: relative;
+  z-index: 10;
+}
+
+/* ===== HEADER STYLES ===== */
+header {
+  transition: background 0.3s ease;
+}
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  background: var(--background);
+  z-index: 40;
+  padding: 10px;
+  text-align: center;
+}
+
+/* ===== SECTION HEADERS ===== */
+.section-header-container {
+  position: sticky;
+  top: var(--header-height);
+  z-index: 30;
+  background-color: var(--background);
+  width: 100%;
+  transition: opacity var(--transition-duration-short) ease-out;
+}
+
+/* Section header visibility states */
+section:not(.active-section) .section-header-container {
+  opacity: 0.5;
+}
+
+section.active-section .section-header-container {
+  opacity: 1;
+}
+
+/* Navigation state handling */
+.navigating .section-header-container {
+  position: static !important;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.navigating .active-section .section-header-container {
+  visibility: visible;
+  opacity: 1;
+}
+
+.hidden-section-header {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* ===== UTILITY CLASSES ===== */
+.text-balance {
+  text-wrap: balance;
+}
+
 .duration-3000 {
   transition-duration: var(--transition-duration-long);
 }
 
-/* Add this utility class for the glow opacity */
 .opacity-15 {
   opacity: 0.15;
 }
 
-/* Add to your globals.css */
+.text-shadow {
+  text-shadow: 0px 0px 2px var(--color-gold);
+}
+
+.text-shadow-lg {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 4px 8px rgba(0, 0, 0, 0.6);
+}
+
+.sticky-header-no-transition {
+  transition: none !important;
+}
+
+.digital-alchemist-title {
+  margin-top: 8px !important;
+}
+
+.intro-section h2 {
+  margin-top: 8px !important;
+  padding-top: 0 !important;
+}
+
+/* ===== NAVIGATION ===== */
+.nav-backdrop a {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  background-color: rgba(20, 20, 30, 0.4);
+  backdrop-filter: blur(3px);
+}
+
+/* Modern mobile menu styling */
+.mobile-menu-container {
+  background-color: rgba(20, 20, 35, 0.98);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.mobile-menu-header {
+  padding: 24px 0;
+  text-align: center;
+}
+
+.mobile-menu-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 8px;
+  color: var(--foreground);
+}
+
+.mobile-menu-title {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 4px;
+}
+
+.mobile-menu-item {
+  position: relative;
+  margin: 4px 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mobile-menu-item a {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  transition: all 0.2s ease;
+  color: var(--foreground);
+}
+
+.mobile-menu-item a:active {
+  transform: scale(0.98);
+}
+
+.mobile-menu-item.active a {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: var(--foreground);
+}
+
+.mobile-menu-item .icon {
+  margin-right: 16px;
+  color: var(--color-gold);
+}
+
+.mobile-menu-item .text {
+  font-weight: 500;
+}
+
+.mobile-menu-item.active .text {
+  font-weight: 600;
+}
+
+.mobile-menu-item .active-indicator {
+  width: 3px;
+  height: 100%;
+  background-color: var(--color-gold);
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+/* ===== SCROLLBAR STYLING ===== */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--color-mysticTeal);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--foreground);
+  border-radius: 10px;
+}
+
+/* ===== ANIMATIONS ===== */
 @keyframes pulse {
   0% {
     opacity: 0.1;
@@ -127,49 +319,48 @@ ol {
   animation: pulse 8s ease-in-out infinite;
 }
 
-.text-shadow-lg {
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 4px 8px rgba(0, 0, 0, 0.6);
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 1024px) {
+  /* Tablet and below */
+  .section-content {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 }
 
-.nav-backdrop a {
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  background-color: rgba(20, 20, 30, 0.4);
-  backdrop-filter: blur(3px);
+@media (max-width: 640px) {
+  /* Mobile specific */
+  html {
+    scroll-padding-top: calc(var(--header-height) - 5px);
+  }
+
+  h2 {
+    font-size: 0.9rem;
+  }
+
+  p {
+    font-size: 0.8rem;
+  }
 }
 
-/* Prevent transitions on sticky header for immediate appearance */
-.sticky-header-no-transition {
-  transition: none !important;
+/* Fix for iOS Safari overscroll behavior */
+@supports (-webkit-touch-callout: none) {
+  body {
+    /* Prevent rubber-band effect on iOS */
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
-/* In your globals.css */
-.section-header-container {
-  position: relative;
-  z-index: 30; /* Lower than header but higher than regular content */
-  background-color: var(--background); /* Match your site background */
-}
-
-.section-header-container {
-  height: 48px; /* Set to the exact height of your section headers */
-  overflow: hidden;
-  transition: opacity 0.1s ease-out, visibility 0.1s ease-out;
-}
-
-/* This class will be applied by JavaScript during navigation */
-.hidden-section-header {
-  opacity: 0;
-  visibility: hidden;
-}
-
-/* Add to globals.css */
-.digital-alchemist-title {
-  margin-top: 8px !important;
-}
-
-/* Add to globals.css */
-.intro-section h2 {
-  margin-top: 8px !important;
-  padding-top: 0 !important;
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

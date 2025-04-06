@@ -163,19 +163,16 @@
   0% {
     fill: #f8f8ff; /* Start with Ivory White */
   }
-  14% {
+  20% {
     fill: #b0c4de; /* Silver Mist */
   }
-  28% {
-    fill: #e57373; /* Light Crimson */
-  }
-  42% {
+  40% {
     fill: #00bfa6; /* Mystic Teal */
   }
-  57% {
+  60% {
     fill: #d6a4e0; /* Lavender */
   }
-  71% {
+  80% {
     fill: #a0c4ff; /* Light Sky Blue */
   }
   100% {

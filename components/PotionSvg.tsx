@@ -1,4 +1,3 @@
-// PotionSvg.tsx with animations preserved and size fixed
 import React from "react";
 import Image from "next/legacy/image";
 import { motion } from "framer-motion";
@@ -14,16 +13,8 @@ const PotionSvg: React.FC = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
     >
-      <motion.div
-        className="absolute inset-0 rounded-full blur-xl opacity-30 z-0"
-        animate={{
-          opacity: [0.2, 0.4, 0.2],
-        }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        style={{
-          background:
-            "radial-gradient(circle, rgba(0,255,213,0.4) 0%, transparent 70%)",
-        }}
+      <div
+        className={`absolute inset-0 rounded-full blur-xl opacity-30 z-0 ${styles.backgroundGlow}`}
       />
 
       <motion.div

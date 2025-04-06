@@ -8,13 +8,6 @@ interface SectionHeaderProps {
   subheader?: string;
 }
 
-// Mapping colors to border classes
-const colorMapping: { [key: string]: string } = {
-  lightCrimson: "border-lightCrimson",
-  mysticTeal: "border-mysticTeal",
-  gold: "border-gold",
-};
-
 // Mapping section names to icons
 const iconMapping: { [key: string]: React.ReactNode } = {
   Experience: <PiGraduationCapFill className="text-3xl text-gold mr-3 mt-1" />,
@@ -25,18 +18,12 @@ const iconMapping: { [key: string]: React.ReactNode } = {
   Contact: <FaEnvelope className="text-3xl text-gold mr-3 mt-1" />,
 };
 
-const SectionHeader: React.FC<SectionHeaderProps> = ({
-  name,
-  bandColor,
-  subheader,
-}) => {
-  const topBorder = colorMapping[bandColor] || "border-darkSlate";
-
+const SectionHeader: React.FC<SectionHeaderProps> = ({ name, subheader }) => {
   // Get the icon for the current section name
   const Icon = iconMapping[name] || null;
 
   return (
-    <div className={`w-full border-t-4 ${topBorder} px-4 pb-2`}>
+    <div className="w-full px-4 pb-2 border-t-4 border-gold">
       <div className="flex items-center">
         {/* Render the icon if it exists */}
         {Icon}

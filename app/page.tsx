@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import Header from "@/components/ui/Header";
 import ExperienceSection from "@/components/ExperienceSection";
@@ -49,40 +49,35 @@ const svgVariants = {
 
 const Home: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<string>("");
-  // const [isPageLoaded, setIsPageLoaded] = useState(false);
-  const [showStickyHeader, setShowStickyHeader] = useState(false);
-  const [isNavigating, setIsNavigating] = useState(false);
   const [backgroundGlowColor, setBackgroundGlowColor] = useState("mysticTeal");
-  const [isProgrammaticNavigation, setIsProgrammaticNavigation] =
-    useState(false);
-
-  const sectionHeaderRefs = useRef<{ [key: string]: HTMLDivElement | null }>(
-    {}
-  );
+  const [isNavigating, setIsNavigating] = useState(false);
   const introSectionRef = useRef<HTMLElement | null>(null);
-  // const lastScrollY = useRef(0);
-  const stickyHeaderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [headerHeight, setHeaderHeight] = useState(64);
+  const navigationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Function to handle navigation clicks from the Header component
   const handleNavClick = (sectionId: string) => {
-    // Set both navigating flags
+    // Set navigating state to true
     setIsNavigating(true);
-    setIsProgrammaticNavigation(true);
-
-    // Immediately update the current section
     setCurrentSection(sectionId);
 
-    // Always show the sticky header during navigation
-    setShowStickyHeader(true);
+    // Add navigating class to body
+    document.body.classList.add("navigating");
 
     const section = document.getElementById(sectionId);
     if (section) {
+      // Add active-section class to the target section
+      document.querySelectorAll("section").forEach((s) => {
+        s.classList.remove("active-section");
+      });
+      section.classList.add("active-section");
+
       // Get the main header height
       const header = document.querySelector("header") as HTMLElement;
       const headerHeight = header ? header.offsetHeight : 64;
 
-      // Calculate position - add a small offset to ensure content is visible
-      const offsetPosition = section.offsetTop - headerHeight - 10;
+      // Calculate position
+      const offsetPosition = section.offsetTop - headerHeight;
 
       // Scroll immediately
       window.scrollTo({
@@ -91,27 +86,55 @@ const Home: React.FC = () => {
       });
 
       // Reset navigation states after scrolling completes
-      setTimeout(() => {
+      if (navigationTimeoutRef.current) {
+        clearTimeout(navigationTimeoutRef.current);
+      }
+
+      navigationTimeoutRef.current = setTimeout(() => {
         setIsNavigating(false);
-        // Keep isProgrammaticNavigation true for a bit longer
-        setTimeout(() => {
-          setIsProgrammaticNavigation(false);
-        }, 300); // Keep it true for 300ms after navigation completes
-      }, 50);
+        document.body.classList.remove("navigating");
+      }, 300); // Short timeout since we're using behavior: "auto"
     }
   };
 
-  const handleScroll = useCallback(() => {
-    if (isNavigating) return;
+  // Effect to measure header height
+  useEffect(() => {
+    const header = document.querySelector("header") as HTMLElement;
+    if (header) {
+      setHeaderHeight(header.offsetHeight);
+      document.documentElement.style.setProperty(
+        "--header-height",
+        `${header.offsetHeight}px`
+      );
+    }
+
+    const handleResize = () => {
+      if (header) {
+        setHeaderHeight(header.offsetHeight);
+        document.documentElement.style.setProperty(
+          "--header-height",
+          `${header.offsetHeight}px`
+        );
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      if (navigationTimeoutRef.current) {
+        clearTimeout(navigationTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleScroll = throttle(() => {
+    if (isNavigating) return; // Skip scroll handling during navigation
 
     const scrollY = window.scrollY;
-    const header = document.querySelector("header") as HTMLElement;
-    const headerHeight = header ? header.offsetHeight : 64;
 
     // Check if we're in the intro section
     if (scrollY < 300) {
       setCurrentSection("");
-      setShowStickyHeader(false);
       return;
     }
 
@@ -120,35 +143,23 @@ const Home: React.FC = () => {
 
     for (const section of sections) {
       const sectionEl = section as HTMLElement;
-      const sectionTop = sectionEl.offsetTop - headerHeight;
+      const sectionTop = sectionEl.offsetTop - headerHeight - 10;
       const sectionBottom = sectionTop + sectionEl.offsetHeight;
 
       if (scrollY >= sectionTop && scrollY < sectionBottom) {
         if (sectionEl.id !== currentSection) {
           setCurrentSection(sectionEl.id);
+
+          // Update active section for styling
+          document.querySelectorAll("section").forEach((s) => {
+            s.classList.remove("active-section");
+          });
+          sectionEl.classList.add("active-section");
         }
-
-        // Find the section header
-        const sectionHeader = sectionEl.querySelector(
-          ".section-header-container"
-        ) as HTMLElement;
-
-        if (sectionHeader) {
-          // Calculate the position of the section header relative to the viewport
-          const sectionHeaderRect = sectionHeader.getBoundingClientRect();
-
-          // Show sticky header when the section header is about to go behind the main header
-          // or is already behind it
-          setShowStickyHeader(sectionHeaderRect.top <= headerHeight);
-        }
-
         return;
       }
     }
-
-    // If we're not in any section, hide the sticky header
-    setShowStickyHeader(false);
-  }, [currentSection, isNavigating]);
+  }, 100);
 
   useEffect(() => {
     const colors = [
@@ -169,76 +180,27 @@ const Home: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const throttledHandleScroll = throttle(handleScroll, 16); // ~60fps
-
-    // Initial check for the current section
+    window.addEventListener("scroll", handleScroll);
     handleScroll();
 
-    window.addEventListener("scroll", throttledHandleScroll);
-
-    // Store the current ref value in a variable inside the effect
-    const currentTimeoutRef = stickyHeaderTimeoutRef;
-
     return () => {
-      window.removeEventListener("scroll", throttledHandleScroll);
-
-      // Use the captured variable instead of accessing the ref directly
-      if (currentTimeoutRef.current) {
-        clearTimeout(currentTimeoutRef.current);
-      }
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [handleScroll]);
 
-  // section header visibility
-  useEffect(() => {
-    if (isProgrammaticNavigation) {
-      // Hide all section headers when in programmatic navigation
-      const sectionHeaders = document.querySelectorAll(
-        ".section-header-container"
-      );
-      sectionHeaders.forEach((header) => {
-        (header as HTMLElement).style.opacity = "0";
-        (header as HTMLElement).style.visibility = "hidden";
-      });
-
-      // Clean up function to restore visibility when navigation ends
-      return () => {
-        if (!isProgrammaticNavigation) {
-          setTimeout(() => {
-            sectionHeaders.forEach((header) => {
-              (header as HTMLElement).style.opacity = "1";
-              (header as HTMLElement).style.visibility = "visible";
-            });
-          }, 50); // Small delay to ensure smooth transition
-        }
-      };
-    }
-  }, [isProgrammaticNavigation]);
-
-  // Update handleScroll when currentSection changes to check visibility of the new section's header
-  useEffect(() => {
-    if (currentSection && !isNavigating) {
-      handleScroll();
-    }
-  }, [currentSection, isNavigating, handleScroll]);
-
   return (
     <div className="p-0">
-      {/* Main Header - Pass the handleNavClick function and showStickyHeader state */}
+      {/* Main Header */}
       <Header
         name="Brian Giordano"
         currentSection={currentSection}
         onNavClick={handleNavClick}
-        showStickyHeader={showStickyHeader && !isNavigating}
-        isProgrammaticNavigation={isProgrammaticNavigation}
       />
 
       <main className="container mx-auto lg:pt-2">
         {/* Full-height introductory section */}
         <motion.section
-          ref={(el) => {
-            introSectionRef.current = el;
-          }}
+          ref={introSectionRef}
           className="min-h-[85vh] relative grid grid-rows-[auto_1fr_auto]"
           initial="hidden"
           animate="visible"
@@ -284,100 +246,88 @@ const Home: React.FC = () => {
         {/* Experience Section */}
         <section
           id="experience"
-          className="bg-gray-100 flex flex-col items-start justify-center md:pb-6 pt-16 mt-8"
+          className="bg-gray-100 flex flex-col items-start justify-center mt-8"
         >
-          <div
-            className="container mx-auto section-header-container"
-            ref={(el) => {
-              sectionHeaderRefs.current["experience"] = el;
-            }}
-          >
+          <div className="container mx-auto section-header-container">
             <SectionHeader name="Experience" bandColor="gold" />
           </div>
-          <ExperienceSection />
+          <div className="container mx-auto section-content md:pb-6">
+            <ExperienceSection />
+          </div>
         </section>
+
         {/* Education Section */}
         <section
           id="education"
-          className="bg-gray-100 flex flex-col items-start justify-center md:pb-6 min-h-[50vh] pt-16 mt-8"
+          className="bg-gray-100 flex flex-col items-start justify-center mt-8"
         >
-          <div
-            className="container mx-auto section-header-container"
-            ref={(el) => {
-              sectionHeaderRefs.current["education"] = el;
-            }}
-          >
+          <div className="container mx-auto section-header-container">
             <SectionHeader name="Education" bandColor="gold" />
           </div>
-          <EducationSection />
+          <div className="container mx-auto section-content md:pb-6 min-h-[50vh]">
+            <EducationSection />
+          </div>
         </section>
+
         {/* Skills Section */}
         <section
           id="skills"
-          className="flex flex-col items-start justify-center md:pb-6 min-h-[50vh] pt-16 mt-8"
+          className="flex flex-col items-start justify-center mt-8"
         >
-          <div
-            className="container mx-auto section-header-container"
-            ref={(el) => {
-              sectionHeaderRefs.current["skills"] = el;
-            }}
-          >
+          <div className="container mx-auto section-header-container">
             <SectionHeader name="Skills" bandColor="gold" />
           </div>
-          <SkillsSection />
+          <div className="container mx-auto section-content md:pb-6 min-h-[50vh]">
+            <SkillsSection />
+          </div>
         </section>
+
         {/* Projects Section */}
         <section
           id="projects"
-          className="w-full bg-gray-100 flex flex-col items-start justify-center md:pb-6 min-h-[50vh] pt-16 mt-8"
+          className="w-full bg-gray-100 flex flex-col items-start justify-center mt-8"
         >
-          <div
-            className="container mx-auto section-header-container"
-            ref={(el) => {
-              sectionHeaderRefs.current["projects"] = el;
-            }}
-          >
+          <div className="container mx-auto section-header-container">
             <SectionHeader name="Projects" bandColor="gold" />
           </div>
-          <ProjectSection />
+          <div className="container mx-auto section-content md:pb-6 min-h-[50vh]">
+            <ProjectSection />
+          </div>
         </section>
+
         {/* About Section */}
         <section
           id="about"
-          className="bg-gray-100 flex flex-col items-start justify-center md:pb-6 pt-16 mt-8"
+          className="bg-gray-100 flex flex-col items-start justify-center mt-8"
         >
-          <div
-            className="container mx-auto section-header-container"
-            ref={(el) => {
-              sectionHeaderRefs.current["about"] = el;
-            }}
-          >
+          <div className="container mx-auto section-header-container">
             <SectionHeader name="About" bandColor="gold" />
           </div>
-          <AboutSection />
+          <div className="container mx-auto section-content md:pb-6">
+            <AboutSection />
+          </div>
         </section>
+
         {/* Contact Section */}
         <section
           id="contact"
-          className="min-h-screen flex flex-col items-start justify-center md:pb-6 pt-16 mt-8"
+          className="flex flex-col items-start justify-center mt-8 min-h-[calc(100vh-var(--header-height))]"
         >
-          <div
-            className="container mx-auto section-header-container"
-            ref={(el) => {
-              sectionHeaderRefs.current["contact"] = el;
-            }}
-          >
+          <div className="container mx-auto section-header-container">
             <SectionHeader name="Contact" bandColor="gold" />
           </div>
-          <div className="w-full flex flex-col lg:flex-row">
-            <div className="w-full lg:w-1/2 lg:mb-0">
-              <ContactSection />
-            </div>
-            <div className="w-full lg:w-1/2 mx-auto">
-              <FollowMeSection />
+          <div className="container mx-auto section-content flex-grow md:pb-6">
+            <div className="w-full flex flex-col lg:flex-row">
+              <div className="w-full lg:w-1/2 lg:mb-0">
+                <ContactSection />
+              </div>
+              <div className="w-full lg:w-1/2 mx-auto">
+                <FollowMeSection />
+              </div>
             </div>
           </div>
         </section>
+
         {/* Footer */}
         <Footer />
       </main>

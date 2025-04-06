@@ -1,7 +1,7 @@
 // components/ProjectsSection.tsx (updated)
 import React from "react";
 import CardsList from "./ui/CardsList";
-import CryptoDashboardImg from "../assets/images/projects-crypto-dashboard.jpg";
+import CryptoDashboardImg from "../assets/images/projects-crypto-dashboard.png";
 import GaspImg from "../assets/images/projects-gasp.png";
 import PortfolioImage from "../assets/images/projects-portfolio.png";
 import { StackUsed, CardProps } from "./ui/Card"; // Import both StackUsed and CardProps types
@@ -163,10 +163,10 @@ const ProjectsSection: React.FC = () => {
       orgLink: "", // Add empty string for orgLink if not provided
       description: (
         <p>
-          This portfolio website showcases my creative process with bold design
-          elements and modern development practices. It&apos;s a user-centric
-          experience built to leave a lasting impression with responsive layouts
-          and fluid animations.
+          This portfolio website represents my creative vision brought to life,
+          designed and built entirely by myself. It showcases my work through
+          custom animations, interactive elements, and thoughtful UI design that
+          reflects my personal aesthetic and technical abilities.
         </p>
       ),
       stackUsed: PortfolioSkills,
@@ -176,12 +176,11 @@ const ProjectsSection: React.FC = () => {
           <div>
             <h3 className="text-xl font-bold">Description</h3>
             <p className="mt-2">
-              The Crypto AI Dashboard is a personal project born from my
-              enthusiasm for cryptocurrency and desire to create a unified
-              platform for market analysis. It combines{" "}
-              <strong>real-time market data</strong> with
-              <strong> AI-powered insights</strong> to help users make more
-              informed decisions about their crypto investments.
+              After years of building websites to client specifications,
+              creating my own portfolio was a refreshing opportunity to build
+              something entirely to my own standards. This site serves as both a
+              showcase of my work and a testament to my design philosophy and
+              technical capabilities.
             </p>
           </div>
 
@@ -189,24 +188,25 @@ const ProjectsSection: React.FC = () => {
             <h3 className="text-xl font-bold">Key Features</h3>
             <ul className="mt-2 space-y-2 list-disc pl-5">
               <li>
-                <strong>Real-time Market Tracking:</strong> Live price updates,
-                market cap, and volume data for the top 25 cryptocurrencies
+                <strong>Custom SVG Animations:</strong> Hand-crafted SVG
+                elements with synchronized animations that bring visual interest
+                to the site
               </li>
               <li>
-                <strong>Interactive Charts:</strong> Visual representation of
-                price movements and market trends over customizable time periods
+                <strong>Responsive Layout:</strong> Thoughtfully designed for
+                optimal viewing across all device sizes
               </li>
               <li>
-                <strong>AI-Powered Sentiment Analysis:</strong> Natural language
-                processing to analyze market sentiment from various sources
+                <strong>Dark Mode Implementation:</strong> Color scheme that
+                adapts to user preferences while maintaining visual hierarchy
               </li>
               <li>
-                <strong>Conversational Interface:</strong> Ask questions about
-                specific cryptocurrencies and receive AI-generated insights
+                <strong>Interactive Project Cards:</strong> Engaging hover
+                states and smooth transitions between project details
               </li>
               <li>
-                <strong>Responsive Design:</strong> Optimized for both desktop
-                and mobile viewing
+                <strong>Performance Optimization:</strong> Lazy-loading, code
+                splitting, and optimized assets for fast load times
               </li>
             </ul>
           </div>
@@ -214,23 +214,35 @@ const ProjectsSection: React.FC = () => {
           <div>
             <h3 className="text-xl font-bold">Technical Implementation</h3>
             <p className="mt-2">
-              Built with Next.js and TypeScript for a robust frontend
-              experience, the dashboard leverages Tailwind CSS and Shadcn UI
-              components for a clean, modern interface. The backend integrates
-              with CoinGecko API for real-time market data and OpenAI&apos;s API
-              for sentiment analysis and conversational capabilities.
+              Built with Next.js and TypeScript for type safety and improved
+              developer experience, the site leverages Framer Motion for fluid
+              animations and Tailwind CSS for rapid styling. I implemented
+              custom hooks for animations and state management, and designed all
+              visual elements from scratch to ensure a unique, cohesive
+              experience.
             </p>
           </div>
 
           <div>
-            <h3 className="text-xl font-bold">Challenges</h3>
+            <h3 className="text-xl font-bold">Personal Touches</h3>
             <p className="mt-2">
-              A significant challenge was optimizing the real-time data fetching
-              to maintain performance while providing up-to-date information. I
-              implemented efficient caching strategies and selective updates to
-              minimize API calls while keeping the dashboard responsive.
-              Additionally, fine-tuning the AI prompts to provide relevant
-              financial insights required careful iteration and testing.
+              The animated potion bottle in the hero section represents my
+              approach to development—combining different elements to create
+              something greater than the sum of its parts. Each project card
+              features custom transitions that reflect the nature of the work,
+              and the overall design balances professionalism with personality.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-bold">Reflections</h3>
+            <p className="mt-2">
+              Building my own portfolio allowed me to experiment with techniques
+              I've wanted to try but rarely had the opportunity to implement in
+              client work. It was liberating to make design decisions based
+              solely on my preferences while still adhering to accessibility and
+              performance best practices. This project reinforced my belief that
+              the best work happens when technical skill meets creative freedom.
             </p>
           </div>
         </div>
