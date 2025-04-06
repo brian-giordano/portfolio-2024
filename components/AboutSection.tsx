@@ -1,7 +1,7 @@
 // components/AboutSection.tsx
 import React from "react";
 import Image from "next/legacy/image";
-import AboutImage from "../assets/images/about-me-illustration-2.png"; // Import your image
+import AboutImage from "@/assets/images/about-me-illustration-2.png";
 
 const AboutSection: React.FC = () => {
   return (
@@ -69,7 +69,6 @@ const AboutSection: React.FC = () => {
             layout="fill" // Use fill to cover the parent div
             className="absolute top-0 left-0 w-full h-full object-cover rounded" // Cover the parent div
             sizes="(max-width: 768px) 100vw, (min-width: 768px) 50vw"
-            priority={true}
           />
         </div>
       </div>
