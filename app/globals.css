@@ -319,6 +319,21 @@ section.active-section .section-header-container {
   }
 }
 
+/* ===== DIRECT STYLING ===== */
+/* Always ensure Projects section header has proper opacity */
+#projects .section-header-container {
+  opacity: 1 !important;
+}
+
+/* For other sections, keep the existing behavior */
+section:not(#projects):not(.active-section) .section-header-container {
+  opacity: 0.5;
+}
+
+section:not(#projects).active-section .section-header-container {
+  opacity: 1;
+}
+
 .pulse-animation {
   animation: pulse 8s ease-in-out infinite;
 }

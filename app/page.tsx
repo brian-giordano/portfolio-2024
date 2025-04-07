@@ -135,6 +135,19 @@ const Home: React.FC = () => {
     // Check if we're in the intro section
     if (scrollY < 300) {
       setCurrentSection("");
+
+      // Important: Don't remove active-section class from Projects when in intro
+      // Only update other sections if needed
+      const projectsSection = document.getElementById("projects");
+      if (
+        projectsSection &&
+        !projectsSection.classList.contains("active-section")
+      ) {
+        document.querySelectorAll("section").forEach((s) => {
+          if (s.id !== "projects") s.classList.remove("active-section");
+        });
+        projectsSection.classList.add("active-section");
+      }
       return;
     }
 
