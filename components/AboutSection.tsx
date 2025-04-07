@@ -55,8 +55,8 @@ const AboutSection: React.FC = () => {
           <p>
             Other hobbies of mine include camping & hiking, craft beer, audio
             production, building personal projects, crypto, fitness, and
-            snowboarding. I live in New England with my gorgeous wife and two
-            dogs (Daisy, a beautiful mutt, and Drax, a handsome pocket bully.)
+            snowboarding. I live in New England with my wife and two dogs
+            (Daisy, a beautiful mutt, and Drax, a handsome pocket bully.)
           </p>
         </div>
 
