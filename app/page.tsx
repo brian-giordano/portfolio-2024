@@ -243,6 +243,19 @@ const Home: React.FC = () => {
           </div>
         </motion.section>
 
+        {/* Projects Section */}
+        <section
+          id="projects"
+          className="w-full bg-gray-100 flex flex-col items-start justify-center mt-8"
+        >
+          <div className="container mx-auto section-header-container">
+            <SectionHeader name="Projects" bandColor="gold" />
+          </div>
+          <div className="container mx-auto section-content md:pb-6 min-h-[50vh]">
+            <ProjectSection />
+          </div>
+        </section>
+
         {/* Experience Section */}
         <section
           id="experience"
@@ -279,19 +292,6 @@ const Home: React.FC = () => {
           </div>
           <div className="container mx-auto section-content md:pb-6 min-h-[50vh]">
             <SkillsSection />
-          </div>
-        </section>
-
-        {/* Projects Section */}
-        <section
-          id="projects"
-          className="w-full bg-gray-100 flex flex-col items-start justify-center mt-8"
-        >
-          <div className="container mx-auto section-header-container">
-            <SectionHeader name="Projects" bandColor="gold" />
-          </div>
-          <div className="container mx-auto section-content md:pb-6 min-h-[50vh]">
-            <ProjectSection />
           </div>
         </section>
 

@@ -95,6 +95,12 @@ const Header: React.FC<HeaderProps> = ({
   const MenuItems: MenuItem[] = useMemo(
     () => [
       {
+        label: "Projects",
+        sectionId: "projects",
+        bandColor: "gold",
+        icon: <FaBriefcase className="text-gold" />,
+      },
+      {
         label: "Experience",
         sectionId: "experience",
         bandColor: "gold",
@@ -111,12 +117,6 @@ const Header: React.FC<HeaderProps> = ({
         sectionId: "skills",
         bandColor: "gold",
         icon: <PiLightningFill className="text-gold" />,
-      },
-      {
-        label: "Projects",
-        sectionId: "projects",
-        bandColor: "gold",
-        icon: <FaBriefcase className="text-gold" />,
       },
       {
         label: "About",
@@ -168,7 +168,7 @@ const Header: React.FC<HeaderProps> = ({
             className={`
               ${
                 currentSection === item.sectionId
-                  ? "bg-opacity-15 bg-eggplant font-bold"
+                  ? "bg-opacity-15 bg-eggplant font-bold text-gold"
                   : "font-medium hover:bg-opacity-10 hover:bg-gray-400"
               }
               ${

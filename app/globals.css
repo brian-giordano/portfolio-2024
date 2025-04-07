@@ -61,6 +61,10 @@ p {
   color: var(--foreground);
 }
 
+.text-gold {
+  color: var(--color-gold);
+}
+
 /* ===== LIST STYLES ===== */
 /* Only apply list styles to content areas */
 .section-content ul {
@@ -259,7 +263,7 @@ section.active-section .section-header-container {
 
 .mobile-menu-item.active a {
   background-color: rgba(255, 255, 255, 0.08);
-  color: var(--foreground);
+  color: var(--color-gold);
 }
 
 .mobile-menu-item .icon {
@@ -344,16 +348,7 @@ section.active-section .section-header-container {
 }
 
 /* Fix for iOS Safari overscroll behavior */
-@supports (-webkit-touch-callout: none) {
-  body {
-    /* Prevent rubber-band effect on iOS */
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
-  }
-}
+/* Fix for iOS Safari overscroll behavior while maintaining scroll functionality */
 
 /* Reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
