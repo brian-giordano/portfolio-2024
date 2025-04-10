@@ -24,16 +24,16 @@ const ProjectsSection: React.FC = () => {
   const projects: CardProps[] = [
     {
       imageUrl: CryptoDashboardImg,
-      title: "Crypto AI Dashboard",
+      title: "Crypto AI Dashboard (Beta)",
       alt: "Crypto AI Dashboard interface screenshot",
       orgName: "Full Stack Development",
       orgLink: "https://crypto-ai-dashboard-lovat.vercel.app/",
       description: (
         <p>
-          A comprehensive cryptocurrency dashboard that combines real-time
-          market data with AI-powered sentiment analysis. Users can track the
-          top 25 cryptocurrencies, visualize market trends, and get AI-generated
-          insights through a conversational interface.
+          An in-development cryptocurrency dashboard combining real-time market
+          data with AI-powered analysis. This beta version allows users to track
+          cryptocurrencies, view basic market trends, and experiment with the AI
+          conversational interface that&apos;s currently being refined.
         </p>
       ),
       stackUsed: [
@@ -47,6 +47,20 @@ const ProjectsSection: React.FC = () => {
       ],
       moreDetails: (
         <div className="space-y-8">
+          {/* Description Section */}
+          <div className="space-y-3">
+            <h3 className="text-xl md:text-2xl font-bold text-ivoryWhite">
+              Project Status
+            </h3>
+            <p className="text-ivoryWhite text-base leading-relaxed">
+              <strong>Currently in Beta:</strong> This dashboard is an active
+              development project that showcases my work with cryptocurrency
+              data and AI integration. While functional, it&apos;s still being
+              optimized for performance and expanded with new features. Consider
+              it a working prototype rather than a production-ready application.
+            </p>
+          </div>
+
           {/* Description Section */}
           <div className="space-y-3">
             <h3 className="text-xl md:text-2xl font-bold text-ivoryWhite">
@@ -65,12 +79,11 @@ const ProjectsSection: React.FC = () => {
           {/* Key Features Section */}
           <div className="space-y-4">
             <h3 className="text-xl md:text-2xl font-bold text-ivoryWhite">
-              Key Features
+              Current Features
             </h3>
             <ul className="space-y-4">
-              <li className="flex">
-                <span className="text-gold flex-shrink-0 w-5">•</span>
-                <div className="flex-1">
+              <li>
+                <div>
                   <strong>Real-time Market Tracking:</strong>
                   <span className="text-ivoryWhite block mt-1">
                     Live price updates, market cap, and volume data for the top
@@ -78,42 +91,38 @@ const ProjectsSection: React.FC = () => {
                   </span>
                 </div>
               </li>
-              <li className="flex">
-                <span className="text-gold flex-shrink-0 w-5">•</span>
-                <div className="flex-1">
-                  <strong>Interactive Charts:</strong>
+              <li>
+                <div>
+                  <strong>Interactive Charts (In Development):</strong>
                   <span className="text-ivoryWhite block mt-1">
-                    Visual representation of price movements and market trends
-                    over customizable time periods
+                    Basic visualization of price movements with more advanced
+                    charting features planned
                   </span>
                 </div>
               </li>
-              <li className="flex">
-                <span className="text-gold flex-shrink-0 w-5">•</span>
-                <div className="flex-1">
-                  <strong>AI-Powered Sentiment Analysis:</strong>
+              <li>
+                <div>
+                  <strong>AI-Powered Sentiment Analysis (Beta):</strong>
                   <span className="text-ivoryWhite block mt-1">
-                    Natural language processing to analyze market sentiment from
-                    various sources
+                    Experimental natural language processing to analyze market
+                    sentiment
                   </span>
                 </div>
               </li>
-              <li className="flex">
-                <span className="text-gold flex-shrink-0 w-5">•</span>
-                <div className="flex-1">
+              <li>
+                <div>
                   <strong>Conversational Interface:</strong>
                   <span className="text-ivoryWhite block mt-1">
-                    Ask questions about specific cryptocurrencies and receive
-                    AI-generated insights
+                    Ask questions about cryptocurrencies and receive
+                    AI-generated insights (still being refined)
                   </span>
                 </div>
               </li>
-              <li className="flex">
-                <span className="text-gold flex-shrink-0 w-5">•</span>
-                <div className="flex-1">
+              <li>
+                <div>
                   <strong>Responsive Design:</strong>
                   <span className="text-ivoryWhite block mt-1">
-                    Optimized for both desktop and mobile viewing
+                    Basic mobile optimization in progress
                   </span>
                 </div>
               </li>
@@ -140,16 +149,18 @@ const ProjectsSection: React.FC = () => {
           {/* Challenges Section */}
           <div className="space-y-3">
             <h3 className="text-xl md:text-2xl font-bold text-ivoryWhite">
-              Challenges
+              Current Challenges & Next Steps
             </h3>
             <p className="text-ivoryWhite text-base leading-relaxed">
-              A significant challenge was optimizing the real-time data fetching
-              to maintain performance while providing up-to-date information. I
-              implemented <strong>efficient caching strategies</strong> and{" "}
-              <strong>selective updates</strong> to minimize API calls while
-              keeping the dashboard responsive. Additionally, fine-tuning the AI
-              prompts to provide relevant financial insights required careful
-              iteration and testing.
+              I&apos;m currently working on optimizing the real-time data
+              fetching to improve performance while providing up-to-date
+              information. The next development phase includes implementing{" "}
+              <strong>more efficient caching strategies</strong> and{" "}
+              <strong>selective updates</strong> to minimize API calls. I&apos;m
+              also refining the AI prompts to provide more relevant financial
+              insights, which requires ongoing iteration and testing. Future
+              updates will include more comprehensive charting tools and
+              expanded cryptocurrency coverage.
             </p>
           </div>
         </div>
