@@ -250,7 +250,7 @@ const Home: React.FC = () => {
           {/* Bottom row - minimal height */}
           <div className="pb-4 flex justify-center lg:pb-12">
             <ScrollIndicator
-              targetSectionId="experience"
+              targetSectionId="projects"
               onNavClick={handleNavClick}
             />
           </div>
