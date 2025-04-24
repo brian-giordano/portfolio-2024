@@ -41,8 +41,9 @@ const ProjectsSection: React.FC = () => {
         { name: "TypeScript", category: "Frontend" },
         { name: "Tailwind CSS", category: "Frontend" },
         { name: "Shadcn UI", category: "Frontend" },
-        { name: "OpenAI API", category: "Backend" },
         { name: "CoinGecko API", category: "Backend" },
+        { name: "FastAPI", category: "Backend" },
+        { name: "Python", category: "Backend" },
         { name: "Vercel", category: "DevOps" },
       ],
       moreDetails: (
@@ -141,8 +142,8 @@ const ProjectsSection: React.FC = () => {
               <strong> Tailwind CSS</strong> and <strong>Shadcn UI</strong>{" "}
               components for a clean, modern interface. The backend integrates
               with <strong>CoinGecko API</strong> for real-time market data and{" "}
-              <strong>OpenAI&apos;s API</strong> for sentiment analysis and
-              conversational capabilities.
+              <strong>Hugging Face</strong> data models for sentiment analysis
+              and conversational capabilities.
             </p>
           </div>
 
@@ -186,7 +187,7 @@ const ProjectsSection: React.FC = () => {
         <div className="space-y-6">
           <div>
             <h3 className="text-xl font-bold">Description</h3>
-            <p className="mt-2">
+            <p className="text-ivoryWhite text-base leading-relaxed">
               After years of building websites to client specifications,
               creating my own portfolio was a refreshing opportunity to build
               something entirely to my own standards. This site serves as both a
@@ -224,7 +225,7 @@ const ProjectsSection: React.FC = () => {
 
           <div>
             <h3 className="text-xl font-bold">Technical Implementation</h3>
-            <p className="mt-2">
+            <p className="text-ivoryWhite text-base leading-relaxed">
               Built with Next.js and TypeScript for type safety and improved
               developer experience, the site leverages Framer Motion for fluid
               animations and Tailwind CSS for rapid styling. I implemented
@@ -236,7 +237,7 @@ const ProjectsSection: React.FC = () => {
 
           <div>
             <h3 className="text-xl font-bold">Personal Touches</h3>
-            <p className="mt-2">
+            <p className="text-ivoryWhite text-base leading-relaxed">
               The animated potion bottle in the hero section represents my
               approach to development—combining different elements to create
               something greater than the sum of its parts. Each project card
@@ -247,9 +248,9 @@ const ProjectsSection: React.FC = () => {
 
           <div>
             <h3 className="text-xl font-bold">Reflections</h3>
-            <p className="mt-2">
+            <p className="text-ivoryWhite text-base leading-relaxed">
               Building my own portfolio allowed me to experiment with techniques
-              It&apos;ve wanted to try but rarely had the opportunity to
+              I&apos;ve wanted to try but rarely had the opportunity to
               implement in client work. It was liberating to make design
               decisions based solely on my preferences while still adhering to
               accessibility and performance best practices. This project
@@ -277,7 +278,7 @@ const ProjectsSection: React.FC = () => {
       stackUsed: GaspSkills,
       moreDetails: (
         <>
-          <h3>Key Responsibilities:</h3>
+          <h3 className="text-xl font-bold">Key Responsibilities</h3>
           <ul>
             <li>
               Curated and customized Squarespace templates for GASP&apos;s
@@ -297,8 +298,8 @@ const ProjectsSection: React.FC = () => {
             </li>
           </ul>
 
-          <h3>Outcome/Impact:</h3>
-          <p>
+          <h3 className="text-xl font-bold">Outcome/Impact</h3>
+          <p className="text-ivoryWhite text-base leading-relaxed">
             The final website offered a user-friendly interface for both the
             GASP team and potential donors, significantly improving their online
             presence. The compelling design and user experience facilitated

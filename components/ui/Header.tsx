@@ -174,7 +174,7 @@ const Header: React.FC<HeaderProps> = ({
               ${
                 isMobile
                   ? "w-full text-left py-4 px-6 flex items-center rounded-lg"
-                  : "px-4 py-2 w-32 flex items-center justify-center"
+                  : "px-4 py-2 flex items-center justify-center flex-1"
               }
               text-ivoryWhite hover:text-gold transition-all duration-200 ease-in-out
               cursor-pointer min-h-[44px] md:min-h-0
@@ -258,7 +258,7 @@ const Header: React.FC<HeaderProps> = ({
                   {name}
                 </h1>
                 <nav className="opacity-90 transition-all duration-300 z-50 hidden lg:flex">
-                  <ul className="flex space-x-6 py-2 list-none">
+                  <ul className="flex w-full justify-between py-2 list-none">
                     {renderNavItems()}
                   </ul>
                 </nav>
