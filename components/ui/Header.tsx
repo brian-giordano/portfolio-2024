@@ -11,10 +11,10 @@ import {
   FaEnvelope,
   FaBars,
   FaXmark,
+  FaRocket,
 } from "react-icons/fa6";
 import { PiLightningFill, PiGraduationCapFill } from "react-icons/pi";
-import { motion } from "framer-motion";
-import { useScrollPosition } from "@/hooks/useScrollPosition";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface HeaderProps {
   name: string;
@@ -29,67 +29,49 @@ interface MenuItem {
   icon: React.ReactNode;
 }
 
-const headerVariants = {
-  hidden: { y: -100, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      type: "spring",
-      stiffness: 100,
-      damping: 15,
-      delay: 0.1,
-    },
-  },
-};
-
 const Header: React.FC<HeaderProps> = ({
   name,
   currentSection,
   onNavClick,
 }) => {
-  const isScrolled = useScrollPosition();
-  const [isMinimallyScrolled, setIsMinimallyScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const headerRef = useRef<HTMLDivElement>(null);
-  const [headerHeight, setHeaderHeight] = useState(64);
+  const [initialHeaderHeight, setInitialHeaderHeight] = useState(200);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
-  // Effect to measure header height
+  // Measure header height ONCE on mount (expanded state only)
   useEffect(() => {
-    if (headerRef.current) {
-      setHeaderHeight(headerRef.current.offsetHeight);
-
-      // Update CSS variable for header height
-      document.documentElement.style.setProperty(
-        "--header-height",
-        `${headerRef.current.offsetHeight}px`
-      );
-    }
-
-    const handleResize = () => {
-      if (headerRef.current) {
-        setHeaderHeight(headerRef.current.offsetHeight);
-        document.documentElement.style.setProperty(
-          "--header-height",
-          `${headerRef.current.offsetHeight}px`
-        );
+    const measureInitialHeight = () => {
+      if (headerRef.current && window.scrollY < 10) {
+        const height = headerRef.current.offsetHeight;
+        setInitialHeaderHeight(height);
+        document.documentElement.style.setProperty("--header-height", "70px");
       }
     };
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [isScrolled]);
+    measureInitialHeight();
+    document.fonts?.ready?.then(measureInitialHeight);
 
-  // Add this effect to detect even minimal scrolling
+    const timeout = setTimeout(measureInitialHeight, 100);
+
+    window.addEventListener("resize", measureInitialHeight);
+    return () => {
+      window.removeEventListener("resize", measureInitialHeight);
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  // Smooth scroll progress (0 to 1)
   useEffect(() => {
-    const handleMinimalScroll = () => {
-      setIsMinimallyScrolled(window.scrollY > 5);
+    const handleScroll = () => {
+      const progress = Math.min(window.scrollY / 150, 1);
+      setScrollProgress(progress);
     };
 
-    window.addEventListener("scroll", handleMinimalScroll);
-    handleMinimalScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
 
-    return () => window.removeEventListener("scroll", handleMinimalScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const MenuItems: MenuItem[] = useMemo(
@@ -98,13 +80,13 @@ const Header: React.FC<HeaderProps> = ({
         label: "Projects",
         sectionId: "projects",
         bandColor: "gold",
-        icon: <FaBriefcase className="text-gold" />,
+        icon: <FaRocket className="text-gold" />,
       },
       {
         label: "Experience",
         sectionId: "experience",
         bandColor: "gold",
-        icon: <PiGraduationCapFill className="text-gold" />,
+        icon: <FaBriefcase className="text-gold" />,
       },
       {
         label: "Education",
@@ -144,192 +126,252 @@ const Header: React.FC<HeaderProps> = ({
     [onNavClick]
   );
 
-  const renderNavItems = (isMobile = false) => (
-    <>
-      {MenuItems.map((item) => (
-        <li
-          key={item.sectionId}
-          className={`
-            ${isMobile ? "w-full my-1" : "group"} 
-            list-none
-            ${
-              isMobile
-                ? "rounded-lg overflow-hidden transition-all duration-200"
-                : ""
-            }
-          `}
-        >
-          <a
-            href={`#${item.sectionId}`}
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToSection(item.sectionId);
-            }}
-            className={`
-              ${
-                currentSection === item.sectionId
-                  ? "bg-opacity-15 bg-eggplant font-bold text-gold"
-                  : "font-medium hover:bg-opacity-10 hover:bg-gray-400"
-              }
-              ${
-                isMobile
-                  ? "w-full text-left py-4 px-6 flex items-center rounded-lg"
-                  : "px-4 py-2 flex items-center justify-center flex-1"
-              }
-              text-ivoryWhite hover:text-gold transition-all duration-200 ease-in-out
-              cursor-pointer min-h-[44px] md:min-h-0
-            `}
-          >
-            <span className={`text-xl ${isMobile ? "mr-4" : "mr-2"} text-gold`}>
-              {item.icon}
-            </span>
-            <span className={isMobile ? "text-base" : "whitespace-nowrap"}>
-              {item.label}
-            </span>
-            {isMobile && currentSection === item.sectionId && (
-              <span className="ml-auto">
-                <div className="h-2 w-2 rounded-full bg-gold"></div>
-              </span>
-            )}
-          </a>
-        </li>
-      ))}
-    </>
-  );
+  const scrollToTop = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
-  const isHomeSection = currentSection === "" || currentSection === "home";
-  const showHeaderBackground = !isHomeSection || isMinimallyScrolled;
+  // Interpolated values based on scroll
+  const nameSize = `${Math.max(1.75, 3.75 - scrollProgress * 2)}rem`;
+  const topPadding = `${Math.max(1, 2.5 - scrollProgress * 1.5)}rem`;
+  const bottomPadding = `${Math.max(0.75, 1.5 - scrollProgress * 0.75)}rem`;
+  const nameMarginTop = `${Math.max(0, 0.5 - scrollProgress * 0.5)}rem`;
+  const nameMarginBottom = `${Math.max(0, 1.5 - scrollProgress * 1.5)}rem`;
+  const navOpacity = scrollProgress < 0.5 ? 1 - scrollProgress * 2 : 0;
+  const scrolledNavOpacity =
+    scrollProgress > 0.5 ? (scrollProgress - 0.5) * 2 : 0;
+
+  // Subtle, tight dark shadow used for all nav links (keeps edges crisp)
+  const navTextShadow = "0 1px 0 rgba(0,0,0,0.7)";
 
   return (
     <>
-      {/* Main header */}
+      {/* Main header - ALWAYS solid background */}
       <motion.header
         ref={headerRef}
-        className={`w-full fixed top-0 left-0 right-0 z-50 ${
-          showHeaderBackground ? "bg-darkSlate" : ""
-        }`}
-        style={{
-          background: !showHeaderBackground
-            ? "linear-gradient(to bottom, rgba(20, 20, 30, 0.8) 0%, rgba(20, 20, 30, 0.4) 50%, transparent 100%)"
-            : "",
-          backdropFilter: !showHeaderBackground ? "blur(5px)" : "",
-        }}
-        initial="hidden"
-        animate="visible"
-        variants={headerVariants}
+        className="w-full fixed top-0 left-0 right-0 z-50 bg-darkSlate"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 100, damping: 15, delay: 0.1 }}
       >
         <div
-          className={`container mx-auto ${
-            isScrolled
-              ? "flex items-center justify-between py-4 px-4"
-              : "flex flex-col items-center py-8 px-4"
-          }`}
+          className="container mx-auto px-4 transition-all duration-150 ease-out"
+          style={{ paddingTop: topPadding, paddingBottom: bottomPadding }}
         >
-          {!isScrolled && (
-            <>
-              <nav
-                className={`mb-2 w-full opacity-90 transition-all duration-300 z-50 hidden lg:block ${
-                  !showHeaderBackground ? "nav-backdrop" : ""
-                }`}
-              >
-                <ul className="flex justify-center space-x-4 py-2 list-none">
-                  {renderNavItems()}
-                </ul>
-              </nav>
-              <h1
-                className={`font-primary font-extrabold tracking-wide transition-all duration-300 uppercase text-3xl text-ivoryWhite z-20 cursor-pointer lg:text-6xl ${
-                  !showHeaderBackground ? "text-shadow-lg" : ""
-                }`}
-              >
-                {name}
-              </h1>
-            </>
-          )}
-
-          {isScrolled && (
-            <>
-              <div className="flex items-center justify-between w-full">
-                <h1
-                  onClick={() =>
-                    window.scrollTo({ top: 0, behavior: "smooth" })
-                  }
-                  className={`font-primary font-extrabold tracking-wide transition-all duration-300 uppercase text-2xl text-ivoryWhite cursor-pointer`}
-                >
-                  {name}
-                </h1>
-                <nav className="opacity-90 transition-all duration-300 z-50 hidden lg:flex">
-                  <ul className="flex w-full justify-between py-2 list-none">
-                    {renderNavItems()}
-                  </ul>
-                </nav>
-              </div>
-
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-xl pt-0 px-4 focus:outline-none flex items-center justify-center transition-all duration-300 lg:hidden"
-                aria-label="Toggle menu"
-                aria-expanded={isMenuOpen}
-              >
-                <span className="text-ivoryWhite">
-                  {isMenuOpen ? <FaXmark /> : <FaBars />}
-                </span>
-              </button>
-            </>
-          )}
-        </div>
-      </motion.header>
-
-      {/* Mobile menu */}
-      {isMenuOpen && (
-        <div className="fixed inset-0 mobile-menu-container z-50 lg:hidden">
-          <div className="flex justify-end p-4">
-            <button
-              onClick={() => setIsMenuOpen(false)}
-              className="text-xl text-ivoryWhite bg-opacity-20 bg-gray-700 p-2 rounded-full"
-              aria-label="Close menu"
-            >
-              <FaXmark />
-            </button>
-          </div>
-
-          <div className="mobile-menu-header">
-            <h1 className="text-2xl font-bold text-ivoryWhite">
-              BRIAN GIORDANO
-            </h1>
-            <p className="text-sm text-silverMist mt-2">Digital Alchemist</p>
-          </div>
-
-          <nav className="flex flex-col items-center justify-start w-full px-4 mt-6">
-            <ul className="flex flex-col items-stretch w-full max-w-xs list-none p-0 m-0 space-y-2">
+          {/* Top nav - fades out on scroll */}
+          <motion.nav
+            className="w-full z-50 hidden lg:block transition-all duration-150"
+            style={{
+              opacity: navOpacity,
+              pointerEvents: navOpacity > 0.3 ? "auto" : "none",
+              height: navOpacity > 0 ? "auto" : 0,
+              marginBottom: navOpacity > 0 ? "0.5rem" : 0,
+              overflow: "hidden",
+            }}
+          >
+            <ul className="flex justify-center space-x-2 py-2 list-none">
               {MenuItems.map((item) => (
-                <li
-                  key={item.sectionId}
-                  className={`mobile-menu-item ${
-                    currentSection === item.sectionId ? "active" : ""
-                  }`}
-                >
-                  {currentSection === item.sectionId && (
-                    <div className="active-indicator"></div>
-                  )}
+                <li key={item.sectionId} className="group list-none">
                   <a
                     href={`#${item.sectionId}`}
                     onClick={(e) => {
                       e.preventDefault();
                       scrollToSection(item.sectionId);
                     }}
+                    className={`
+  ${
+    currentSection === item.sectionId
+      ? "bg-gold/15 text-gold"
+      : "font-medium hover:bg-white/10"
+  }
+  px-4 py-2 flex items-center justify-center
+  text-ivoryWhite hover:text-gold transition-all duration-200 ease-in-out
+  cursor-pointer rounded-lg
+`}
+                    style={{ textShadow: navTextShadow }}
                   >
-                    <span className="icon">{item.icon}</span>
-                    <span className="text">{item.label}</span>
+                    <span className="text-xl mr-2 text-gold">{item.icon}</span>
+                    <span className="whitespace-nowrap">{item.label}</span>
                   </a>
                 </li>
               ))}
             </ul>
-          </nav>
-        </div>
-      )}
+          </motion.nav>
 
-      {/* Add padding to the top of the page to account for the fixed header */}
-      <div style={{ height: headerHeight }} />
+          {/* Name + scrolled nav row */}
+          <div className="flex items-center justify-center relative">
+            {/* Name - centered when not scrolled, left when scrolled */}
+            <motion.h1
+              onClick={scrollToTop}
+              className={`font-primary font-extrabold tracking-wide uppercase text-ivoryWhite cursor-pointer transition-all duration-150 ease-out ${
+                scrollProgress > 0.5 ? "mr-auto" : ""
+              }`}
+              style={{
+                fontSize: nameSize,
+                marginTop: nameMarginTop,
+                marginBottom: nameMarginBottom,
+              }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              {name}
+            </motion.h1>
+
+            {/* Scrolled nav - fades in, positioned absolute so it doesn't affect centering */}
+            <motion.nav
+              className="hidden lg:flex items-center absolute right-0"
+              style={{
+                opacity: scrolledNavOpacity,
+                pointerEvents: scrolledNavOpacity > 0.3 ? "auto" : "none",
+              }}
+            >
+              <ul className="flex space-x-1 py-2 list-none">
+                {MenuItems.map((item) => (
+                  <li key={item.sectionId} className="list-none">
+                    <a
+                      href={`#${item.sectionId}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        scrollToSection(item.sectionId);
+                      }}
+                      className={`
+  ${
+    currentSection === item.sectionId
+      ? "bg-gold/20 text-gold"
+      : "font-medium hover:bg-white/10"
+  }
+  px-3 py-2 flex items-center
+  text-ivoryWhite hover:text-gold transition-all duration-200 ease-in-out
+  cursor-pointer rounded-lg text-sm
+`}
+                      style={{ textShadow: navTextShadow }}
+                    >
+                      <span className="text-lg mr-1.5 text-gold">
+                        {item.icon}
+                      </span>
+                      <span className="whitespace-nowrap">{item.label}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </motion.nav>
+
+            {/* Mobile menu button */}
+            <motion.button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-xl px-4 focus:outline-none flex items-center justify-center lg:hidden absolute right-0"
+              style={{
+                opacity: scrolledNavOpacity > 0.5 ? 1 : 0,
+                pointerEvents: scrolledNavOpacity > 0.5 ? "auto" : "none",
+              }}
+              aria-label="Toggle menu"
+              aria-expanded={isMenuOpen}
+              whileTap={{ scale: 0.9 }}
+            >
+              <span className="text-ivoryWhite">
+                {isMenuOpen ? <FaXmark /> : <FaBars />}
+              </span>
+            </motion.button>
+          </div>
+        </div>
+
+        {/* Bottom border that fades in on scroll */}
+        <motion.div
+          className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent"
+          style={{ opacity: scrollProgress }}
+        />
+      </motion.header>
+
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            className="fixed inset-0 bg-darkSlate/98 backdrop-blur-lg z-50 lg:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="flex justify-end p-4">
+              <motion.button
+                onClick={() => setIsMenuOpen(false)}
+                className="text-xl text-ivoryWhite bg-white/10 p-3 rounded-full"
+                aria-label="Close menu"
+                whileHover={{
+                  scale: 1.1,
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <FaXmark />
+              </motion.button>
+            </div>
+
+            <motion.div
+              className="text-center mb-8 cursor-pointer"
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0 8px 15px rgba(255, 202, 40, 0.3)",
+                rotateX: 2,
+              }}
+              transition={{
+                delay: 0.1,
+                type: "spring",
+                stiffness: 150,
+                damping: 20,
+              }}
+            >
+              <h1 className="text-2xl font-bold text-ivoryWhite font-primary tracking-wide select-none">
+                BRIAN GIORDANO
+              </h1>
+            </motion.div>
+
+            <nav className="flex flex-col items-center justify-start w-full px-4">
+              <ul className="flex flex-col items-stretch w-full max-w-xs list-none p-0 m-0 space-y-2">
+                {MenuItems.map((item, index) => (
+                  <motion.li
+                    key={item.sectionId}
+                    initial={{ x: -30, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.1 + index * 0.05 }}
+                  >
+                    <a
+                      href={`#${item.sectionId}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        scrollToSection(item.sectionId);
+                      }}
+                      className={`
+                        ${
+                          currentSection === item.sectionId
+                            ? "bg-gold/20 text-gold"
+                            : "text-ivoryWhite hover:bg-white/10"
+                        }
+                        w-full py-4 px-6 flex items-center rounded-xl transition-all duration-200
+                      `}
+                      style={{ textShadow: navTextShadow }}
+                    >
+                      <span className="text-xl mr-4 text-gold">
+                        {item.icon}
+                      </span>
+                      <span className="text-base">{item.label}</span>
+                      {currentSection === item.sectionId && (
+                        <span className="ml-auto">
+                          <div className="h-2 w-2 rounded-full bg-gold" />
+                        </span>
+                      )}
+                    </a>
+                  </motion.li>
+                ))}
+              </ul>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Spacer - always uses expanded height */}
+      <div style={{ height: initialHeaderHeight }} />
     </>
   );
 };

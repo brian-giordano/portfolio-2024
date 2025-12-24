@@ -7,6 +7,17 @@
   /* Colors */
   --background: #1a1a2e;
   --foreground: #f8f8ff;
+
+  /* Updated pill colors for badges - improved palette */
+  --color-pill-frontend-bg: #4fd1c5; /* mystic teal */
+  --color-pill-backend-bg: #f56565; /* light crimson */
+  --color-pill-database-bg: #d4af37; /* gold */
+  --color-pill-devops-bg: #cbd5e0; /* silver mist */
+  --color-pill-design-bg: #b794f4; /* lavender */
+
+  --color-pill-text: #1e1e2f; /* dark text for contrast */
+
+  /* Legacy colors (optional, keep if used elsewhere) */
   --color-mysticTeal: #00bfa6;
   --color-gold: #ffd700;
   --color-lightCrimson: #e57373;
@@ -373,4 +384,65 @@ section:not(#projects).active-section .section-header-container {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+section {
+  position: relative;
+  z-index: 1;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+}
+
+header {
+  z-index: 50;
+}
+
+/* Background color for cards */
+.bg-charcoal {
+  background-color: #2e2e3e; /* example dark but distinct from bg-darkSlate */
+}
+
+/* Badge pill background colors */
+.badge-frontend {
+  background-color: var(--color-pill-frontend-bg);
+  color: var(--color-pill-text);
+}
+
+.badge-backend {
+  background-color: var(--color-pill-backend-bg);
+  color: var(--color-pill-text);
+}
+
+.badge-database {
+  background-color: var(--color-pill-database-bg);
+  color: var(--color-pill-text);
+}
+
+.badge-devops {
+  background-color: var(--color-pill-devops-bg);
+  color: var(--color-pill-text);
+}
+
+.badge-design {
+  background-color: var(--color-pill-design-bg);
+  color: var(--color-pill-text);
+}
+
+@keyframes scan {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+.animate-scan {
+  animation: scan 1.5s linear infinite;
+}
+
+.hover\:shadow-gold\/30:hover {
+  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
 }

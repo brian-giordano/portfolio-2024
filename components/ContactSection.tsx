@@ -1,10 +1,27 @@
 import React from "react";
 import ContactForm from "./ui/ContactForm";
+import { FaCalendarAlt } from "react-icons/fa";
 
 const ContactSection: React.FC = () => {
   return (
     <div className="container mx-auto bg-darkSlate p-4 md:p-8">
       <ContactForm />
+
+      {/* Calendly CTA */}
+      <div className="mt-8 pt-6 border-t border-mediumCharcoal text-center">
+        <p className="text-silverMist mb-4 text-sm md:text-base">
+          Prefer to schedule directly?
+        </p>
+        <a
+          href="https://calendly.com/YOUR_USERNAME"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gold text-darkSlate font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-300 hover:scale-105 w-full sm:w-auto"
+        >
+          <FaCalendarAlt />
+          Book a call on Calendly
+        </a>
+      </div>
     </div>
   );
 };
