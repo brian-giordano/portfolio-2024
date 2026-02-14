@@ -8,6 +8,7 @@ import CardsList from "./ui/CardsList";
 import VisionDashboardThumbnail from "../assets/images/vision-dashboard-thumbnail-v2.png";
 import PortfolioWebsiteThumbnail from "../assets/images/portfolio-website-thumbnail-v2.png";
 import GaspThumbnail from "../assets/images/portfolio-GASP-thumbnail-v2.png";
+import ChrisStrattonThumbnail from "../assets/images/portfolio-Chirs-Stratton-thumbnail-v2.png";
 
 import NextImage from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -121,6 +122,56 @@ const ProjectsSection: React.FC = () => {
         },
       },
       {
+        imageUrl: ChrisStrattonThumbnail,
+        title: "Chris Stratton for City Council (In Production)",
+        alt: "Christ Stratton for Ward 6 City Council screenshot",
+        orgName: "Full Stack Development",
+        orgLink: "https://chris-stratton-campaign.vercel.app/",
+        description: (
+          <p className="text-gray-200">
+            An in-progress website designed and developed with React, Tailwind
+            and typescript for a candidtate running for Ward 6 City Council in
+            Northampton, MA. Chris wanted a grass-roots feel that displayed the
+            unique Northampton cultural fabric with it&apos;s impressive natural
+            features and &quot;bike-ability.&quot; that&apos;s currently being
+            refined.
+          </p>
+        ),
+        stackUsed: [
+          { name: "Next.js", category: "Frontend" },
+          { name: "TypeScript", category: "Frontend" },
+          { name: "Tailwind CSS", category: "Frontend" },
+          { name: "Shadcn UI", category: "Frontend" },
+          { name: "Vercel", category: "DevOps" },
+          { name: "Adobe CS", category: "Design" },
+        ],
+        moreDetails: (
+          <div className="text-gray-200">
+            <p>
+              This beta dashboard provides real-time market data, AI-driven
+              insights, and a conversational interface to help users analyze
+              cryptocurrency trends.
+            </p>
+            <ul className="list-disc list-inside mt-2">
+              <li>Real-time price tracking</li>
+              <li>AI-powered market predictions</li>
+              <li>Interactive chat interface</li>
+              <li>Built with Next.js, FastAPI, and Python</li>
+              <li>Deployed on Vercel</li>
+            </ul>
+          </div>
+        ),
+        sizes: "(max-width: 1024px) 100vw, 1024px",
+        thumbnailConfig: {
+          useStyled: true,
+          accentColor: "gold",
+          bgGradient: "from-mediumCharcoal to-darkSlate",
+          thumbnailType: "chrisStratton",
+          animationKey: "scanLine",
+          projectImageUrl: ChrisStrattonThumbnail.src,
+        },
+      },
+      {
         imageUrl: GaspThumbnail,
         title: "Grand Anse Surgery Project",
         alt: "Grand Anse Surgery Project website screenshot",
@@ -162,7 +213,7 @@ const ProjectsSection: React.FC = () => {
         },
       },
     ],
-    []
+    [],
   );
 
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -191,7 +242,7 @@ const ProjectsSection: React.FC = () => {
     if (selectedIndex === null) return;
     const t = setTimeout(() => {
       const el = modalRef.current?.querySelector<HTMLElement>(
-        "button, a, [tabindex='0']"
+        "button, a, [tabindex='0']",
       );
       el?.focus();
     }, 50);
@@ -338,7 +389,7 @@ const ProjectsSection: React.FC = () => {
                 </motion.div>
               </motion.div>
             </AnimatePresence>,
-            portalRoot
+            portalRoot,
           )
         : null}
     </section>
