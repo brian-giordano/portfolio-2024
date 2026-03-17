@@ -38,7 +38,7 @@ const itemVariants = {
   visible: {
     y: 0,
     opacity: 1,
-    transition: { duration: 0.7, ease: "easeOut" },
+    transition: { duration: 0.9, ease: "easeOut" },
   },
 };
 
@@ -50,8 +50,8 @@ const DashboardCard = () => {
     const interval = setInterval(() => {
       setBars((prev) =>
         prev.map((h) =>
-          Math.max(20, Math.min(95, h + (Math.random() - 0.5) * 20))
-        )
+          Math.max(20, Math.min(95, h + (Math.random() - 0.5) * 20)),
+        ),
       );
     }, 1500);
     return () => clearInterval(interval);
@@ -295,7 +295,7 @@ const Home: React.FC = () => {
       setHeaderHeight(header.offsetHeight);
       document.documentElement.style.setProperty(
         "--header-height",
-        `${header.offsetHeight}px`
+        `${header.offsetHeight}px`,
       );
     }
 
@@ -304,7 +304,7 @@ const Home: React.FC = () => {
         setHeaderHeight(header.offsetHeight);
         document.documentElement.style.setProperty(
           "--header-height",
-          `${header.offsetHeight}px`
+          `${header.offsetHeight}px`,
         );
       }
     };
@@ -481,19 +481,28 @@ const Home: React.FC = () => {
           </div>
 
           {/* Hero content - tighter spacing */}
-          <div className="relative z-10 text-center max-w-3xl mx-auto">
+          <div className="relative z-10 text-center max-w-3xl mx-auto py-6">
             <motion.h1
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-primary font-bold text-ivoryWhite mb-4 leading-tight"
               variants={itemVariants}
             >
-              I build product UIs that ship.
+              I don&apos;t just build UIs.
+            </motion.h1>
+
+            <motion.h1
+              // className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-primary font-bold text-ivoryWhite mb-4 leading-tight"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-primary font-bold bg-gradient-to-tr from-gold to-ivoryWhite bg-clip-text text-transparent my-6 leading-tight"
+              variants={itemVariants}
+            >
+              I solve the problem behind them.
             </motion.h1>
 
             <motion.p
-              className="text-lg sm:text-xl md:text-2xl font-subheader font-light text-silverMist mb-8"
+              className="text-lg sm:text-xl md:text-2xl font-subheader text-silverMist mb-8 leading-loose"
               variants={itemVariants}
             >
-              Frontend engineer with design chops. AI-augmented. Startup-ready.
+              AI-augmented frontend engineer with design chops, defense-grade
+              experience, and a bias toward shipping.
             </motion.p>
 
             {/* Dual CTAs */}
