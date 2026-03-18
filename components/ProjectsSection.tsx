@@ -9,6 +9,8 @@ import VisionDashboardThumbnail from "../assets/images/vision-dashboard-thumbnai
 import PortfolioWebsiteThumbnail from "../assets/images/portfolio-website-thumbnail-v2.png";
 import GaspThumbnail from "../assets/images/portfolio-GASP-thumbnail-v2.png";
 import ChrisStrattonThumbnail from "../assets/images/portfolio-Chirs-Stratton-thumbnail-v2.png";
+import InsuranceAIThumbnail from "../assets/images/vision-dashboard-thumbnail-v2.png"; // temp placeholder
+import DODThumbnail from "../assets/images/portfolio-website-thumbnail-v2.png"; // temp placeholder
 
 import NextImage from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -78,49 +80,49 @@ const ProjectsSection: React.FC = () => {
           projectImageUrl: VisionDashboardThumbnail.src,
         },
       },
-      {
-        imageUrl: PortfolioWebsiteThumbnail,
-        title: "Portfolio Redesign (This website!)",
-        alt: "Portfolio website screenshot",
-        orgName: "Full Stack Development",
-        orgLink: "",
-        description: (
-          <p className="text-gray-200">
-            This portfolio website represents my creative vision brought to
-            life, designed and built entirely by myself. It showcases my work
-            through custom animations, interactive elements, and thoughtful UI
-            design that reflects my personal aesthetic and technical abilities.
-          </p>
-        ),
-        stackUsed: [
-          { name: "React", category: "Frontend" },
-          { name: "TypeScript", category: "Frontend" },
-          { name: "Next.js", category: "Frontend" },
-          { name: "Tailwind CSS", category: "Frontend" },
-          { name: "Adobe CS", category: "Design" },
-        ],
-        moreDetails: (
-          <div className="text-gray-200">
-            <p>
-              The site features custom animations, interactive UI elements, and
-              a clean, modern design that highlights my skills and projects.
-            </p>
-            <p>
-              Built with React and Next.js, styled with Tailwind CSS, and
-              designed with Adobe Creative Suite.
-            </p>
-          </div>
-        ),
-        sizes: "(max-width: 1024px) 100vw, 1024px",
-        thumbnailConfig: {
-          useStyled: true,
-          accentColor: "gold",
-          bgGradient: "from-mediumCharcoal to-darkSlate",
-          thumbnailType: "portfolioRedesign",
-          animationKey: "scanLine",
-          projectImageUrl: PortfolioWebsiteThumbnail.src,
-        },
-      },
+      // {
+      //   imageUrl: PortfolioWebsiteThumbnail,
+      //   title: "Portfolio Redesign (This website!)",
+      //   alt: "Portfolio website screenshot",
+      //   orgName: "Full Stack Development",
+      //   orgLink: "",
+      //   description: (
+      //     <p className="text-gray-200">
+      //       This portfolio website represents my creative vision brought to
+      //       life, designed and built entirely by myself. It showcases my work
+      //       through custom animations, interactive elements, and thoughtful UI
+      //       design that reflects my personal aesthetic and technical abilities.
+      //     </p>
+      //   ),
+      //   stackUsed: [
+      //     { name: "React", category: "Frontend" },
+      //     { name: "TypeScript", category: "Frontend" },
+      //     { name: "Next.js", category: "Frontend" },
+      //     { name: "Tailwind CSS", category: "Frontend" },
+      //     { name: "Adobe CS", category: "Design" },
+      //   ],
+      //   moreDetails: (
+      //     <div className="text-gray-200">
+      //       <p>
+      //         The site features custom animations, interactive UI elements, and
+      //         a clean, modern design that highlights my skills and projects.
+      //       </p>
+      //       <p>
+      //         Built with React and Next.js, styled with Tailwind CSS, and
+      //         designed with Adobe Creative Suite.
+      //       </p>
+      //     </div>
+      //   ),
+      //   sizes: "(max-width: 1024px) 100vw, 1024px",
+      //   thumbnailConfig: {
+      //     useStyled: true,
+      //     accentColor: "gold",
+      //     bgGradient: "from-mediumCharcoal to-darkSlate",
+      //     thumbnailType: "portfolioRedesign",
+      //     animationKey: "scanLine",
+      //     projectImageUrl: PortfolioWebsiteThumbnail.src,
+      //   },
+      // },
       {
         imageUrl: ChrisStrattonThumbnail,
         title: "Chris Stratton for City Council (In Production)",
@@ -210,6 +212,87 @@ const ProjectsSection: React.FC = () => {
           thumbnailType: "grandAnse",
           animationKey: "scanLine",
           projectImageUrl: GaspThumbnail.src,
+        },
+      },
+      {
+        imageUrl: InsuranceAIThumbnail,
+        title: "Insurance Claims AI System",
+        alt: "Insurance Claims AI dashboard screenshot",
+        orgName: "AI / Full Stack Development",
+        orgLink: "https://insurance-claim-ai.onrender.com",
+        description: (
+          <p>
+            AI-powered insurance claims processing system featuring document
+            analysis, RAG-based knowledge retrieval, and entity relationship
+            graph visualization. Built as part of an enterprise technical
+            evaluation for a Fortune 500 insurer.
+          </p>
+        ),
+        stackUsed: [
+          { name: "Python", category: "Backend" },
+          { name: "Streamlit", category: "Frontend" },
+          { name: "RAG", category: "Backend" },
+          { name: "Hugging Face", category: "Backend" },
+          { name: "FastAPI", category: "Backend" },
+          { name: "AI/ML", category: "Backend" },
+        ],
+        moreDetails: (
+          <div>
+            <p>
+              Built a full AI pipeline for processing insurance claims
+              end-to-end, including document ingestion, NLP extraction, and a
+              RAG-powered knowledge assistant that answers policy questions with
+              confidence scores.
+            </p>
+            <ul>
+              <li>Document analysis & metadata extraction</li>
+              <li>RAG knowledge base with confidence scoring</li>
+              <li>Entity relationship graph visualization</li>
+              <li>Streamlit UI with multi-tab interface</li>
+              <li>Deployed on Render (may take 30s to wake from sleep)</li>
+            </ul>
+          </div>
+        ),
+        sizes: "(max-width: 1024px) 100vw, 1024px",
+        thumbnailConfig: {
+          useStyled: true,
+          accentColor: "gold",
+          bgGradient: "from-mediumCharcoal to-darkSlate",
+          thumbnailType: "cryptoDashboard",
+          animationKey: "scanLine",
+          projectImageUrl: InsuranceAIThumbnail.src,
+        },
+      },
+      {
+        imageUrl: DODThumbnail,
+        title: "U.S. Department of Defense",
+        alt: "Department of Defense project",
+        orgName: "Software Development — Confidential",
+        orgLink: "",
+        description: (
+          <p>
+            Developed software for the U.S. Department of Defense. Project
+            details are confidential.
+          </p>
+        ),
+        stackUsed: [],
+        moreDetails: (
+          <div>
+            <p>
+              Engaged as a software developer on a U.S. Department of Defense
+              project. Due to the nature of the work, specific details,
+              technologies, and deliverables cannot be disclosed publicly.
+            </p>
+          </div>
+        ),
+        sizes: "(max-width: 1024px) 100vw, 1024px",
+        thumbnailConfig: {
+          useStyled: true,
+          accentColor: "gold",
+          bgGradient: "from-mediumCharcoal to-darkSlate",
+          thumbnailType: "portfolioRedesign",
+          animationKey: "scanLine",
+          projectImageUrl: DODThumbnail.src,
         },
       },
     ],

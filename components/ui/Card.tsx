@@ -66,7 +66,6 @@ const Card: React.FC<CardProps> = ({
         <div className="relative w-full aspect-video mb-6 overflow-hidden rounded-lg group">
           {useStyledThumbnail ? (
             <>
-              {/* Restore your full styled thumbnail code here if more than background */}
               {thumbnailConfig?.projectImageUrl && (
                 <div
                   className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-500 group-hover:scale-105"
@@ -149,12 +148,12 @@ const Card: React.FC<CardProps> = ({
         </p>
       )}
 
-      <div className="mb-6 text-silverMist text-sm leading-relaxed">
+      <div className="mb-0 text-silverMist text-sm leading-relaxed">
         {description}
       </div>
 
       {stackUsed.length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-auto md:gap-3">
+        <div className="flex flex-wrap gap-2 mt-4 md:gap-3">
           {stackUsed.map((tech) => (
             <Pill key={tech.name} text={tech.name} category={tech.category} />
           ))}
