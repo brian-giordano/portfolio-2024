@@ -6,7 +6,6 @@ import CardsList from "./ui/CardsList";
 
 // Import your new thumbnail PNGs
 import VisionDashboardThumbnail from "../assets/images/vision-dashboard-thumbnail-v2.png";
-import PortfolioWebsiteThumbnail from "../assets/images/portfolio-website-thumbnail-v2.png";
 import GaspThumbnail from "../assets/images/portfolio-GASP-thumbnail-v2.png";
 import ChrisStrattonThumbnail from "../assets/images/portfolio-Chirs-Stratton-thumbnail-v2.png";
 import InsuranceAIThumbnail from "../assets/images/vision-dashboard-thumbnail-v2.png"; // temp placeholder

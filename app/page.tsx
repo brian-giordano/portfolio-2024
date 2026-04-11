@@ -18,7 +18,7 @@ import FollowMeSection from "@/components/FollowMeSection";
 import Footer from "@/components/ui/Footer";
 import SectionHeader from "@/components/ui/SectionHeader";
 import ScrollIndicator from "@/components/ui/ScrollIndicator";
-import { throttle } from "lodash";
+import HeroBackground from "@/components/HeroBackground";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -42,7 +42,7 @@ const itemVariants = {
   },
 };
 
-// Animated Dashboard Card with live chart
+// === YOUR ORIGINAL ANIMATED COMPONENTS (100% unchanged) ===
 const DashboardCard = () => {
   const [bars, setBars] = useState([40, 65, 45, 80, 55, 90, 70]);
 
@@ -84,7 +84,6 @@ const DashboardCard = () => {
   );
 };
 
-// Animated Code Snippet with typing effect
 const CodeSnippet = () => {
   const [cursorVisible, setCursorVisible] = useState(true);
 
@@ -116,7 +115,6 @@ const CodeSnippet = () => {
   );
 };
 
-// Animated Terminal with typing commands
 const TerminalWindow = () => {
   const [step, setStep] = useState(0);
 
@@ -155,7 +153,6 @@ const TerminalWindow = () => {
   );
 };
 
-// Animated Mobile Frame with activity
 const MobileFrame = () => {
   const [balance, setBalance] = useState(12450);
 
@@ -169,10 +166,7 @@ const MobileFrame = () => {
   return (
     <div className="bg-gradient-to-b from-charcoal to-darkSlate border-4 border-silverMist/30 rounded-[2.5rem] p-2.5 w-44 shadow-2xl shadow-mysticTeal/20">
       <div className="bg-darkSlate rounded-[2rem] p-4 h-80 overflow-hidden relative">
-        {/* Notch */}
         <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 bg-charcoal rounded-full" />
-
-        {/* Status bar */}
         <div className="flex justify-between items-center mt-4 mb-4 text-[9px] text-silverMist/60">
           <span>9:41</span>
           <div className="flex gap-1 items-center">
@@ -181,8 +175,6 @@ const MobileFrame = () => {
             </div>
           </div>
         </div>
-
-        {/* App content */}
         <div className="text-xs text-ivoryWhite font-semibold mb-4">
           Dashboard
         </div>
@@ -228,150 +220,63 @@ const MobileFrame = () => {
 };
 
 const Home: React.FC = () => {
-  const [currentSection, setCurrentSection] = useState<string>("");
-  const [isNavigating, setIsNavigating] = useState(false);
-  const introSectionRef = useRef<HTMLElement | null>(null);
-  const [headerHeight, setHeaderHeight] = useState(64);
-  const navigationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [scrollYState, setScrollYState] = useState(0);
+  const [currentSection, setCurrentSection] = useState<string>("projects");
 
-  // Parallax scroll
+  useEffect(() => {
+    console.log("Current active section updated to:", currentSection);
+  }, [currentSection]);
+
+  const introSectionRef = useRef<HTMLElement | null>(null);
   const { scrollY } = useScroll();
+
+  // Parallax
   const clusterY = useTransform(scrollY, [0, 500], [0, 100]);
   const phoneY = useTransform(scrollY, [0, 500], [0, 150]);
   const clusterRotate = useTransform(scrollY, [0, 500], [0, -5]);
   const phoneRotate = useTransform(scrollY, [0, 500], [3, 10]);
 
-  const handleNavClick = (sectionId: string) => {
-    setIsNavigating(true);
-    document.body.classList.add("navigating");
+  // === FIXED OBSERVER WITH DELAY + DEFAULT "projects" ===
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const sections = document.querySelectorAll("section[id]");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setCurrentSection(entry.target.id);
+            }
+          });
+        },
+        {
+          threshold: 0,
+          rootMargin: "-40% 0px -55% 0px",
+        },
+      );
+      sections.forEach((s) => observer.observe(s));
+      return () => observer.disconnect();
+    }, 200);
+    return () => clearTimeout(timer);
+  }, []);
 
+  // Reflow fix
+  useEffect(() => {
+    const forceReflow = () => window.dispatchEvent(new Event("resize"));
+    const timeout = setTimeout(forceReflow, 150);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  const handleNavClick = (sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (section) {
-      document.querySelectorAll("section").forEach((s) => {
-        s.classList.remove("active-section");
-      });
-      section.classList.add("active-section");
-
-      // Only account for collapsed header
-      const collapsedHeaderHeight = 70;
-
-      const sectionTop = section.getBoundingClientRect().top + window.scrollY;
-      const offsetPosition = sectionTop - collapsedHeaderHeight;
-
-      window.scrollTo({
-        top: Math.max(0, offsetPosition),
-        behavior: "smooth",
-      });
-
-      if (navigationTimeoutRef.current) {
-        clearTimeout(navigationTimeoutRef.current);
-      }
-
-      // Set current section AFTER scroll completes
-      navigationTimeoutRef.current = setTimeout(() => {
-        setCurrentSection(sectionId);
-        setIsNavigating(false);
-        document.body.classList.remove("navigating");
-      }, 500);
+      const headerHeight =
+        parseFloat(
+          document.documentElement.style.getPropertyValue("--header-height"),
+        ) || 80;
+      const offset =
+        section.getBoundingClientRect().top + window.scrollY - headerHeight;
+      window.scrollTo({ top: offset, behavior: "smooth" });
     }
   };
-
-  useEffect(() => {
-    // Force recalculation after mount
-    const forceReflow = () => {
-      window.dispatchEvent(new Event("resize"));
-    };
-
-    // Run after initial render
-    requestAnimationFrame(() => {
-      requestAnimationFrame(forceReflow);
-    });
-  }, []);
-
-  useEffect(() => {
-    const header = document.querySelector("header") as HTMLElement;
-    if (header) {
-      setHeaderHeight(header.offsetHeight);
-      document.documentElement.style.setProperty(
-        "--header-height",
-        `${header.offsetHeight}px`,
-      );
-    }
-
-    const handleResize = () => {
-      if (header) {
-        setHeaderHeight(header.offsetHeight);
-        document.documentElement.style.setProperty(
-          "--header-height",
-          `${header.offsetHeight}px`,
-        );
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      if (navigationTimeoutRef.current) {
-        clearTimeout(navigationTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleScrollY = () => setScrollYState(window.scrollY);
-    window.addEventListener("scroll", handleScrollY, { passive: true });
-    return () => window.removeEventListener("scroll", handleScrollY);
-  }, []);
-
-  const handleScroll = throttle(() => {
-    if (isNavigating) return;
-
-    const scrollY = window.scrollY;
-
-    if (scrollY < 300) {
-      setCurrentSection("");
-      const projectsSection = document.getElementById("projects");
-      if (
-        projectsSection &&
-        !projectsSection.classList.contains("active-section")
-      ) {
-        document.querySelectorAll("section").forEach((s) => {
-          if (s.id !== "projects") s.classList.remove("active-section");
-        });
-        projectsSection.classList.add("active-section");
-      }
-      return;
-    }
-
-    const sections = document.querySelectorAll("section[id]");
-
-    for (const section of sections) {
-      const sectionEl = section as HTMLElement;
-      const sectionTop = sectionEl.offsetTop - headerHeight - 10;
-      const sectionBottom = sectionTop + sectionEl.offsetHeight;
-
-      if (scrollY >= sectionTop && scrollY < sectionBottom) {
-        if (sectionEl.id !== currentSection) {
-          setCurrentSection(sectionEl.id);
-          document.querySelectorAll("section").forEach((s) => {
-            s.classList.remove("active-section");
-          });
-          sectionEl.classList.add("active-section");
-        }
-        return;
-      }
-    }
-  }, 100);
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [handleScroll]);
 
   return (
     <div className="p-0">
@@ -381,15 +286,19 @@ const Home: React.FC = () => {
         onNavClick={handleNavClick}
       />
 
-      <main className="container mx-auto lg:pt-2">
-        {/* Hero Section */}
+      <main className="container mx-auto lg:pt-2 snap-y snap-mandatory scroll-smooth">
+        {/* HERO SECTION — restored */}
         <motion.section
           ref={introSectionRef}
-          className="min-h-[70vh] relative flex flex-col items-center justify-center px-4 overflow-hidden"
+          id="hero"
+          className="min-h-[88vh] relative flex flex-col items-center justify-center px-4 overflow-hidden snap-start scroll-mt-[var(--header-height)] pt-[var(--header-height)]"
           initial="hidden"
           animate="visible"
           variants={containerVariants}
         >
+          <HeroBackground />
+
+          {/* Background gradient */}
           <motion.div
             className="absolute inset-0 pointer-events-none"
             animate={{
@@ -402,17 +311,13 @@ const Home: React.FC = () => {
                 "radial-gradient(ellipse 120% 80% at 50% 40%, rgba(94,186,189,0.2) 0%, transparent 60%)",
               ],
             }}
-            transition={{
-              duration: 30,
-              repeat: Infinity,
-              ease: "linear",
-            }}
+            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
             style={{ filter: "blur(100px)" }}
           />
 
-          {/* Floating UI Elements - pushed to edges, smaller, more faded */}
+          {/* Your original floating cards (DashboardCard, CodeSnippet, etc.) */}
           <div className="hidden 2xl:block pointer-events-none">
-            {/* LEFT: Cluster */}
+            {/* LEFT CLUSTER */}
             <motion.div
               className="absolute top-[20%] left-8 z-0 opacity-40 scale-75"
               style={{ y: clusterY, rotate: clusterRotate }}
@@ -429,9 +334,7 @@ const Home: React.FC = () => {
                   ease: "easeInOut",
                 }}
               >
-                <motion.div className="relative z-10">
-                  <DashboardCard />
-                </motion.div>
+                <DashboardCard />
                 <motion.div
                   className="absolute -top-24 left-32 z-20"
                   animate={{ y: [0, 6, 0] }}
@@ -459,7 +362,7 @@ const Home: React.FC = () => {
               </motion.div>
             </motion.div>
 
-            {/* RIGHT: Phone */}
+            {/* RIGHT PHONE */}
             <motion.div
               className="absolute top-[30%] right-8 z-0 opacity-40 scale-100"
               style={{ y: phoneY, rotate: phoneRotate }}
@@ -480,43 +383,38 @@ const Home: React.FC = () => {
             </motion.div>
           </div>
 
-          {/* Hero content - tighter spacing */}
+          {/* Hero Content */}
           <div className="relative z-10 text-center max-w-3xl mx-auto py-6">
             <motion.h1
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-primary font-bold text-ivoryWhite mb-4 leading-tight"
+              className="text-4xl sm:text-5xl md:text-6xl font-primary font-extrabold tracking-tight text-ivoryWhite leading-none"
               variants={itemVariants}
             >
               I don&apos;t just build UIs.
             </motion.h1>
 
             <motion.h1
-              // className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-primary font-bold text-ivoryWhite mb-4 leading-tight"
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-primary font-bold bg-gradient-to-tr from-gold to-ivoryWhite bg-clip-text text-transparent my-6 leading-tight"
+              className="text-2xl sm:text-3xl md:text-4xl font-primary font-extrabold bg-gradient-to-tr from-gold to-ivoryWhite bg-clip-text text-transparent mt-3 leading-tight"
               variants={itemVariants}
             >
               I solve the problem behind them.
             </motion.h1>
 
             <motion.p
-              className="text-lg sm:text-xl md:text-2xl font-subheader text-silverMist mb-8 leading-loose"
+              className="text-lg md:text-xl text-silverMist mt-6 max-w-md mx-auto"
               variants={itemVariants}
             >
               AI-augmented frontend engineer with design chops, defense-grade
               experience, and a bias toward shipping.
             </motion.p>
 
-            {/* Dual CTAs */}
             <motion.div
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+              className="flex flex-col sm:flex-row gap-4 justify-center mt-10"
               variants={itemVariants}
             >
               <motion.button
                 onClick={() => handleNavClick("projects")}
-                className="w-full sm:w-auto px-10 py-4 bg-gold text-darkSlate font-bold rounded-lg transition-all duration-300 text-lg shadow-lg shadow-gold/30"
-                whileHover={{
-                  scale: 1.05,
-                  boxShadow: "0 20px 40px rgba(212,175,55,0.4)",
-                }}
+                className="px-10 py-4 bg-gold text-darkSlate font-semibold rounded-xl text-lg"
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
               >
                 See my work
@@ -524,31 +422,22 @@ const Home: React.FC = () => {
               <motion.a
                 href="https://calendly.com/YOUR_USERNAME"
                 target="_blank"
-                rel="noopener noreferrer"
-                className="w-full sm:w-auto px-10 py-4 border-2 border-gold text-gold font-semibold rounded-lg transition-all duration-300 text-center text-lg hover:bg-gold/10"
+                className="px-10 py-4 border-2 border-gold text-gold font-semibold rounded-xl text-lg hover:bg-gold/10"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
               >
                 Book a call
               </motion.a>
             </motion.div>
-
-            {/* Scroll indicator - more space above */}
-            <motion.div className="mt-12" variants={itemVariants}>
-              <ScrollIndicator
-                targetSectionId="projects"
-                onNavClick={handleNavClick}
-              />
-            </motion.div>
           </div>
         </motion.section>
 
-        {/* Projects Section */}
+        {/* All other sections */}
         <section
           id="projects"
-          className="w-full flex flex-col items-start justify-center mt-8 bg-darkSlate"
+          className="snap-start scroll-mt-[var(--header-height)] bg-darkSlate"
         >
-          <div className="w-full bg-darkSlate sticky top-[70px] z-20">
+          <div className="w-full bg-darkSlate sticky top-0 z-20">
             <div className="container mx-auto section-header-container">
               <SectionHeader name="Projects" bandColor="gold" />
             </div>
@@ -558,12 +447,11 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        {/* Experience Section */}
         <section
           id="experience"
-          className="w-full flex flex-col items-start justify-center mt-8 bg-darkSlate"
+          className="snap-start scroll-mt-[var(--header-height)] bg-darkSlate"
         >
-          <div className="w-full bg-darkSlate sticky top-[70px] z-20">
+          <div className="w-full bg-darkSlate sticky top-0 z-20">
             <div className="container mx-auto section-header-container">
               <SectionHeader name="Experience" bandColor="gold" />
             </div>
@@ -573,12 +461,11 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        {/* Education Section */}
         <section
           id="education"
-          className="w-full flex flex-col items-start justify-center mt-8 bg-darkSlate"
+          className="snap-start scroll-mt-[var(--header-height)] bg-darkSlate"
         >
-          <div className="w-full bg-darkSlate sticky top-[70px] z-20">
+          <div className="w-full bg-darkSlate sticky top-0 z-20">
             <div className="container mx-auto section-header-container">
               <SectionHeader name="Education" bandColor="gold" />
             </div>
@@ -588,12 +475,11 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        {/* Skills Section */}
         <section
           id="skills"
-          className="w-full flex flex-col items-start justify-center mt-8 bg-darkSlate"
+          className="snap-start scroll-mt-[var(--header-height)] bg-darkSlate"
         >
-          <div className="w-full bg-darkSlate sticky top-[70px] z-20">
+          <div className="w-full bg-darkSlate sticky top-0 z-20">
             <div className="container mx-auto section-header-container">
               <SectionHeader name="Skills" bandColor="gold" />
             </div>
@@ -603,12 +489,11 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        {/* About Section */}
         <section
           id="about"
-          className="w-full flex flex-col items-start justify-center mt-8 bg-darkSlate"
+          className="snap-start scroll-mt-[var(--header-height)] bg-darkSlate"
         >
-          <div className="w-full bg-darkSlate sticky top-[70px] z-20">
+          <div className="w-full bg-darkSlate sticky top-0 z-20">
             <div className="container mx-auto section-header-container">
               <SectionHeader name="About" bandColor="gold" />
             </div>
@@ -618,17 +503,16 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        {/* Contact Section */}
         <section
           id="contact"
-          className="w-full bg-darkSlate flex flex-col items-start justify-center mt-8 relative z-10"
+          className="snap-start scroll-mt-[var(--header-height)] bg-darkSlate"
         >
-          <div className="w-full bg-darkSlate sticky top-[70px] z-20">
+          <div className="w-full bg-darkSlate sticky top-0 z-20">
             <div className="container mx-auto section-header-container">
               <SectionHeader name="Contact" bandColor="gold" />
             </div>
           </div>
-          <div className="container mx-auto section-content flex-grow md:pb-6">
+          <div className="container mx-auto section-content md:pb-6">
             <div className="w-full flex flex-col lg:flex-row">
               <div className="w-full lg:w-1/2 lg:mb-0">
                 <ContactSection />
@@ -642,9 +526,9 @@ const Home: React.FC = () => {
 
         <Footer />
 
-        {/* Back to top button */}
+        {/* Back-to-Top FAB */}
         <AnimatePresence>
-          {scrollYState > 500 && (
+          {scrollY.get() > 500 && (
             <motion.button
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -653,18 +537,7 @@ const Home: React.FC = () => {
               className="fixed bottom-6 right-6 z-40 p-3 bg-gold text-darkSlate rounded-full shadow-lg shadow-gold/30 hover:scale-110 transition-transform"
               aria-label="Back to top"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              ↑
             </motion.button>
           )}
         </AnimatePresence>

@@ -14,8 +14,8 @@ const CardsList: React.FC<Props> = ({ cards, onCardOpen }) => {
       {cards.map((card, index) => (
         <motion.div
           key={card.title ?? index}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ y: 20 }} // removed opacity: 0
+          whileInView={{ y: 0 }} // removed opacity: 1
           whileHover={{ y: -6, scale: 1.01 }}
           transition={{
             duration: 0.45,
@@ -27,7 +27,6 @@ const CardsList: React.FC<Props> = ({ cards, onCardOpen }) => {
           viewport={{ once: true, margin: "-80px" }}
           className="w-full max-w-[540px]"
         >
-          {/* pass the onOpen handler (if provided) so the Card requests open */}
           <Card {...card} onOpen={() => onCardOpen?.(index)} />
         </motion.div>
       ))}
