@@ -17,7 +17,6 @@ import ContactSection from "@/components/ContactSection";
 import FollowMeSection from "@/components/FollowMeSection";
 import Footer from "@/components/ui/Footer";
 import SectionHeader from "@/components/ui/SectionHeader";
-import ScrollIndicator from "@/components/ui/ScrollIndicator";
 import HeroBackground from "@/components/HeroBackground";
 import TypewriterText from "@/components/ui/TypewriterText";
 
@@ -269,11 +268,14 @@ const Home: React.FC = () => {
   const handleNavClick = (sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (section) {
-      // By using a rigidly hardcoded target height rather than dynamic DOM sampling mid-transit, 
+      // By using a rigidly hardcoded target height rather than dynamic DOM sampling mid-transit,
       // we completely bypass the severe layout shift errors triggered by Framer Motion collapsing the header.
       const targetHeaderHeight = window.innerWidth < 1024 ? 64 : 68; // Compact mode target constraints
-      
-      const offset = section.getBoundingClientRect().top + window.scrollY - targetHeaderHeight;
+
+      const offset =
+        section.getBoundingClientRect().top +
+        window.scrollY -
+        targetHeaderHeight;
       window.scrollTo({ top: offset, behavior: "smooth" });
     }
   };
@@ -302,7 +304,8 @@ const Home: React.FC = () => {
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: "radial-gradient(ellipse 100% 70% at 50% 40%, rgba(135,206,235,0.06) 0%, rgba(212,175,55,0.06) 30%, transparent 70%)",
+              background:
+                "radial-gradient(ellipse 100% 70% at 50% 40%, rgba(135,206,235,0.06) 0%, rgba(212,175,55,0.06) 30%, transparent 70%)",
             }}
           />
 
@@ -394,7 +397,8 @@ const Home: React.FC = () => {
               className="text-lg md:text-xl text-silverMist mt-6 max-w-md mx-auto"
               variants={itemVariants}
             >
-              Creative technologist and AI product builder. MS in Computer Science meets traditional Fine Arts design.
+              Creative technologist and AI product builder. MS in Computer
+              Science meets traditional Fine Arts design.
             </motion.p>
 
             <motion.div
@@ -419,7 +423,7 @@ const Home: React.FC = () => {
                 Book a call
               </motion.a>
             </motion.div>
-            
+
             <motion.div variants={itemVariants} className="mt-8">
               <TypewriterText />
             </motion.div>

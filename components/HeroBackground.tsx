@@ -32,6 +32,7 @@ import {
   SiAdobephotoshop,
   SiStreamlit,
 } from "react-icons/si";
+import { IconType } from "react-icons/lib";
 
 const ICON_POOL = [
   { Icon: FaReact, color: "#61DAFB" },
@@ -64,7 +65,7 @@ const ICON_POOL = [
 
 interface Drop {
   id: number;
-  Icon: any;
+  Icon: IconType;
   color: string;
   left: number;
   top: number;
@@ -139,7 +140,7 @@ export default function HeroBackground() {
         parallaxScale = 150 + Math.random() * 150;
       } else {
         blur = 0;
-        opacity = 0.10 + Math.random() * 0.08;
+        opacity = 0.1 + Math.random() * 0.08;
         size = 20 + Math.random() * 15;
         parallaxScale = -50 - Math.random() * 150;
       }
@@ -160,7 +161,7 @@ export default function HeroBackground() {
         rotateDeg: (Math.random() > 0.5 ? 1 : -1) * (15 + Math.random() * 30),
       };
     });
-    
+
     setDrops(newDrops);
     setMounted(true);
   }, []);

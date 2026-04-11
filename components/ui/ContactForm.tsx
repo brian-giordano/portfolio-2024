@@ -3,7 +3,6 @@ import React, { useState, useRef } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import Button from "./Button";
 import ToastContainer, { ToastContainerRef } from "./ToastContainer";
 import Modal from "./Modal";
 
@@ -54,7 +53,7 @@ const ContactForm: React.FC = () => {
     if (lastSubmission && now - parseInt(lastSubmission) < 60000) {
       // 1 minute
       toastContainerRef.current?.addToast(
-        "Please wait before submitting again."
+        "Please wait before submitting again.",
       );
       return false;
     }
@@ -98,7 +97,7 @@ const ContactForm: React.FC = () => {
         {
           method: "POST",
           body: formData,
-        }
+        },
       );
 
       if (response.ok) {
@@ -107,7 +106,7 @@ const ContactForm: React.FC = () => {
       } else {
         const errorText = await response.text();
         throw new Error(
-          `Error sending message. Status: ${response.status}, Response: ${errorText}`
+          `Error sending message. Status: ${response.status}, Response: ${errorText}`,
         );
       }
     } catch (error: unknown) {
@@ -117,7 +116,7 @@ const ContactForm: React.FC = () => {
         errorMessage = error.message;
       }
       toastContainerRef.current?.addToast(
-        `Error sending message: ${errorMessage}. Please try again.`
+        `Error sending message: ${errorMessage}. Please try again.`,
       );
     } finally {
       setIsSubmitting(false);
@@ -128,7 +127,10 @@ const ContactForm: React.FC = () => {
     <div className="w-full bg-charcoal/40 backdrop-blur-md rounded-2xl border border-white/5 shadow-2xl p-6 md:p-10">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div>
-          <label className="block text-silverMist font-medium text-sm tracking-wide mb-2 uppercase" htmlFor="name">
+          <label
+            className="block text-silverMist font-medium text-sm tracking-wide mb-2 uppercase"
+            htmlFor="name"
+          >
             Name:
           </label>
           <input
@@ -147,7 +149,10 @@ const ContactForm: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-silverMist font-medium text-sm tracking-wide mb-2 uppercase" htmlFor="email">
+          <label
+            className="block text-silverMist font-medium text-sm tracking-wide mb-2 uppercase"
+            htmlFor="email"
+          >
             Email:
           </label>
           <input
@@ -166,7 +171,10 @@ const ContactForm: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-silverMist font-medium text-sm tracking-wide mb-2 uppercase" htmlFor="subject">
+          <label
+            className="block text-silverMist font-medium text-sm tracking-wide mb-2 uppercase"
+            htmlFor="subject"
+          >
             Subject:
           </label>
           <select
@@ -190,7 +198,10 @@ const ContactForm: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-silverMist font-medium text-sm tracking-wide mb-2 uppercase" htmlFor="message">
+          <label
+            className="block text-silverMist font-medium text-sm tracking-wide mb-2 uppercase"
+            htmlFor="message"
+          >
             Message:
           </label>
           <textarea
@@ -248,10 +259,7 @@ const ContactForm: React.FC = () => {
           >
             {isSubmitting ? (
               <>
-                <svg
-                  className="animate-spin h-5 w-5 mr-3"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
                   <circle
                     cx="12"
                     cy="12"
