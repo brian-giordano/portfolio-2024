@@ -15,9 +15,9 @@ import { motion } from "framer-motion";
 
 const AboutSection: React.FC = () => {
   const stats = [
-    { value: "3+", label: "Years Experience" },
+    { value: "3+", label: "Years Engineering" },
     { value: "MS", label: "Computer Science" },
-    { value: "BA", label: "Art & Design" },
+    { value: "BA", label: "Graphic Design" },
   ];
 
   const hobbies = [
@@ -39,13 +39,11 @@ const AboutSection: React.FC = () => {
           {/* Punchy intro */}
           <div>
             <h3 className="text-2xl md:text-3xl font-bold text-ivoryWhite mb-3">
-              I bridge the gap between <span className="text-gold">design</span>{" "}
-              and <span className="text-gold">code</span>.
+              AI product builder. <span className="text-gold">Creative technologist.</span>{" "}
+              Rare by design.
             </h3>
             <p className="text-lg text-silverMist">
-              Frontend developer with an art degree and a Master&apos;s in CS. I
-              bring a rare combo of creative vision and technical depth to every
-              project.
+              Holding both a Master&apos;s in Computer Science and a traditional BA in Graphic Design, I bring a combination of deep technical architecture and relentless design thinking that is genuinely hard to find in one person.
             </p>
           </div>
 
@@ -71,21 +69,13 @@ const AboutSection: React.FC = () => {
           {/* Core paragraphs - condensed */}
           <div className="space-y-4 text-silverMist">
             <p>
-              I specialize in building responsive, high-performing web apps with
-              React, Next.js, TypeScript, and Tailwind. My design background
-              means I don&apos;t just build to spec — I push for interfaces that
-              are intuitive, polished, and delightful to use.
+              I am an AI-augmented product builder and technical consultant. I leverage modern AI tools to move from concept to production-ready applications much faster than traditional development cycles allow, with a strong focus on RAG systems, LLM integrations, and intuitive web platforms.
             </p>
             <p>
-              From remote UUV control software to full-stack banking platforms
-              to IoT dashboards, I&apos;ve shipped production code across
-              industries. I thrive in fast-moving teams where I can own the
-              frontend and collaborate closely with designers and backend
-              engineers.
+              My background spans defense systems, fintech, IoT, and startup operations. I thrive in small teams and high-autonomy environments where I can own both the product vision and the technical execution.
             </p>
             <p>
-              I&apos;m looking for a team that values autonomy, craft, and
-              shipping great work. If that sounds like you, let&apos;s talk.
+              If you need someone who understands the full stack, has a real design eye, and can independently drive a product to the finish line, let&apos;s talk.
             </p>
           </div>
 

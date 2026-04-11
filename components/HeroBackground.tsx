@@ -1,128 +1,180 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
-import { FaReact, FaPython } from "react-icons/fa6";
+import { motion, useScroll, useTransform } from "framer-motion";
+import {
+  FaReact,
+  FaPython,
+  FaHtml5,
+  FaCss3Alt,
+  FaSass,
+  FaFigma,
+  FaBootstrap,
+  FaNodeJs,
+  FaDocker,
+  FaGitAlt,
+  FaSketch,
+} from "react-icons/fa";
 import {
   SiNextdotjs,
   SiTypescript,
   SiTailwindcss,
   SiOpenai,
+  SiJavascript,
+  SiMongodb,
+  SiMui,
+  SiElectron,
+  SiDotnet,
+  SiVercel,
+  SiJira,
+  SiMysql,
+  SiFastapi,
+  SiAdobephotoshop,
+  SiStreamlit,
 } from "react-icons/si";
 
-const icons = [
-  { Icon: FaReact, color: "#61DAFB", size: 32 },
-  { Icon: SiNextdotjs, color: "#ffffff", size: 36 },
-  { Icon: SiTypescript, color: "#3178C6", size: 30 },
-  { Icon: SiTailwindcss, color: "#06B67F", size: 34 },
-  { Icon: FaPython, color: "#FFD43B", size: 38 },
-  { Icon: SiOpenai, color: "#10A37F", size: 32 },
+const ICON_POOL = [
+  { Icon: FaReact, color: "#61DAFB" },
+  { Icon: SiNextdotjs, color: "#ffffff" },
+  { Icon: SiTypescript, color: "#3178C6" },
+  { Icon: SiTailwindcss, color: "#06B67F" },
+  { Icon: FaPython, color: "#FFD43B" },
+  { Icon: SiOpenai, color: "#10A37F" },
+  { Icon: FaHtml5, color: "#E34F26" },
+  { Icon: FaCss3Alt, color: "#1572B6" },
+  { Icon: SiJavascript, color: "#F7DF1E" },
+  { Icon: FaSass, color: "#CC6699" },
+  { Icon: SiMongodb, color: "#47A248" },
+  { Icon: SiMui, color: "#007FFF" },
+  { Icon: FaFigma, color: "#F24E1E" },
+  { Icon: SiElectron, color: "#47848F" },
+  { Icon: FaBootstrap, color: "#7952B3" },
+  { Icon: FaNodeJs, color: "#339933" },
+  { Icon: SiDotnet, color: "#512BD4" },
+  { Icon: FaDocker, color: "#2496ED" },
+  { Icon: FaGitAlt, color: "#F05032" },
+  { Icon: SiVercel, color: "#ffffff" },
+  { Icon: SiJira, color: "#0052CC" },
+  { Icon: SiMysql, color: "#4479A1" },
+  { Icon: SiFastapi, color: "#009688" },
+  { Icon: SiAdobephotoshop, color: "#31A8FF" },
+  { Icon: FaSketch, color: "#F7B500" },
+  { Icon: SiStreamlit, color: "#FF4B4B" },
 ];
 
-const phrases = [
-  "Next.js • LLMs • RAG",
-  "Full-stack with AI intuition",
-  "Defense-grade velocity",
-  "Ships fast. Thinks deep.",
-];
+interface Drop {
+  id: number;
+  Icon: any;
+  color: string;
+  left: number;
+  top: number;
+  size: number;
+  blur: number;
+  opacity: number;
+  parallaxScale: number;
+  floatDuration: number;
+  floatY: number;
+  floatX: number;
+  rotateDeg: number;
+}
 
-const FloatingIcon = ({ icon, index, springX, springY }: any) => {
-  const x = useTransform(
-    springX,
-    [-0.5, 0.5],
-    [-(index * 8 + 20), index * 8 + 20],
-  );
-  const y = useTransform(
-    springY,
-    [-0.5, 0.5],
-    [-(index * 6 + 30), index * 6 + 30],
-  );
+const BokehDrop = ({ drop }: { drop: Drop }) => {
+  const { scrollY } = useScroll();
+  // Transform scroll into parallax displacement.
+  // Positive parallaxScale pushes items down as you scroll down, giving the illusion they are further away.
+  // Negative parallaxScale pulls them up faster than the scroll, making them feel close.
+  const yParallax = useTransform(scrollY, [0, 1000], [0, drop.parallaxScale]);
 
   return (
     <motion.div
-      className="absolute"
+      className="absolute will-change-transform"
       style={{
-        left: `${12 + index * 13}%`,
-        top: `${28 + index * 6}%`,
-        x,
-        y,
-        opacity: 0.38 + index * 0.04,
-      }}
-      animate={{
-        y: [0, -28, 0],
-        rotate: [0, 10, -10, 0],
-      }}
-      transition={{
-        duration: 20 + index * 6,
-        repeat: Infinity,
-        ease: "easeInOut",
-        delay: index * 0.8,
+        left: `${drop.left}%`,
+        top: `${drop.top}%`,
+        y: yParallax,
+        opacity: drop.opacity,
       }}
     >
-      <icon.Icon size={icon.size} color={icon.color} />
+      <motion.div
+        animate={{
+          y: [0, drop.floatY, 0],
+          x: [0, drop.floatX, 0],
+          rotate: [0, drop.rotateDeg, 0],
+        }}
+        transition={{
+          duration: drop.floatDuration,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: Math.random() * -20, // Negative default randomly jumps the animation forward immediately
+        }}
+      >
+        <drop.Icon size={drop.size} color={drop.color} />
+      </motion.div>
     </motion.div>
   );
 };
 
 export default function HeroBackground() {
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const springX = useSpring(mouseX, { stiffness: 80, damping: 30 });
-  const springY = useSpring(mouseY, { stiffness: 80, damping: 30 });
-
-  const [currentPhrase, setCurrentPhrase] = useState(0);
+  const [drops, setDrops] = useState<Drop[]>([]);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // Fisher-Yates shuffle — guarantees every icon appears exactly once.
+    // No repeats, no faking it. Pool size = drop count.
+    const shuffled = [...ICON_POOL].sort(() => Math.random() - 0.5);
+
+    const newDrops: Drop[] = shuffled.map((iconDef, i) => {
+      const depthClass = Math.random();
+      let blur, opacity, size, parallaxScale;
+
+      if (depthClass < 0.5) {
+        blur = 4 + Math.random() * 4;
+        opacity = 0.03 + Math.random() * 0.05;
+        size = 40 + Math.random() * 50;
+        parallaxScale = 400 + Math.random() * 250;
+      } else if (depthClass < 0.85) {
+        blur = 1.5 + Math.random() * 2;
+        opacity = 0.08 + Math.random() * 0.06;
+        size = 25 + Math.random() * 25;
+        parallaxScale = 150 + Math.random() * 150;
+      } else {
+        blur = 0;
+        opacity = 0.10 + Math.random() * 0.08;
+        size = 20 + Math.random() * 15;
+        parallaxScale = -50 - Math.random() * 150;
+      }
+
+      return {
+        id: i,
+        Icon: iconDef.Icon,
+        color: iconDef.color,
+        left: -5 + Math.random() * 110,
+        top: -10 + Math.random() * 110,
+        size,
+        blur,
+        opacity,
+        parallaxScale,
+        floatDuration: 12 + Math.random() * 12,
+        floatY: (Math.random() > 0.5 ? 1 : -1) * (15 + Math.random() * 25),
+        floatX: (Math.random() > 0.5 ? 1 : -1) * (10 + Math.random() * 15),
+        rotateDeg: (Math.random() > 0.5 ? 1 : -1) * (15 + Math.random() * 30),
+      };
+    });
+    
+    setDrops(newDrops);
     setMounted(true);
   }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentPhrase((prev) => (prev + 1) % phrases.length);
-    }, 3200);
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
-    mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
-  };
 
   if (!mounted) return <div className="absolute inset-0" />;
 
   return (
-    <div
-      className="absolute inset-0 pointer-events-none overflow-hidden"
-      onMouseMove={handleMouseMove}
-    >
-      {icons.map((icon, i) => (
-        <FloatingIcon
-          key={i}
-          icon={icon}
-          index={i}
-          springX={springX}
-          springY={springY}
-        />
-      ))}
-
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {/* We keep the layout gradient here natively, drawing beneath the bokeh */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#111827] via-[#111827]/80 to-transparent" />
 
-      {/* Fixed-height container so the typewriter never shifts or overlaps buttons */}
-      <div className="absolute bottom-[10%] left-1/2 -translate-x-1/2 h-[32px] flex items-center">
-        <motion.span
-          key={currentPhrase}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-gold text-base tracking-widest"
-        >
-          {phrases[currentPhrase]}
-        </motion.span>
-      </div>
+      {drops.map((drop) => (
+        <BokehDrop key={drop.id} drop={drop} />
+      ))}
     </div>
   );
 }

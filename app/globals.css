@@ -37,9 +37,6 @@ html {
   scroll-behavior: smooth;
   height: 100%;
   scroll-padding-top: var(--header-height);
-
-  /* Scroll snapping setup */
-  scroll-snap-type: y mandatory;
 }
 
 body {
@@ -68,8 +65,8 @@ h3 {
 }
 
 p {
-  font-size: 0.875rem;
-  line-height: 1.625;
+  font-size: 1rem;
+  line-height: 1.7;
   margin-bottom: 0.75rem;
   color: var(--foreground);
 }
@@ -106,12 +103,10 @@ header li {
 
 /* ===== LAYOUT & SECTIONS ===== */
 section {
-  scroll-margin-top: var(--header-height);
+  scroll-margin-top: calc(var(--header-height) - 1px);
   position: relative;
   margin-top: 0;
   padding-top: 0;
-  scroll-snap-align: start;
-  min-height: 100vh; /* Ensure sections are tall enough for snapping */
   z-index: 1;
 }
 
@@ -157,38 +152,14 @@ header {
 /* ===== SECTION HEADERS ===== */
 .section-header-container {
   position: sticky;
-  top: var(--header-height);
+  top: calc(var(--header-height) - 1px);
   z-index: 30;
   background-color: var(--background);
   width: 100%;
   transition: opacity var(--transition-duration-short) ease-out;
 }
 
-/* Section header visibility states */
-section:not(.active-section) .section-header-container {
-  opacity: 0.5;
-}
-
-section.active-section .section-header-container {
-  opacity: 1;
-}
-
-/* Navigation state handling */
-.navigating .section-header-container {
-  position: static !important;
-  visibility: hidden;
-  opacity: 0;
-}
-
-.navigating .active-section .section-header-container {
-  visibility: visible;
-  opacity: 1;
-}
-
-.hidden-section-header {
-  opacity: 0;
-  visibility: hidden;
-}
+/* Section headers are fully opaque as per redesign specs */
 
 /* ===== UTILITY CLASSES ===== */
 .text-balance {
@@ -361,7 +332,8 @@ section.active-section .section-header-container {
   }
 
   p {
-    font-size: 0.8rem;
+    font-size: 0.925rem;
+    line-height: 1.65;
   }
 }
 
@@ -388,30 +360,12 @@ main {
   background-color: #2e2e3e; /* example dark but distinct from bg-darkSlate */
 }
 
-/* Badge pill background colors */
-.badge-frontend {
-  background-color: var(--color-pill-frontend-bg);
-  color: var(--color-pill-text);
-}
-
-.badge-backend {
-  background-color: var(--color-pill-backend-bg);
-  color: var(--color-pill-text);
-}
-
-.badge-database {
-  background-color: var(--color-pill-database-bg);
-  color: var(--color-pill-text);
-}
-
-.badge-devops {
-  background-color: var(--color-pill-devops-bg);
-  color: var(--color-pill-text);
-}
-
-.badge-design {
-  background-color: var(--color-pill-design-bg);
-  color: var(--color-pill-text);
+/* Premium Glassmorphic Badge Styles */
+.badge-frontend, .badge-backend, .badge-database, .badge-devops, .badge-design {
+  background-color: rgba(255, 255, 255, 0.05); /* Barely visible frost */
+  color: #e2e8f0; /* Crisp soft-silver */
+  border: 1px solid rgba(255, 255, 255, 0.12); /* Extremely delicate rim lighting */
+  backdrop-filter: blur(8px);
 }
 
 @keyframes scan {
@@ -430,16 +384,4 @@ main {
   box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
 }
 
-/* Always ensure Projects section header has proper opacity */
-#projects .section-header-container {
-  opacity: 1 !important;
-}
 
-/* For other sections, keep the existing behavior */
-section:not(#projects):not(.active-section) .section-header-container {
-  opacity: 0.5;
-}
-
-section:not(#projects).active-section .section-header-container {
-  opacity: 1;
-}

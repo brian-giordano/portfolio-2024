@@ -14,10 +14,10 @@
   },
   { "title": "Python", "level": 7, "category": "Backend" },
   {
-    "title": "AI Agent Orchestration",
+    "title": "Agent Orchestration",
     "level": 8,
     "category": "Backend",
-    "subtitles": ["LLMs, RAG, automated pipelines"]
+    "subtitles": ["LLM Integration, RAG Architectures, Pipelines"]
   },
   {
     "title": "AI Tooling & Workflows",
@@ -26,6 +26,8 @@
     "subtitles": ["Claude, ChatGPT, Abacus.AI, Antigravity"]
   },
   { "title": "REST APIs", "level": 8, "category": "Backend" },
+  { "title": "FastAPI & Python", "level": 8, "category": "Backend" },
+  { "title": "Streamlit", "level": 7, "category": "Frontend" },
   { "title": "UI/UX Design", "level": 9, "category": "Design" },
   {
     "title": "Generative AI",

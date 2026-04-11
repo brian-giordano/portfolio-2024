@@ -61,7 +61,7 @@ const Card: React.FC<CardProps> = ({
   const showImageContainer = isProjectCard && hasVisual;
 
   return (
-    <div className="flex flex-col bg-charcoal rounded-lg shadow-sm p-6 group h-full">
+    <div className="flex flex-col bg-charcoal rounded-xl border border-transparent transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(255,215,0,0.08)] hover:border-gold/20 p-4 sm:p-6 md:p-8 group h-full relative z-10 w-full">
       {showImageContainer && (
         <div className="relative w-full aspect-video mb-6 overflow-hidden rounded-lg group">
           {useStyledThumbnail ? (

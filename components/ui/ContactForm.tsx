@@ -125,20 +125,20 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <div className="w-full bg-charcoal rounded-lg shadow-lg px-8 py-8">
+    <div className="w-full bg-charcoal/40 backdrop-blur-md rounded-2xl border border-white/5 shadow-2xl p-6 md:p-10">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div>
-          <label className="block text-ivoryWhite mb-1" htmlFor="name">
+          <label className="block text-silverMist font-medium text-sm tracking-wide mb-2 uppercase" htmlFor="name">
             Name:
           </label>
           <input
             type="text"
             id="name"
             {...register("name")}
-            className={`w-full p-4 rounded bg-gray-800 text-darkSlate text-xl ${
+            className={`w-full p-4 rounded-xl bg-white/5 border text-ivoryWhite text-lg focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 ${
               errors.name
-                ? "border-lightCrimson border-4 bg-pink"
-                : "border-gray-300"
+                ? "border-lightCrimson bg-lightCrimson/10"
+                : "border-white/10 focus:border-gold hover:border-white/20"
             }`}
           />
           {errors.name && (
@@ -147,17 +147,17 @@ const ContactForm: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-ivoryWhite mb-1" htmlFor="email">
+          <label className="block text-silverMist font-medium text-sm tracking-wide mb-2 uppercase" htmlFor="email">
             Email:
           </label>
           <input
             type="email"
             id="email"
             {...register("email")}
-            className={`w-full p-4 rounded bg-gray-800 text-darkSlate text-xl ${
+            className={`w-full p-4 rounded-xl bg-white/5 border text-ivoryWhite text-lg focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 ${
               errors.email
-                ? "border-lightCrimson border-4 bg-pink"
-                : "border-gray-300"
+                ? "border-lightCrimson bg-lightCrimson/10"
+                : "border-white/10 focus:border-gold hover:border-white/20"
             }`}
           />
           {errors.email && (
@@ -166,16 +166,16 @@ const ContactForm: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-ivoryWhite mb-1" htmlFor="subject">
+          <label className="block text-silverMist font-medium text-sm tracking-wide mb-2 uppercase" htmlFor="subject">
             Subject:
           </label>
           <select
             id="subject"
             {...register("subject")}
-            className={`w-full p-4 rounded bg-gray-800 text-darkSlate text-xl ${
+            className={`w-full p-4 rounded-xl bg-white/5 border text-ivoryWhite text-lg focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 appearance-none ${
               errors.subject
-                ? "border-lightCrimson border-4 bg-pink"
-                : "border-gray-300"
+                ? "border-lightCrimson bg-lightCrimson/10"
+                : "border-white/10 focus:border-gold hover:border-white/20"
             }`}
           >
             <option value="">Select a subject</option>
@@ -190,16 +190,16 @@ const ContactForm: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-ivoryWhite mb-1" htmlFor="message">
+          <label className="block text-silverMist font-medium text-sm tracking-wide mb-2 uppercase" htmlFor="message">
             Message:
           </label>
           <textarea
             id="message"
             {...register("message")}
-            className={`w-full p-4 rounded bg-gray-800 text-darkSlate text-xl ${
+            className={`w-full p-4 rounded-xl bg-white/5 border text-ivoryWhite text-lg focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 custom-scrollbar ${
               errors.message
-                ? "border-lightCrimson border-4 bg-pink"
-                : "border-gray-300"
+                ? "border-lightCrimson bg-lightCrimson/10"
+                : "border-white/10 focus:border-gold hover:border-white/20"
             }`}
             rows={4}
           />
@@ -222,10 +222,10 @@ const ContactForm: React.FC = () => {
             id="consent"
             {...register("consent")}
           />
-          <label htmlFor="consent" className="text-ivoryWhite italic">
+          <label htmlFor="consent" className="text-silverMist text-sm">
             I agree to the{" "}
             <span
-              className="underline cursor-pointer"
+              className="text-gold hover:text-ivoryWhite underline cursor-pointer transition-colors"
               onClick={() => setIsModalOpen(true)}
             >
               privacy policy
@@ -236,40 +236,42 @@ const ContactForm: React.FC = () => {
           )}
         </div>
 
-        <div>
-          <Button
+        <div className="pt-2">
+          <button
             type="submit"
             disabled={isSubmitting}
-            variant="primary"
-            className="flex items-center justify-center"
-            label={
-              isSubmitting ? (
-                <>
-                  <svg
-                    className="animate-spin h-5 w-5 mr-2"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                      fill="none"
-                    />
-                    <path
-                      d="M4 12a8 8 0 018-8"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    />
-                  </svg>
-                  Submitting...
-                </>
-              ) : (
-                "Submit"
-              )
-            }
-          />
+            className={`w-full py-4 rounded-xl text-lg font-bold uppercase tracking-widest transition-all duration-300 flex items-center justify-center ${
+              isSubmitting
+                ? "bg-mediumCharcoal text-silverMist cursor-not-allowed"
+                : "bg-gold text-darkSlate hover:bg-ivoryWhite shadow-[0_0_20px_rgba(255,215,0,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]"
+            }`}
+          >
+            {isSubmitting ? (
+              <>
+                <svg
+                  className="animate-spin h-5 w-5 mr-3"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    fill="none"
+                  />
+                  <path
+                    d="M4 12a8 8 0 018-8"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                </svg>
+                Sending...
+              </>
+            ) : (
+              "Send Message"
+            )}
+          </button>
         </div>
       </form>
       <ToastContainer ref={toastContainerRef} />

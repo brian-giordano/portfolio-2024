@@ -1,5 +1,47 @@
 [
   {
+    "title": "Ops Principal",
+    "orgName": "Nexurion",
+    "startMonth": "10",
+    "startYear": "2025",
+    "endMonth": "",
+    "endYear": "Present",
+    "cityTown": "Remote",
+    "locationState": "MA",
+    "description": [
+      "Collaborating with founder to define operational workflows and identify automation opportunities across client delivery",
+      "Attending platform training sessions on compliance tooling (Vanta, Compyl, Microsoft security stack)",
+      "Contributing to internal process documentation and playbook development for SOC 2 / ISO 27001 workflows"
+    ],
+    "stackUsed": [
+      { "name": "Vanta", "category": "DevOps" },
+      { "name": "Compyl", "category": "DevOps" },
+      { "name": "Process Automation", "category": "Backend" }
+    ]
+  },
+  {
+    "title": "Freelance Developer & Technical Consultant",
+    "orgName": "Independent",
+    "startMonth": "6",
+    "startYear": "2024",
+    "endMonth": "",
+    "endYear": "Present",
+    "cityTown": "Remote",
+    "locationState": "MA",
+    "description": [
+      "Built and deployed a full-stack AI crypto market dashboard with real-time data integration and AI-powered analysis",
+      "Built and deployed an insurance claims AI system featuring RAG-based Q&A, document analysis, and relationship graph visualization",
+      "Provided web development, design, and technical strategy consulting for small business and Web3/crypto clients"
+    ],
+    "stackUsed": [
+      { "name": "Next.js", "category": "Frontend" },
+      { "name": "FastAPI", "category": "Backend" },
+      { "name": "Python", "category": "Backend" },
+      { "name": "Streamlit", "category": "Frontend" },
+      { "name": "Render", "category": "DevOps" }
+    ]
+  },
+  {
     "title": "Web Developer",
     "orgName": "ZAG Interactive",
     "startMonth": "11",

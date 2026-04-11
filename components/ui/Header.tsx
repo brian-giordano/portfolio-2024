@@ -44,12 +44,18 @@ const Header: React.FC<HeaderProps> = ({
         );
       }
     };
+    
     measure();
     window.addEventListener("resize", measure);
-    const timeout = setTimeout(measure, 100);
+    
+    // Safely capture the header's height at multiple intervals to account
+    // for Framer Motion / CSS transitions settling, especially on fresh loads
+    // when starting scrolled down.
+    const intervals = [50, 150, 350].map((ms) => setTimeout(measure, ms));
+    
     return () => {
       window.removeEventListener("resize", measure);
-      clearTimeout(timeout);
+      intervals.forEach(clearTimeout);
     };
   }, [isHero]);
 
@@ -81,7 +87,7 @@ const Header: React.FC<HeaderProps> = ({
         ref={headerRef}
         className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
           isCompact
-            ? "bg-darkSlate/95 backdrop-blur-md border-b border-gold/20 py-4"
+            ? "bg-darkSlate backdrop-blur-md py-4 shadow-[0_2px_0_0_rgba(212,175,55,0.25),0_4px_20px_0_rgba(0,0,0,0.6)]"
             : "bg-transparent py-12"
         }`}
       >
@@ -107,10 +113,10 @@ const Header: React.FC<HeaderProps> = ({
                       <li key={item.sectionId}>
                         <button
                           onClick={() => scrollToSection(item.sectionId)}
-                          className={`text-sm tracking-widest transition-all duration-300 ${
+                          className={`text-base tracking-wider font-medium pb-1 transition-all duration-300 ${
                             currentSection === item.sectionId
-                              ? "text-yellow-400 border-b-2 border-yellow-400"
-                              : "text-ivoryWhite hover:text-white/80"
+                              ? "text-gold border-b-[3px] border-gold"
+                              : "text-ivoryWhite/90 hover:text-white hover:border-b-[3px] hover:border-ivoryWhite/30"
                           }`}
                         >
                           {item.label}
@@ -140,10 +146,10 @@ const Header: React.FC<HeaderProps> = ({
                       <li key={item.sectionId}>
                         <button
                           onClick={() => scrollToSection(item.sectionId)}
-                          className={`text-sm tracking-widest transition-all duration-300 ${
+                          className={`text-base tracking-wider font-medium pb-1 transition-all duration-300 ${
                             currentSection === item.sectionId
-                              ? "text-yellow-400 border-b-2 border-yellow-400"
-                              : "text-ivoryWhite hover:text-white/80"
+                              ? "text-gold border-b-[3px] border-gold"
+                              : "text-ivoryWhite/90 hover:text-white hover:border-b-[3px] hover:border-ivoryWhite/30"
                           }`}
                         >
                           {item.label}

@@ -7,9 +7,8 @@ import CardsList from "./ui/CardsList";
 // Import your new thumbnail PNGs
 import VisionDashboardThumbnail from "../assets/images/vision-dashboard-thumbnail-v2.png";
 import GaspThumbnail from "../assets/images/portfolio-GASP-thumbnail-v2.png";
-import ChrisStrattonThumbnail from "../assets/images/portfolio-Chirs-Stratton-thumbnail-v2.png";
-import InsuranceAIThumbnail from "../assets/images/vision-dashboard-thumbnail-v2.png"; // temp placeholder
-import DODThumbnail from "../assets/images/portfolio-website-thumbnail-v2.png"; // temp placeholder
+import InsuranceAIThumbnail from "../assets/images/insurance-ai-thumbnail.png";
+import HIISonarThumbnail from "../assets/images/hii-sonar-thumbnail.png";
 
 import NextImage from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -122,56 +121,7 @@ const ProjectsSection: React.FC = () => {
       //     projectImageUrl: PortfolioWebsiteThumbnail.src,
       //   },
       // },
-      {
-        imageUrl: ChrisStrattonThumbnail,
-        title: "Chris Stratton for City Council (In Production)",
-        alt: "Christ Stratton for Ward 6 City Council screenshot",
-        orgName: "Full Stack Development",
-        orgLink: "https://chris-stratton-campaign.vercel.app/",
-        description: (
-          <p className="text-gray-200">
-            An in-progress website designed and developed with React, Tailwind
-            and typescript for a candidtate running for Ward 6 City Council in
-            Northampton, MA. Chris wanted a grass-roots feel that displayed the
-            unique Northampton cultural fabric with it&apos;s impressive natural
-            features and &quot;bike-ability.&quot; that&apos;s currently being
-            refined.
-          </p>
-        ),
-        stackUsed: [
-          { name: "Next.js", category: "Frontend" },
-          { name: "TypeScript", category: "Frontend" },
-          { name: "Tailwind CSS", category: "Frontend" },
-          { name: "Shadcn UI", category: "Frontend" },
-          { name: "Vercel", category: "DevOps" },
-          { name: "Adobe CS", category: "Design" },
-        ],
-        moreDetails: (
-          <div className="text-gray-200">
-            <p>
-              This beta dashboard provides real-time market data, AI-driven
-              insights, and a conversational interface to help users analyze
-              cryptocurrency trends.
-            </p>
-            <ul className="list-disc list-inside mt-2">
-              <li>Real-time price tracking</li>
-              <li>AI-powered market predictions</li>
-              <li>Interactive chat interface</li>
-              <li>Built with Next.js, FastAPI, and Python</li>
-              <li>Deployed on Vercel</li>
-            </ul>
-          </div>
-        ),
-        sizes: "(max-width: 1024px) 100vw, 1024px",
-        thumbnailConfig: {
-          useStyled: true,
-          accentColor: "gold",
-          bgGradient: "from-mediumCharcoal to-darkSlate",
-          thumbnailType: "chrisStratton",
-          animationKey: "scanLine",
-          projectImageUrl: ChrisStrattonThumbnail.src,
-        },
-      },
+
       {
         imageUrl: GaspThumbnail,
         title: "Grand Anse Surgery Project",
@@ -263,25 +213,42 @@ const ProjectsSection: React.FC = () => {
         },
       },
       {
-        imageUrl: DODThumbnail,
-        title: "U.S. Department of Defense",
-        alt: "Department of Defense project",
-        orgName: "Software Development — Confidential",
+        imageUrl: HIISonarThumbnail,
+        title: "HII Unmanned Systems",
+        alt: "Sonar data annotation tool screenshot",
+        orgName: "Defense Software Development",
         orgLink: "",
         description: (
           <p>
-            Developed software for the U.S. Department of Defense. Project
-            details are confidential.
+            Developed production software for HII Mission Technologies, a
+            defense contractor supporting U.S. Navy unmanned underwater vehicle
+            (UUV) programs. Includes a proprietary sonar data annotation tool
+            built as a full-stack desktop application.
           </p>
         ),
-        stackUsed: [],
+        stackUsed: [
+          { name: "React", category: "Frontend" },
+          { name: "TypeScript", category: "Frontend" },
+          { name: "Electron", category: "Frontend" },
+          { name: "MongoDB", category: "Database" },
+          { name: "MapTiler", category: "Frontend" },
+        ],
         moreDetails: (
           <div>
             <p>
-              Engaged as a software developer on a U.S. Department of Defense
-              project. Due to the nature of the work, specific details,
-              technologies, and deliverables cannot be disclosed publicly.
+              Worked as a Software Engineer II at HII Mission Technologies,
+              building and maintaining UIs for DOD-adjacent defense web
+              applications. Led R&amp;D and development of a proprietary sonar
+              data annotation tool used by DOD radar SMEs, and added GIS mapping
+              functionality using MapTiler.
             </p>
+            <ul>
+              <li>React + TypeScript frontend for UUV simulator/controller</li>
+              <li>Sonar data annotation desktop app (Electron + React)</li>
+              <li>GIS mapping integration with MapTiler</li>
+              <li>Real-time data exchange via RTI DDS Connext</li>
+              <li>Project details subject to contractor confidentiality</li>
+            </ul>
           </div>
         ),
         sizes: "(max-width: 1024px) 100vw, 1024px",
@@ -291,7 +258,7 @@ const ProjectsSection: React.FC = () => {
           bgGradient: "from-mediumCharcoal to-darkSlate",
           thumbnailType: "portfolioRedesign",
           animationKey: "scanLine",
-          projectImageUrl: DODThumbnail.src,
+          projectImageUrl: HIISonarThumbnail.src,
         },
       },
     ],

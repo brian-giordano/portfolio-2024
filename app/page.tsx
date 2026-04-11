@@ -19,6 +19,7 @@ import Footer from "@/components/ui/Footer";
 import SectionHeader from "@/components/ui/SectionHeader";
 import ScrollIndicator from "@/components/ui/ScrollIndicator";
 import HeroBackground from "@/components/HeroBackground";
+import TypewriterText from "@/components/ui/TypewriterText";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -268,12 +269,11 @@ const Home: React.FC = () => {
   const handleNavClick = (sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (section) {
-      const headerHeight =
-        parseFloat(
-          document.documentElement.style.getPropertyValue("--header-height"),
-        ) || 80;
-      const offset =
-        section.getBoundingClientRect().top + window.scrollY - headerHeight;
+      // By using a rigidly hardcoded target height rather than dynamic DOM sampling mid-transit, 
+      // we completely bypass the severe layout shift errors triggered by Framer Motion collapsing the header.
+      const targetHeaderHeight = window.innerWidth < 1024 ? 64 : 68; // Compact mode target constraints
+      
+      const offset = section.getBoundingClientRect().top + window.scrollY - targetHeaderHeight;
       window.scrollTo({ top: offset, behavior: "smooth" });
     }
   };
@@ -286,33 +286,24 @@ const Home: React.FC = () => {
         onNavClick={handleNavClick}
       />
 
-      <main className="container mx-auto lg:pt-2 snap-y snap-mandatory scroll-smooth">
+      <main className="container mx-auto lg:pt-2 scroll-smooth">
         {/* HERO SECTION — restored */}
         <motion.section
           ref={introSectionRef}
           id="hero"
-          className="min-h-[88vh] relative flex flex-col items-center justify-center px-4 overflow-hidden snap-start scroll-mt-[var(--header-height)] pt-[var(--header-height)]"
+          className="min-h-[80vh] relative flex flex-col items-center justify-center px-4 overflow-hidden pt-[120px] pb-16"
           initial="hidden"
           animate="visible"
           variants={containerVariants}
         >
           <HeroBackground />
 
-          {/* Background gradient */}
-          <motion.div
+          {/* Background gradient (Optimized for GPU) */}
+          <div
             className="absolute inset-0 pointer-events-none"
-            animate={{
-              background: [
-                "radial-gradient(ellipse 120% 80% at 50% 40%, rgba(94,186,189,0.2) 0%, transparent 60%)",
-                "radial-gradient(ellipse 120% 80% at 50% 40%, rgba(212,175,55,0.2) 0%, transparent 60%)",
-                "radial-gradient(ellipse 120% 80% at 50% 40%, rgba(205,92,92,0.2) 0%, transparent 60%)",
-                "radial-gradient(ellipse 120% 80% at 50% 40%, rgba(150,123,182,0.2) 0%, transparent 60%)",
-                "radial-gradient(ellipse 120% 80% at 50% 40%, rgba(135,206,235,0.2) 0%, transparent 60%)",
-                "radial-gradient(ellipse 120% 80% at 50% 40%, rgba(94,186,189,0.2) 0%, transparent 60%)",
-              ],
+            style={{
+              background: "radial-gradient(ellipse 100% 70% at 50% 40%, rgba(135,206,235,0.06) 0%, rgba(212,175,55,0.06) 30%, transparent 70%)",
             }}
-            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-            style={{ filter: "blur(100px)" }}
           />
 
           {/* Your original floating cards (DashboardCard, CodeSnippet, etc.) */}
@@ -389,22 +380,21 @@ const Home: React.FC = () => {
               className="text-4xl sm:text-5xl md:text-6xl font-primary font-extrabold tracking-tight text-ivoryWhite leading-none"
               variants={itemVariants}
             >
-              I don&apos;t just build UIs.
+              I don&apos;t just write code.
             </motion.h1>
 
             <motion.h1
               className="text-2xl sm:text-3xl md:text-4xl font-primary font-extrabold bg-gradient-to-tr from-gold to-ivoryWhite bg-clip-text text-transparent mt-3 leading-tight"
               variants={itemVariants}
             >
-              I solve the problem behind them.
+              I use AI to architect and ship entire products.
             </motion.h1>
 
             <motion.p
               className="text-lg md:text-xl text-silverMist mt-6 max-w-md mx-auto"
               variants={itemVariants}
             >
-              AI-augmented frontend engineer with design chops, defense-grade
-              experience, and a bias toward shipping.
+              Creative technologist and AI product builder. MS in Computer Science meets traditional Fine Arts design.
             </motion.p>
 
             <motion.div
@@ -429,6 +419,10 @@ const Home: React.FC = () => {
                 Book a call
               </motion.a>
             </motion.div>
+            
+            <motion.div variants={itemVariants} className="mt-8">
+              <TypewriterText />
+            </motion.div>
           </div>
         </motion.section>
 
@@ -437,8 +431,8 @@ const Home: React.FC = () => {
           id="projects"
           className="snap-start scroll-mt-[var(--header-height)] bg-darkSlate"
         >
-          <div className="w-full bg-darkSlate sticky top-0 z-20">
-            <div className="container mx-auto section-header-container">
+          <div className="w-full section-header-container border-t-[3px] border-gold bg-darkSlate/95 backdrop-blur-md shadow-[0_4px_15px_rgba(0,0,0,0.2)]">
+            <div className="container mx-auto">
               <SectionHeader name="Projects" bandColor="gold" />
             </div>
           </div>
@@ -451,8 +445,8 @@ const Home: React.FC = () => {
           id="experience"
           className="snap-start scroll-mt-[var(--header-height)] bg-darkSlate"
         >
-          <div className="w-full bg-darkSlate sticky top-0 z-20">
-            <div className="container mx-auto section-header-container">
+          <div className="w-full section-header-container border-t-[3px] border-gold bg-darkSlate/95 backdrop-blur-md shadow-[0_4px_15px_rgba(0,0,0,0.2)]">
+            <div className="container mx-auto">
               <SectionHeader name="Experience" bandColor="gold" />
             </div>
           </div>
@@ -465,8 +459,8 @@ const Home: React.FC = () => {
           id="education"
           className="snap-start scroll-mt-[var(--header-height)] bg-darkSlate"
         >
-          <div className="w-full bg-darkSlate sticky top-0 z-20">
-            <div className="container mx-auto section-header-container">
+          <div className="w-full section-header-container border-t-[3px] border-gold bg-darkSlate/95 backdrop-blur-md shadow-[0_4px_15px_rgba(0,0,0,0.2)]">
+            <div className="container mx-auto">
               <SectionHeader name="Education" bandColor="gold" />
             </div>
           </div>
@@ -479,8 +473,8 @@ const Home: React.FC = () => {
           id="skills"
           className="snap-start scroll-mt-[var(--header-height)] bg-darkSlate"
         >
-          <div className="w-full bg-darkSlate sticky top-0 z-20">
-            <div className="container mx-auto section-header-container">
+          <div className="w-full section-header-container border-t-[3px] border-gold bg-darkSlate/95 backdrop-blur-md shadow-[0_4px_15px_rgba(0,0,0,0.2)]">
+            <div className="container mx-auto">
               <SectionHeader name="Skills" bandColor="gold" />
             </div>
           </div>
@@ -493,8 +487,8 @@ const Home: React.FC = () => {
           id="about"
           className="snap-start scroll-mt-[var(--header-height)] bg-darkSlate"
         >
-          <div className="w-full bg-darkSlate sticky top-0 z-20">
-            <div className="container mx-auto section-header-container">
+          <div className="w-full section-header-container border-t-[3px] border-gold bg-darkSlate/95 backdrop-blur-md shadow-[0_4px_15px_rgba(0,0,0,0.2)]">
+            <div className="container mx-auto">
               <SectionHeader name="About" bandColor="gold" />
             </div>
           </div>
@@ -507,8 +501,8 @@ const Home: React.FC = () => {
           id="contact"
           className="snap-start scroll-mt-[var(--header-height)] bg-darkSlate"
         >
-          <div className="w-full bg-darkSlate sticky top-0 z-20">
-            <div className="container mx-auto section-header-container">
+          <div className="w-full section-header-container border-t-[3px] border-gold bg-darkSlate/95 backdrop-blur-md shadow-[0_4px_15px_rgba(0,0,0,0.2)]">
+            <div className="container mx-auto">
               <SectionHeader name="Contact" bandColor="gold" />
             </div>
           </div>

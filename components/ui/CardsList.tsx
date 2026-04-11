@@ -10,12 +10,12 @@ type Props = {
 
 const CardsList: React.FC<Props> = ({ cards, onCardOpen }) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-12 justify-items-center">
+    <div className="flex flex-wrap gap-x-6 md:gap-x-10 gap-y-8 md:gap-y-12 justify-start">
       {cards.map((card, index) => (
         <motion.div
           key={card.title ?? index}
-          initial={{ y: 20 }} // removed opacity: 0
-          whileInView={{ y: 0 }} // removed opacity: 1
+          initial={{ y: 20 }}
+          whileInView={{ y: 0 }}
           whileHover={{ y: -6, scale: 1.01 }}
           transition={{
             duration: 0.45,
@@ -25,7 +25,7 @@ const CardsList: React.FC<Props> = ({ cards, onCardOpen }) => {
             damping: 18,
           }}
           viewport={{ once: true, margin: "-80px" }}
-          className="w-full max-w-[540px]"
+          className="w-full lg:w-[calc(50%-20px)] max-w-[650px] flex-none"
         >
           <Card {...card} onOpen={() => onCardOpen?.(index)} />
         </motion.div>
