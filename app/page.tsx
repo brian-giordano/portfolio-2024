@@ -6,6 +6,7 @@ import {
   motion,
   useScroll,
   useTransform,
+  animate,
 } from "framer-motion";
 import Header from "@/components/ui/Header";
 import ExperienceSection from "@/components/ExperienceSection";
@@ -221,10 +222,18 @@ const MobileFrame = () => {
 
 const Home: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<string>("projects");
+  const [isAtBottom, setIsAtBottom] = useState(false);
 
   useEffect(() => {
-    console.log("Current active section updated to:", currentSection);
-  }, [currentSection]);
+    const handleScroll = () => {
+      const isBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 180;
+      setIsAtBottom(isBottom);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const introSectionRef = useRef<HTMLElement | null>(null);
   const { scrollY } = useScroll();
@@ -235,12 +244,20 @@ const Home: React.FC = () => {
   const clusterRotate = useTransform(scrollY, [0, 500], [0, -5]);
   const phoneRotate = useTransform(scrollY, [0, 500], [3, 10]);
 
+  const [forceHeaderCompact, setForceHeaderCompact] = useState(false);
+  const isNavigatingRef = useRef(false);
+
   // === FIXED OBSERVER WITH DELAY + DEFAULT "projects" ===
   useEffect(() => {
     const timer = setTimeout(() => {
       const sections = document.querySelectorAll("section[id]");
       const observer = new IntersectionObserver(
         (entries) => {
+          // SHIELD: Ignore observer updates if we are in an automated navigation scroll
+          if (isNavigatingRef.current) {
+            return;
+          }
+
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
               setCurrentSection(entry.target.id);
@@ -258,25 +275,41 @@ const Home: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Reflow fix
-  useEffect(() => {
-    const forceReflow = () => window.dispatchEvent(new Event("resize"));
-    const timeout = setTimeout(forceReflow, 150);
-    return () => clearTimeout(timeout);
-  }, []);
+  // Helper for absolute document coordinates
+  const getAbsoluteOffsetTop = (element: HTMLElement) => {
+    const rect = element.getBoundingClientRect();
+    const coordinate = rect.top + window.scrollY;
+    return coordinate;
+  };
 
   const handleNavClick = (sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (section) {
-      // By using a rigidly hardcoded target height rather than dynamic DOM sampling mid-transit,
-      // we completely bypass the severe layout shift errors triggered by Framer Motion collapsing the header.
-      const targetHeaderHeight = window.innerWidth < 1024 ? 64 : 68; // Compact mode target constraints
+      // 1. Instantly Lock Layout & Trigger Nav Glide
+      setForceHeaderCompact(true);
+      isNavigatingRef.current = true;
+      setCurrentSection(sectionId);
 
-      const offset =
-        section.getBoundingClientRect().top +
-        window.scrollY -
-        targetHeaderHeight;
-      window.scrollTo({ top: offset, behavior: "smooth" });
+      // 2. Immediate Measurement & Launch
+      // Since our Header's compact height is stable (68px), we measure instantly
+      const absoluteTop = getAbsoluteOffsetTop(section);
+      const targetY = absoluteTop - 68;
+      
+      // 3. High-Velocity Kinetic Scroll
+      const controls = animate(window.scrollY, targetY, {
+        duration: 0.85,
+        ease: [0.16, 1, 0.3, 1],
+        onUpdate: (latest) => window.scrollTo(0, latest)
+      });
+
+      // 4. Unlock once the animation settles
+      controls.then(() => {
+        // Stay forced compact for a moment to ensure stability
+        setTimeout(() => {
+          setForceHeaderCompact(false);
+          isNavigatingRef.current = false;
+        }, 150);
+      });
     }
   };
 
@@ -286,14 +319,15 @@ const Home: React.FC = () => {
         name="Brian Giordano"
         currentSection={currentSection}
         onNavClick={handleNavClick}
+        forceCompact={forceHeaderCompact}
       />
 
-      <main className="container mx-auto lg:pt-2 scroll-smooth">
+      <main className="max-w-6xl mx-auto px-6 lg:pt-2">
         {/* HERO SECTION — restored */}
         <motion.section
           ref={introSectionRef}
           id="hero"
-          className="min-h-[80vh] relative flex flex-col items-center justify-center px-4 overflow-hidden pt-[120px] pb-16"
+          className="min-h-[95vh] relative flex flex-col items-center justify-center px-4 overflow-hidden pt-[160px] pb-24"
           initial="hidden"
           animate="visible"
           variants={containerVariants}
@@ -429,93 +463,115 @@ const Home: React.FC = () => {
             </motion.div>
           </div>
         </motion.section>
+        
+        {/* Bottom Focus Blur Overlay (Tinted Frosted Glass with smooth mask gradient) */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isAtBottom ? 0 : 1 }}
+          transition={{ duration: 1.2, ease: "easeInOut" }}
+          className="fixed bottom-0 left-0 right-0 h-32 pointer-events-none z-[45]" 
+          style={{ 
+            background: 'linear-gradient(to top, rgba(15, 23, 42, 0.4) 0%, rgba(20, 184, 166, 0.05) 50%, transparent 100%)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            maskImage: 'linear-gradient(to top, black 0%, transparent 100%)', 
+            WebkitMaskImage: 'linear-gradient(to top, black 0%, transparent 100%)' 
+          }}
+        />
+
 
         {/* All other sections */}
         <section
           id="projects"
-          className="snap-start scroll-mt-[var(--header-height)] bg-darkSlate"
+          className="scroll-mt-[68px] bg-darkSlate pb-32"
         >
-          <div className="w-full section-header-container border-t-[3px] border-gold bg-darkSlate/95 backdrop-blur-md shadow-[0_4px_15px_rgba(0,0,0,0.2)]">
-            <div className="container mx-auto">
+          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40">
+            <div className="w-full h-[5px] bg-gold" />
+            <div className="max-w-6xl mx-auto">
               <SectionHeader name="Projects" bandColor="gold" />
             </div>
           </div>
-          <div className="container mx-auto section-content md:pb-6 min-h-[50vh]">
+          <div className="max-w-6xl mx-auto section-content md:pb-6 min-h-[50vh]">
             <ProjectSection />
           </div>
         </section>
 
         <section
           id="experience"
-          className="snap-start scroll-mt-[var(--header-height)] bg-darkSlate"
+          className="scroll-mt-[68px] bg-darkSlate pb-32"
         >
-          <div className="w-full section-header-container border-t-[3px] border-gold bg-darkSlate/95 backdrop-blur-md shadow-[0_4px_15px_rgba(0,0,0,0.2)]">
-            <div className="container mx-auto">
+          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40">
+            <div className="w-full h-[5px] bg-gold" />
+            <div className="max-w-6xl mx-auto">
               <SectionHeader name="Experience" bandColor="gold" />
             </div>
           </div>
-          <div className="container mx-auto section-content md:pb-6 min-h-[50vh]">
+          <div className="max-w-6xl mx-auto section-content md:pb-6 min-h-[50vh]">
             <ExperienceSection />
           </div>
         </section>
 
         <section
           id="education"
-          className="snap-start scroll-mt-[var(--header-height)] bg-darkSlate"
+          className="scroll-mt-[68px] bg-darkSlate pb-32"
         >
-          <div className="w-full section-header-container border-t-[3px] border-gold bg-darkSlate/95 backdrop-blur-md shadow-[0_4px_15px_rgba(0,0,0,0.2)]">
-            <div className="container mx-auto">
+          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40">
+            <div className="w-full h-[5px] bg-gold" />
+            <div className="max-w-6xl mx-auto">
               <SectionHeader name="Education" bandColor="gold" />
             </div>
           </div>
-          <div className="container mx-auto section-content md:pb-6 min-h-[50vh]">
+          <div className="max-w-6xl mx-auto section-content md:pb-6 min-h-[50vh]">
             <EducationSection />
           </div>
         </section>
 
         <section
           id="skills"
-          className="snap-start scroll-mt-[var(--header-height)] bg-darkSlate"
+          className="scroll-mt-[68px] bg-darkSlate pb-32"
         >
-          <div className="w-full section-header-container border-t-[3px] border-gold bg-darkSlate/95 backdrop-blur-md shadow-[0_4px_15px_rgba(0,0,0,0.2)]">
-            <div className="container mx-auto">
+          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40">
+            <div className="w-full h-[5px] bg-gold" />
+            <div className="max-w-6xl mx-auto">
               <SectionHeader name="Skills" bandColor="gold" />
             </div>
           </div>
-          <div className="container mx-auto section-content md:pb-6 min-h-[50vh]">
+          <div className="max-w-6xl mx-auto section-content md:pb-6 min-h-[50vh]">
             <SkillsSection />
           </div>
         </section>
 
         <section
           id="about"
-          className="snap-start scroll-mt-[var(--header-height)] bg-darkSlate"
+          className="scroll-mt-[68px] bg-darkSlate pb-32"
         >
-          <div className="w-full section-header-container border-t-[3px] border-gold bg-darkSlate/95 backdrop-blur-md shadow-[0_4px_15px_rgba(0,0,0,0.2)]">
-            <div className="container mx-auto">
+          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40">
+            <div className="w-full h-[5px] bg-gold" />
+            <div className="max-w-6xl mx-auto">
               <SectionHeader name="About" bandColor="gold" />
             </div>
           </div>
-          <div className="container mx-auto section-content md:pb-6 min-h-[50vh]">
+          <div className="max-w-6xl mx-auto section-content md:pb-6 min-h-[50vh]">
             <AboutSection />
           </div>
         </section>
 
         <section
           id="contact"
-          className="snap-start scroll-mt-[var(--header-height)] bg-darkSlate"
+          className="scroll-mt-[68px] bg-darkSlate pb-32 min-h-screen"
         >
-          <div className="w-full section-header-container border-t-[3px] border-gold bg-darkSlate/95 backdrop-blur-md shadow-[0_4px_15px_rgba(0,0,0,0.2)]">
-            <div className="container mx-auto">
+          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40">
+            <div className="w-full h-[5px] bg-gold" />
+            <div className="max-w-6xl mx-auto">
               <SectionHeader name="Contact" bandColor="gold" />
             </div>
           </div>
-          <div className="container mx-auto section-content md:pb-6">
-            <div className="w-full flex flex-col lg:flex-row">
-              <div className="w-full lg:w-1/2 lg:mb-0">
+          <div className="max-w-6xl mx-auto section-content md:pb-6">
+            <div className="w-full flex flex-col lg:flex-row gap-12">
+              <div className="w-full lg:w-[62%] lg:mb-0">
                 <ContactSection />
               </div>
-              <div className="w-full lg:w-1/2 mx-auto">
+              <div className="w-full lg:w-[38%] mx-auto">
                 <FollowMeSection />
               </div>
             </div>
@@ -532,7 +588,7 @@ const Home: React.FC = () => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="fixed bottom-6 right-6 z-40 p-3 bg-gold text-darkSlate rounded-full shadow-lg shadow-gold/30 hover:scale-110 transition-transform"
+              className="fixed bottom-6 right-6 z-50 p-3 bg-gold text-darkSlate rounded-full shadow-lg shadow-gold/30 hover:scale-110 transition-transform"
               aria-label="Back to top"
             >
               ↑

@@ -125,62 +125,66 @@ const ContactForm: React.FC = () => {
 
   return (
     <div className="w-full bg-charcoal/40 backdrop-blur-md rounded-2xl border border-white/5 shadow-2xl p-6 md:p-10">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div>
-          <label
-            className="block text-silverMist font-medium text-sm tracking-wide mb-2 uppercase"
-            htmlFor="name"
-          >
-            Name:
-          </label>
-          <input
-            type="text"
-            id="name"
-            {...register("name")}
-            className={`w-full p-4 rounded-xl bg-white/5 border text-ivoryWhite text-lg focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 ${
-              errors.name
-                ? "border-lightCrimson bg-lightCrimson/10"
-                : "border-white/10 focus:border-gold hover:border-white/20"
-            }`}
-          />
-          {errors.name && (
-            <p className="text-lightCrimson">{errors.name.message}</p>
-          )}
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 md:space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          <div>
+            <label
+              className="block text-silverMist font-medium text-xs tracking-wider mb-1.5 uppercase"
+              htmlFor="name"
+            >
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              placeholder="Your name"
+              {...register("name")}
+              className={`w-full p-3.5 rounded-xl bg-white/5 border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 ${
+                errors.name
+                  ? "border-lightCrimson bg-lightCrimson/10"
+                  : "border-white/10 focus:border-gold hover:border-white/20"
+              }`}
+            />
+            {errors.name && (
+              <p className="text-lightCrimson text-xs mt-1">{errors.name.message}</p>
+            )}
+          </div>
+
+          <div>
+            <label
+              className="block text-silverMist font-medium text-xs tracking-wider mb-1.5 uppercase"
+              htmlFor="email"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              placeholder="Your email"
+              {...register("email")}
+              className={`w-full p-3.5 rounded-xl bg-white/5 border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 ${
+                errors.email
+                  ? "border-lightCrimson bg-lightCrimson/10"
+                  : "border-white/10 focus:border-gold hover:border-white/20"
+              }`}
+            />
+            {errors.email && (
+              <p className="text-lightCrimson text-xs mt-1">{errors.email.message}</p>
+            )}
+          </div>
         </div>
 
         <div>
           <label
-            className="block text-silverMist font-medium text-sm tracking-wide mb-2 uppercase"
-            htmlFor="email"
-          >
-            Email:
-          </label>
-          <input
-            type="email"
-            id="email"
-            {...register("email")}
-            className={`w-full p-4 rounded-xl bg-white/5 border text-ivoryWhite text-lg focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 ${
-              errors.email
-                ? "border-lightCrimson bg-lightCrimson/10"
-                : "border-white/10 focus:border-gold hover:border-white/20"
-            }`}
-          />
-          {errors.email && (
-            <p className="text-lightCrimson">{errors.email.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label
-            className="block text-silverMist font-medium text-sm tracking-wide mb-2 uppercase"
+            className="block text-silverMist font-medium text-xs tracking-wider mb-1.5 uppercase"
             htmlFor="subject"
           >
-            Subject:
+            Subject
           </label>
           <select
             id="subject"
             {...register("subject")}
-            className={`w-full p-4 rounded-xl bg-white/5 border text-ivoryWhite text-lg focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 appearance-none ${
+            className={`w-full p-3.5 rounded-xl bg-white/5 border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 appearance-none ${
               errors.subject
                 ? "border-lightCrimson bg-lightCrimson/10"
                 : "border-white/10 focus:border-gold hover:border-white/20"
@@ -193,21 +197,22 @@ const ContactForm: React.FC = () => {
             <option value="other">Other</option>
           </select>
           {errors.subject && (
-            <p className="text-lightCrimson">{errors.subject.message}</p>
+            <p className="text-lightCrimson text-xs mt-1">{errors.subject.message}</p>
           )}
         </div>
 
         <div>
           <label
-            className="block text-silverMist font-medium text-sm tracking-wide mb-2 uppercase"
+            className="block text-silverMist font-medium text-xs tracking-wider mb-1.5 uppercase"
             htmlFor="message"
           >
-            Message:
+            Message
           </label>
           <textarea
             id="message"
+            placeholder="How can I help you?"
             {...register("message")}
-            className={`w-full p-4 rounded-xl bg-white/5 border text-ivoryWhite text-lg focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 custom-scrollbar ${
+            className={`w-full p-3.5 rounded-xl bg-white/5 border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 custom-scrollbar ${
               errors.message
                 ? "border-lightCrimson bg-lightCrimson/10"
                 : "border-white/10 focus:border-gold hover:border-white/20"
@@ -215,7 +220,7 @@ const ContactForm: React.FC = () => {
             rows={4}
           />
           {errors.message && (
-            <p className="text-lightCrimson">{errors.message.message}</p>
+            <p className="text-lightCrimson text-xs mt-1">{errors.message.message}</p>
           )}
         </div>
 
@@ -226,14 +231,14 @@ const ContactForm: React.FC = () => {
           {...register("honeypot")}
         />
 
-        <div>
+        <div className="flex items-center">
           <input
-            className="mr-2"
+            className="w-4 h-4 rounded border-white/10 bg-white/5 text-gold focus:ring-gold transition-colors"
             type="checkbox"
             id="consent"
             {...register("consent")}
           />
-          <label htmlFor="consent" className="text-silverMist text-sm">
+          <label htmlFor="consent" className="ml-2 text-silverMist text-xs">
             I agree to the{" "}
             <span
               className="text-gold hover:text-ivoryWhite underline cursor-pointer transition-colors"
@@ -243,7 +248,7 @@ const ContactForm: React.FC = () => {
             </span>
           </label>
           {errors.consent && (
-            <p className="text-lightCrimson">{errors.consent.message}</p>
+            <p className="text-lightCrimson text-xs ml-4">{errors.consent.message}</p>
           )}
         </div>
 
@@ -251,10 +256,10 @@ const ContactForm: React.FC = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full py-4 rounded-xl text-lg font-bold uppercase tracking-widest transition-all duration-300 flex items-center justify-center ${
+            className={`w-full py-3.5 rounded-xl text-base font-bold uppercase tracking-widest transition-all duration-300 flex items-center justify-center ${
               isSubmitting
                 ? "bg-mediumCharcoal text-silverMist cursor-not-allowed"
-                : "bg-gold text-darkSlate hover:bg-ivoryWhite shadow-[0_0_20px_rgba(255,215,0,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]"
+                : "bg-gold text-darkSlate hover:bg-ivoryWhite shadow-[0_4px_20px_rgba(255,215,0,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]"
             }`}
           >
             {isSubmitting ? (
