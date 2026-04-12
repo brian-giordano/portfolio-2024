@@ -7,6 +7,17 @@
   /* Colors */
   --background: #1a1a2e;
   --foreground: #f8f8ff;
+
+  /* Updated pill colors for badges - improved palette */
+  --color-pill-frontend-bg: #4fd1c5; /* mystic teal */
+  --color-pill-backend-bg: #f56565; /* light crimson */
+  --color-pill-database-bg: #d4af37; /* gold */
+  --color-pill-devops-bg: #cbd5d0; /* silver mist */
+  --color-pill-design-bg: #b794f4; /* lavender */
+
+  --color-pill-text: #1e1e2f; /* dark text for contrast */
+
+  /* Legacy colors (optional, keep if used elsewhere) */
   --color-mysticTeal: #00bfa6;
   --color-gold: #ffd700;
   --color-lightCrimson: #e57373;
@@ -14,18 +25,13 @@
   --color-lightSkyBlue: #a0c4ff;
 
   /* Layout */
-  --header-height: 64px;
-
-  /* Transitions */
-  --transition-duration-long: 3000ms;
-  --transition-duration-short: 200ms;
+  --header-height: 68px;
 }
 
 /* ===== BASE STYLES ===== */
 html {
-  scroll-behavior: smooth;
   height: 100%;
-  scroll-padding-top: var(--header-height);
+  scroll-padding-top: 0 !important;
 }
 
 body {
@@ -34,7 +40,6 @@ body {
   font-family: var(--font-poppins), Arial, Helvetica, sans-serif;
   height: 100%;
   overflow-y: auto;
-  scroll-snap-type: y proximity;
 }
 
 /* Typography */
@@ -55,8 +60,8 @@ h3 {
 }
 
 p {
-  font-size: 0.875rem;
-  line-height: 1.625;
+  font-size: 1rem;
+  line-height: 1.7;
   margin-bottom: 0.75rem;
   color: var(--foreground);
 }
@@ -93,16 +98,14 @@ header li {
 
 /* ===== LAYOUT & SECTIONS ===== */
 section {
-  scroll-margin-top: var(--header-height);
+  scroll-margin-top: 68px;
   position: relative;
   margin-top: 0;
   padding-top: 0;
-  scroll-snap-align: start;
+  z-index: 1;
 }
 
 section:last-of-type {
-  scroll-snap-align: end;
-  scroll-snap-stop: always;
   margin-bottom: 0;
   padding-bottom: 0;
 }
@@ -127,6 +130,7 @@ footer {
 /* ===== HEADER STYLES ===== */
 header {
   transition: background 0.3s ease;
+  z-index: 50;
 }
 
 .sticky-header {
@@ -141,38 +145,14 @@ header {
 /* ===== SECTION HEADERS ===== */
 .section-header-container {
   position: sticky;
-  top: var(--header-height);
+  top: 68px;
   z-index: 30;
   background-color: var(--background);
   width: 100%;
   transition: opacity var(--transition-duration-short) ease-out;
 }
 
-/* Section header visibility states */
-section:not(.active-section) .section-header-container {
-  opacity: 0.5;
-}
-
-section.active-section .section-header-container {
-  opacity: 1;
-}
-
-/* Navigation state handling */
-.navigating .section-header-container {
-  position: static !important;
-  visibility: hidden;
-  opacity: 0;
-}
-
-.navigating .active-section .section-header-container {
-  visibility: visible;
-  opacity: 1;
-}
-
-.hidden-section-header {
-  opacity: 0;
-  visibility: hidden;
-}
+/* Section headers are fully opaque as per redesign specs */
 
 /* ===== UTILITY CLASSES ===== */
 .text-balance {
@@ -192,7 +172,9 @@ section.active-section .section-header-container {
 }
 
 .text-shadow-lg {
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 4px 8px rgba(0, 0, 0, 0.6);
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.8),
+    0 4px 8px rgba(0, 0, 0, 0.6);
 }
 
 .sticky-header-no-transition {
@@ -319,21 +301,6 @@ section.active-section .section-header-container {
   }
 }
 
-/* ===== DIRECT STYLING ===== */
-/* Always ensure Projects section header has proper opacity */
-#projects .section-header-container {
-  opacity: 1 !important;
-}
-
-/* For other sections, keep the existing behavior */
-section:not(#projects):not(.active-section) .section-header-container {
-  opacity: 0.5;
-}
-
-section:not(#projects).active-section .section-header-container {
-  opacity: 1;
-}
-
 .pulse-animation {
   animation: pulse 8s ease-in-out infinite;
 }
@@ -358,7 +325,8 @@ section:not(#projects).active-section .section-header-container {
   }
 
   p {
-    font-size: 0.8rem;
+    font-size: 0.925rem;
+    line-height: 1.65;
   }
 }
 
@@ -374,3 +342,39 @@ section:not(#projects).active-section .section-header-container {
     scroll-behavior: auto !important;
   }
 }
+
+main {
+  position: relative;
+  z-index: 1;
+}
+
+/* Background color for cards */
+.bg-charcoal {
+  background-color: #2e2e3e; /* example dark but distinct from bg-darkSlate */
+}
+
+/* Premium Glassmorphic Badge Styles */
+.badge-frontend, .badge-backend, .badge-database, .badge-devops, .badge-design {
+  background-color: rgba(255, 255, 255, 0.05); /* Barely visible frost */
+  color: #e2e8f0; /* Crisp soft-silver */
+  border: 1px solid rgba(255, 255, 255, 0.12); /* Extremely delicate rim lighting */
+  backdrop-filter: blur(8px);
+}
+
+@keyframes scan {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+.animate-scan {
+  animation: scan 1.5s linear infinite;
+}
+
+.hover\:shadow-gold\/30:hover {
+  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
+}
+
+

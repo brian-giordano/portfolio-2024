@@ -1,335 +1,295 @@
+"use client";
+
 import React, {
   useState,
   useCallback,
   useMemo,
-  useEffect,
   useRef,
 } from "react";
 import {
-  FaBriefcase,
-  FaAddressCard,
-  FaEnvelope,
-  FaBars,
-  FaXmark,
-} from "react-icons/fa6";
-import { PiLightningFill, PiGraduationCapFill } from "react-icons/pi";
-import { motion } from "framer-motion";
-import { useScrollPosition } from "@/hooks/useScrollPosition";
+  motion,
+  useScroll,
+  AnimatePresence,
+  useMotionValueEvent,
+  useTransform,
+} from "framer-motion";
 
 interface HeaderProps {
-  name: string;
+  onNavClick: (id: string) => void;
   currentSection: string;
-  onNavClick?: (sectionId: string) => void;
+  name?: string;
+  forceCompact?: boolean;
 }
-
-interface MenuItem {
-  label: string;
-  sectionId: string;
-  bandColor: string;
-  icon: React.ReactNode;
-}
-
-const headerVariants = {
-  hidden: { y: -100, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      type: "spring",
-      stiffness: 100,
-      damping: 15,
-      delay: 0.1,
-    },
-  },
-};
 
 const Header: React.FC<HeaderProps> = ({
-  name,
-  currentSection,
+  name = "Brian Giordano",
   onNavClick,
+  currentSection,
+  forceCompact = false,
 }) => {
-  const isScrolled = useScrollPosition();
-  const [isMinimallyScrolled, setIsMinimallyScrolled] = useState(false);
+  const { scrollY } = useScroll();
+  const [internalIsHero, setInternalIsHero] = useState(true);
+  
+  // Real isHero is false if externally forced OR if scrolled down
+  const isHero = forceCompact ? false : internalIsHero;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const headerRef = useRef<HTMLDivElement>(null);
-  const [headerHeight, setHeaderHeight] = useState(64);
+  const headerRef = useRef<HTMLElement | null>(null);
 
-  // Effect to measure header height
-  useEffect(() => {
-    if (headerRef.current) {
-      setHeaderHeight(headerRef.current.offsetHeight);
-
-      // Update CSS variable for header height
-      document.documentElement.style.setProperty(
-        "--header-height",
-        `${headerRef.current.offsetHeight}px`
-      );
-    }
-
-    const handleResize = () => {
-      if (headerRef.current) {
-        setHeaderHeight(headerRef.current.offsetHeight);
-        document.documentElement.style.setProperty(
-          "--header-height",
-          `${headerRef.current.offsetHeight}px`
-        );
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [isScrolled]);
-
-  // Add this effect to detect even minimal scrolling
-  useEffect(() => {
-    const handleMinimalScroll = () => {
-      setIsMinimallyScrolled(window.scrollY > 5);
-    };
-
-    window.addEventListener("scroll", handleMinimalScroll);
-    handleMinimalScroll();
-
-    return () => window.removeEventListener("scroll", handleMinimalScroll);
-  }, []);
-
-  const MenuItems: MenuItem[] = useMemo(
-    () => [
-      {
-        label: "Projects",
-        sectionId: "projects",
-        bandColor: "gold",
-        icon: <FaBriefcase className="text-gold" />,
-      },
-      {
-        label: "Experience",
-        sectionId: "experience",
-        bandColor: "gold",
-        icon: <PiGraduationCapFill className="text-gold" />,
-      },
-      {
-        label: "Education",
-        sectionId: "education",
-        bandColor: "gold",
-        icon: <PiGraduationCapFill className="text-gold" />,
-      },
-      {
-        label: "Skills",
-        sectionId: "skills",
-        bandColor: "gold",
-        icon: <PiLightningFill className="text-gold" />,
-      },
-      {
-        label: "About",
-        sectionId: "about",
-        bandColor: "gold",
-        icon: <FaAddressCard className="text-gold" />,
-      },
-      {
-        label: "Contact",
-        sectionId: "contact",
-        bandColor: "gold",
-        icon: <FaEnvelope className="text-gold" />,
-      },
-    ],
-    []
+  // Smooth "Mist-In" Background Logic
+  const headerBackground = useTransform(
+    scrollY,
+    [0, 80],
+    ["rgba(15, 23, 42, 0)", "rgba(15, 23, 42, 1)"]
   );
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    // Only update internal state if not forced
+    setInternalIsHero(latest < 10);
+  });
+
+  const isCompact = !isHero;
+
+  const MenuItems = useMemo(
+    () => [
+      { label: "Projects", sectionId: "projects" },
+      { label: "Experience", sectionId: "experience" },
+      { label: "Education", sectionId: "education" },
+      { label: "Skills", sectionId: "skills" },
+      { label: "About", sectionId: "about" },
+      { label: "Contact", sectionId: "contact" },
+    ],
+    [],
+  );
+
+  // === LINKED-AXIS ENGINE ===
+  const [navCoords, setNavCoords] = useState<{ x: number; width: number; id: string }[]>([]);
+  const [sectionYCoords, setSectionYCoords] = useState<number[]>([]);
+  const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
+
+  // 1. Core Measurement Logic
+  const measureCoords = useCallback(() => {
+    // Measure X coordinates in Header
+    const coords = MenuItems.map((item) => {
+      const btn = buttonRefs.current[item.sectionId];
+      if (btn) {
+        return {
+          x: btn.offsetLeft,
+          width: btn.offsetWidth,
+          id: item.sectionId,
+        };
+      }
+      return { x: 0, width: 0, id: item.sectionId };
+    });
+    setNavCoords(coords);
+
+    // Measure Y coordinates in Page (Absolute Document Top)
+    const yCoords = MenuItems.map((item) => {
+      const el = document.getElementById(item.sectionId);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        return rect.top + window.scrollY - 68;
+      }
+      return 0;
+    });
+    setSectionYCoords(yCoords);
+  }, [MenuItems]);
+
+  // 2. Self-Healing Calibration (Resizes, Layout Shifts, Image Loads)
+  React.useEffect(() => {
+    measureCoords();
+
+    // Watch for layout shifts in the main container
+    const observer = new ResizeObserver(() => {
+      measureCoords();
+    });
+
+    const mainContent = document.querySelector('main');
+    if (mainContent) observer.observe(mainContent);
+    
+    window.addEventListener("resize", measureCoords);
+    window.addEventListener("load", measureCoords); // Catch late image loads
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measureCoords);
+      window.removeEventListener("load", measureCoords);
+    };
+  }, [measureCoords]);
+
+
+  // 3. The Segment-Transfer Mapping (X, Width, Opacity)
+  // We double each point to create "Dead Zones" where the ribbon stays locked
+  const transformedPoints = useMemo(() => {
+    if (sectionYCoords.length === 0 || navCoords.length === 0) return null;
+    
+    const yPoints: number[] = [];
+    const xPoints: number[] = [];
+    const wPoints: number[] = [];
+    
+    const GAP = 250; // The 250px "Glide Zone" before each section
+
+    sectionYCoords.forEach((y, i) => {
+      const coord = navCoords[i];
+      if (i === 0) {
+        // First section
+        yPoints.push(y);
+        xPoints.push(coord.x);
+        wPoints.push(coord.width);
+      } else {
+        // Add "Glide-Start" and "Lock-In" points
+        yPoints.push(y - GAP);
+        xPoints.push(navCoords[i-1].x);
+        wPoints.push(navCoords[i-1].width);
+        
+        yPoints.push(y);
+        xPoints.push(coord.x);
+        wPoints.push(coord.width);
+      }
+    });
+
+    return { yPoints, xPoints, wPoints };
+  }, [sectionYCoords, navCoords]);
+
+  const ribbonX = useTransform(
+    scrollY,
+    transformedPoints?.yPoints || [0, 1000],
+    transformedPoints?.xPoints || [0, 0]
+  );
+
+  const ribbonWidth = useTransform(
+    scrollY,
+    transformedPoints?.yPoints || [0, 1000],
+    transformedPoints?.wPoints || [100, 100]
+  );
+
+
+
+  const ribbonOpacity = useTransform(
+    scrollY,
+    [0, sectionYCoords[0] ? sectionYCoords[0] - 100 : 200],
+    [0, 1]
+  );
+
 
   const scrollToSection = useCallback(
     (sectionId: string) => {
-      if (onNavClick) {
-        onNavClick(sectionId);
-      }
+      onNavClick(sectionId);
       setIsMenuOpen(false);
     },
-    [onNavClick]
+    [onNavClick],
   );
-
-  const renderNavItems = (isMobile = false) => (
-    <>
-      {MenuItems.map((item) => (
-        <li
-          key={item.sectionId}
-          className={`
-            ${isMobile ? "w-full my-1" : "group"} 
-            list-none
-            ${
-              isMobile
-                ? "rounded-lg overflow-hidden transition-all duration-200"
-                : ""
-            }
-          `}
-        >
-          <a
-            href={`#${item.sectionId}`}
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToSection(item.sectionId);
-            }}
-            className={`
-              ${
-                currentSection === item.sectionId
-                  ? "bg-opacity-15 bg-eggplant font-bold text-gold"
-                  : "font-medium hover:bg-opacity-10 hover:bg-gray-400"
-              }
-              ${
-                isMobile
-                  ? "w-full text-left py-4 px-6 flex items-center rounded-lg"
-                  : "px-4 py-2 flex items-center justify-center flex-1"
-              }
-              text-ivoryWhite hover:text-gold transition-all duration-200 ease-in-out
-              cursor-pointer min-h-[44px] md:min-h-0
-            `}
-          >
-            <span className={`text-xl ${isMobile ? "mr-4" : "mr-2"} text-gold`}>
-              {item.icon}
-            </span>
-            <span className={isMobile ? "text-base" : "whitespace-nowrap"}>
-              {item.label}
-            </span>
-            {isMobile && currentSection === item.sectionId && (
-              <span className="ml-auto">
-                <div className="h-2 w-2 rounded-full bg-gold"></div>
-              </span>
-            )}
-          </a>
-        </li>
-      ))}
-    </>
-  );
-
-  const isHomeSection = currentSection === "" || currentSection === "home";
-  const showHeaderBackground = !isHomeSection || isMinimallyScrolled;
 
   return (
     <>
-      {/* Main header */}
       <motion.header
         ref={headerRef}
-        className={`w-full fixed top-0 left-0 right-0 z-50 ${
-          showHeaderBackground ? "bg-darkSlate" : ""
+        className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 ${
+          isCompact ? "py-4 md:py-4" : "py-12"
         }`}
-        style={{
-          background: !showHeaderBackground
-            ? "linear-gradient(to bottom, rgba(20, 20, 30, 0.8) 0%, rgba(20, 20, 30, 0.4) 50%, transparent 100%)"
-            : "",
-          backdropFilter: !showHeaderBackground ? "blur(5px)" : "",
+        style={{ 
+          backgroundColor: headerBackground,
+          transition: "background-color 0.3s ease",
         }}
-        initial="hidden"
-        animate="visible"
-        variants={headerVariants}
       >
-        <div
-          className={`container mx-auto ${
-            isScrolled
-              ? "flex items-center justify-between py-4 px-4"
-              : "flex flex-col items-center py-8 px-4"
-          }`}
-        >
-          {!isScrolled && (
-            <>
-              <nav
-                className={`mb-2 w-full opacity-90 transition-all duration-300 z-50 hidden lg:block ${
-                  !showHeaderBackground ? "nav-backdrop" : ""
-                }`}
-              >
-                <ul className="flex justify-center space-x-4 py-2 list-none">
-                  {renderNavItems()}
-                </ul>
-              </nav>
-              <h1
-                className={`font-primary font-extrabold tracking-wide transition-all duration-300 uppercase text-3xl text-ivoryWhite z-20 cursor-pointer lg:text-6xl ${
-                  !showHeaderBackground ? "text-shadow-lg" : ""
-                }`}
-              >
-                {name}
-              </h1>
-            </>
-          )}
+        <div className="max-w-6xl mx-auto px-6">
+          {/* Desktop Navigation */}
+          <div
+            className={`hidden lg:flex items-center transition-all duration-500 ${
+              isCompact ? "justify-between" : "flex-col items-center gap-8"
+            }`}
+          >
+            <motion.h1
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className={`font-primary font-extrabold tracking-[1px] uppercase text-ivoryWhite cursor-pointer select-none transition-all duration-500 ${
+                isCompact ? "text-3xl" : "text-5xl"
+              }`}
+            >
+              {name}
+            </motion.h1>
 
-          {isScrolled && (
-            <>
-              <div className="flex items-center justify-between w-full">
-                <h1
-                  onClick={() =>
-                    window.scrollTo({ top: 0, behavior: "smooth" })
-                  }
-                  className={`font-primary font-extrabold tracking-wide transition-all duration-300 uppercase text-2xl text-ivoryWhite cursor-pointer`}
-                >
-                  {name}
-                </h1>
-                <nav className="opacity-90 transition-all duration-300 z-50 hidden lg:flex">
-                  <ul className="flex w-full justify-between py-2 list-none">
-                    {renderNavItems()}
-                  </ul>
-                </nav>
-              </div>
+            <nav className="relative">
+              <ul className="flex items-center gap-8 relative">
+                {MenuItems.map((item) => (
+                  <li key={item.sectionId}>
+                    <button
+                      ref={(el) => { buttonRefs.current[item.sectionId] = el; }}
+                      onClick={() => scrollToSection(item.sectionId)}
+                      className={`relative text-sm tracking-[0.2em] font-semibold uppercase pb-3 transition-all duration-300 ${
+                        currentSection === item.sectionId
+                          ? "text-gold"
+                          : "text-ivoryWhite/90 hover:text-gold/80"
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              {/* THE UNIVERSAL LINKED RIBBON */}
+              <motion.div
+                className="absolute md:bottom-[-21px] bottom-[-11px] h-[16px] bg-gold z-0 will-change-transform pointer-events-none"
+                style={{
+                  x: ribbonX,
+                  width: ribbonWidth,
+                  opacity: ribbonOpacity,
+                }}
+              />
+            </nav>
+          </div>
 
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-xl pt-0 px-4 focus:outline-none flex items-center justify-center transition-all duration-300 lg:hidden"
-                aria-label="Toggle menu"
-                aria-expanded={isMenuOpen}
-              >
-                <span className="text-ivoryWhite">
-                  {isMenuOpen ? <FaXmark /> : <FaBars />}
-                </span>
-              </button>
-            </>
-          )}
+          {/* Mobile Navigation */}
+          <div className="flex lg:hidden items-center justify-between">
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="font-primary font-extrabold tracking-widest uppercase text-2xl text-ivoryWhite"
+            >
+              {name}
+            </button>
+            <button
+              onClick={() => setIsMenuOpen(true)}
+              className="text-3xl text-ivoryWhite"
+            >
+              ☰
+            </button>
+          </div>
         </div>
       </motion.header>
 
-      {/* Mobile menu */}
-      {isMenuOpen && (
-        <div className="fixed inset-0 mobile-menu-container z-50 lg:hidden">
-          <div className="flex justify-end p-4">
-            <button
-              onClick={() => setIsMenuOpen(false)}
-              className="text-xl text-ivoryWhite bg-opacity-20 bg-gray-700 p-2 rounded-full"
-              aria-label="Close menu"
-            >
-              <FaXmark />
-            </button>
-          </div>
-
-          <div className="mobile-menu-header">
-            <h1 className="text-2xl font-bold text-ivoryWhite">
-              BRIAN GIORDANO
-            </h1>
-            <p className="text-sm text-silverMist mt-2">Digital Alchemist</p>
-          </div>
-
-          <nav className="flex flex-col items-center justify-start w-full px-4 mt-6">
-            <ul className="flex flex-col items-stretch w-full max-w-xs list-none p-0 m-0 space-y-2">
+      {/* Mobile Sidebar Overlay */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            className="fixed inset-0 bg-darkSlate/98 backdrop-blur-2xl z-[999] lg:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="flex justify-end p-6">
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="text-4xl text-ivoryWhite"
+              >
+                ✕
+              </button>
+            </div>
+            <nav className="px-8 flex flex-col gap-6 text-xl">
               {MenuItems.map((item) => (
-                <li
+                <button
                   key={item.sectionId}
-                  className={`mobile-menu-item ${
-                    currentSection === item.sectionId ? "active" : ""
+                  onClick={() => scrollToSection(item.sectionId)}
+                  className={`text-left ${
+                    currentSection === item.sectionId
+                      ? "text-yellow-400 font-semibold"
+                      : "text-ivoryWhite"
                   }`}
                 >
-                  {currentSection === item.sectionId && (
-                    <div className="active-indicator"></div>
-                  )}
-                  <a
-                    href={`#${item.sectionId}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      scrollToSection(item.sectionId);
-                    }}
-                  >
-                    <span className="icon">{item.icon}</span>
-                    <span className="text">{item.label}</span>
-                  </a>
-                </li>
+                  {item.label}
+                </button>
               ))}
-            </ul>
-          </nav>
-        </div>
-      )}
-
-      {/* Add padding to the top of the page to account for the fixed header */}
-      <div style={{ height: headerHeight }} />
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };

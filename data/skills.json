@@ -1,96 +1,48 @@
 [
+  { "title": "React", "level": 8, "category": "Frontend" },
+  { "title": "Next.js", "level": 8, "category": "Frontend" },
+  { "title": "TypeScript", "level": 7, "category": "Frontend" },
+  { "title": "JavaScript", "level": 9, "category": "Frontend" },
+  { "title": "HTML & CSS", "level": 10, "category": "Frontend" },
+  { "title": "Tailwind CSS", "level": 8, "category": "Frontend" },
+  { "title": "Framer Motion", "level": 7, "category": "Frontend" },
   {
-    "title": "React",
-    "level": 7,
-    "category": "Frontend"
-  },
-  {
-    "title": "Typescript",
-    "level": 7,
-    "category": "Frontend"
-  },
-  {
-    "title": "Javascript",
+    "title": "Component Libraries",
     "level": 8,
-    "category": "Frontend"
-  },
-  {
-    "title": "Tailwind CSS",
-    "level": 7,
-    "category": "Frontend"
-  },
-  {
-    "title": "Electron",
-    "level": 7,
-    "category": "Frontend"
-  },
-  {
-    "title": "Databases",
-    "level": 6,
-    "category": "Database",
-    "subtitles": ["MongoDB, MySQL"]
-  },
-  {
-    "title": "Modern Frameworks",
-    "level": 7,
     "category": "Frontend",
-    "subtitles": ["Material UI, Bootstrap, Chakra UI"]
+    "subtitles": ["Shadcn UI, Material UI, Chakra UI"]
   },
+  { "title": "Python", "level": 7, "category": "Backend" },
   {
-    "title": "HTML",
-    "level": 10,
-    "category": "Frontend"
-  },
-  {
-    "title": "CSS",
-    "level": 10,
-    "category": "Frontend"
-  },
-  {
-    "title": "C, C#, C++",
-    "level": 5,
-    "category": "Backend"
-  },
-  {
-    "title": "Java",
-    "level": 5,
-    "category": "Backend"
-  },
-  {
-    "title": "Git, Github",
+    "title": "Agent Orchestration",
     "level": 8,
-    "category": "DevOps"
+    "category": "Backend",
+    "subtitles": ["LLM Integration, RAG Architectures, Pipelines"]
   },
   {
-    "title": "Unity",
-    "level": 4,
-    "category": "Backend"
-  },
-  {
-    "title": "App/Web Design",
+    "title": "AI Tooling & Workflows",
     "level": 9,
-    "category": "Design"
+    "category": "Backend",
+    "subtitles": ["Claude, ChatGPT, Abacus.AI, Antigravity"]
+  },
+  { "title": "REST APIs", "level": 8, "category": "Backend" },
+  { "title": "FastAPI & Python", "level": 8, "category": "Backend" },
+  { "title": "Streamlit", "level": 7, "category": "Frontend" },
+  { "title": "UI/UX Design", "level": 9, "category": "Design" },
+  {
+    "title": "Generative AI",
+    "level": 9,
+    "category": "Design",
+    "subtitles": ["Midjourney (4 years), Suno, image & audio pipelines"]
   },
   {
     "title": "Design Tools",
-    "level": 10,
+    "level": 9,
     "category": "Design",
-    "subtitles": ["Adobe Suite, Sketch"]
+    "subtitles": ["Adobe Suite, Figma, Sketch"]
   },
-  {
-    "title": "Project Management",
-    "level": 8,
-    "category": "DevOps"
-  },
-  {
-    "title": "Jira",
-    "level": 8,
-    "category": "DevOps"
-  },
-  {
-    "title": "Diagramming Software",
-    "level": 8,
-    "category": "DevOps",
-    "subtitles": ["Visio, LucidChart, UML"]
-  }
+  { "title": "MongoDB", "level": 6, "category": "Database" },
+  { "title": "MySQL", "level": 6, "category": "Database" },
+  { "title": "Git & GitHub", "level": 8, "category": "DevOps" },
+  { "title": "Vercel / Deployment", "level": 8, "category": "DevOps" }
 ]

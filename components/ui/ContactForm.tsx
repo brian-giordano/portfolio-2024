@@ -3,7 +3,6 @@ import React, { useState, useRef } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import Button from "./Button";
 import ToastContainer, { ToastContainerRef } from "./ToastContainer";
 import Modal from "./Modal";
 
@@ -13,7 +12,11 @@ interface FormData {
   subject: string;
   message: string;
   honeypot?: string;
-  consent?: boolean; // New field for consent
+  consent?: boolean;
+  // Web3Forms Hidden Fields
+  access_key: string;
+  redirect: string;
+  botcheck?: string | boolean;
 }
 
 // Validation schema using Yup
@@ -29,7 +32,11 @@ const schema = Yup.object().shape({
     .min(10, "Message must be at least 10 characters")
     .max(1000, "Message is too long"),
   honeypot: Yup.string().max(0, "Honeypot should be empty"),
-  consent: Yup.boolean().oneOf([true], "You must accept the privacy policy"), // Consent validation
+  consent: Yup.boolean().oneOf([true], "You must accept the privacy policy"),
+  // Hidden fields are optional for validation but typed for RHF
+  access_key: Yup.string(),
+  redirect: Yup.string(),
+  botcheck: Yup.string(),
 });
 
 const ContactForm: React.FC = () => {
@@ -44,6 +51,11 @@ const ContactForm: React.FC = () => {
     reset,
   } = useForm<FormData>({
     resolver: yupResolver(schema),
+    defaultValues: {
+      access_key: "96cebeae-a016-4cfe-9063-259effb11937",
+      subject: "New message from briangiordano.com",
+      redirect: "https://briangiordano.com/#thank-you",
+    }
   });
 
   // Security measure: Rate limiting
@@ -54,7 +66,7 @@ const ContactForm: React.FC = () => {
     if (lastSubmission && now - parseInt(lastSubmission) < 60000) {
       // 1 minute
       toastContainerRef.current?.addToast(
-        "Please wait before submitting again."
+        "Please wait before submitting again.",
       );
       return false;
     }
@@ -71,8 +83,8 @@ const ContactForm: React.FC = () => {
   };
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    // Security check: Honeypot
-    if (data.honeypot) {
+    // Security check: Web3Forms Botcheck
+    if (data.botcheck) {
       console.log("Potential bot detected");
       return;
     }
@@ -82,33 +94,22 @@ const ContactForm: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      const formData = new FormData();
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-      // Append sanitized form data
-      formData.append("name", sanitizeInput(data.name));
-      formData.append("email", sanitizeInput(data.email));
-      formData.append("subject", sanitizeInput(data.subject));
-      formData.append("message", sanitizeInput(data.message));
+      const result = await response.json();
 
-      // Use FormSubmit's built-in CAPTCHA
-      formData.append("_captcha", "true"); // Ensure this line is included
-
-      const response = await fetch(
-        "https://formsubmit.co/65b50a450eb5648ef931291f1b87e905", // Replace with your FormSubmit endpoint
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      if (response.ok) {
+      if (result.success) {
         toastContainerRef.current?.addToast("Message sent successfully!");
         reset();
       } else {
-        const errorText = await response.text();
-        throw new Error(
-          `Error sending message. Status: ${response.status}, Response: ${errorText}`
-        );
+        throw new Error(result.message || "Error sending message");
       }
     } catch (error: unknown) {
       console.error("Error submitting form:", error);
@@ -117,7 +118,7 @@ const ContactForm: React.FC = () => {
         errorMessage = error.message;
       }
       toastContainerRef.current?.addToast(
-        `Error sending message: ${errorMessage}. Please try again.`
+        `Error sending message: ${errorMessage}. Please try again.`,
       );
     } finally {
       setIsSubmitting(false);
@@ -125,151 +126,185 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <div className="w-full bg-charcoal rounded-lg shadow-lg px-8 py-8">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div>
-          <label className="block text-ivoryWhite mb-1" htmlFor="name">
-            Name:
-          </label>
-          <input
-            type="text"
-            id="name"
-            {...register("name")}
-            className={`w-full p-4 rounded bg-gray-800 text-darkSlate text-xl ${
-              errors.name
-                ? "border-lightCrimson border-4 bg-pink"
-                : "border-gray-300"
-            }`}
-          />
-          {errors.name && (
-            <p className="text-lightCrimson">{errors.name.message}</p>
-          )}
+    <div className="w-full bg-[#1e1e2f]/80 backdrop-blur-md rounded-2xl border border-white/5 shadow-2xl p-6 md:p-10">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 md:space-y-6" style={{ colorScheme: 'dark' }}>
+        {/* Web3Forms Hidden Fields inside React Logic */}
+        <input type="hidden" value="96cebeae-a016-4cfe-9063-259effb11937" {...register("access_key")} />
+        <input type="hidden" value="New message from briangiordano.com" {...register("subject")} />
+        <input type="hidden" value="https://briangiordano.com/#thank-you" {...register("redirect")} />
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          <div>
+            <label
+              className="block text-silverMist font-medium text-xs tracking-wider mb-1.5 uppercase"
+              htmlFor="name"
+            >
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              placeholder="Your name"
+              {...register("name")}
+              className={`w-full p-3.5 rounded-xl bg-[#0f172a] border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 ${
+                errors.name
+                  ? "border-lightCrimson bg-lightCrimson/10"
+                  : "border-white/10 focus:border-gold hover:border-white/20"
+              }`}
+              style={{ backgroundColor: '#0f172a' }}
+            />
+            {errors.name && (
+              <p className="text-lightCrimson text-xs mt-1">{errors.name.message}</p>
+            )}
+          </div>
+
+          <div>
+            <label
+              className="block text-silverMist font-medium text-xs tracking-wider mb-1.5 uppercase"
+              htmlFor="email"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              placeholder="Your email"
+              {...register("email")}
+              className={`w-full p-3.5 rounded-xl bg-[#0f172a] border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 ${
+                errors.email
+                  ? "border-lightCrimson bg-lightCrimson/10"
+                  : "border-white/10 focus:border-gold hover:border-white/20"
+              }`}
+              style={{ backgroundColor: '#0f172a' }}
+            />
+            {errors.email && (
+              <p className="text-lightCrimson text-xs mt-1">{errors.email.message}</p>
+            )}
+          </div>
         </div>
 
         <div>
-          <label className="block text-ivoryWhite mb-1" htmlFor="email">
-            Email:
-          </label>
-          <input
-            type="email"
-            id="email"
-            {...register("email")}
-            className={`w-full p-4 rounded bg-gray-800 text-darkSlate text-xl ${
-              errors.email
-                ? "border-lightCrimson border-4 bg-pink"
-                : "border-gray-300"
-            }`}
-          />
-          {errors.email && (
-            <p className="text-lightCrimson">{errors.email.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="block text-ivoryWhite mb-1" htmlFor="subject">
-            Subject:
-          </label>
-          <select
-            id="subject"
-            {...register("subject")}
-            className={`w-full p-4 rounded bg-gray-800 text-darkSlate text-xl ${
-              errors.subject
-                ? "border-lightCrimson border-4 bg-pink"
-                : "border-gray-300"
-            }`}
+          <label
+            className="block text-silverMist font-medium text-xs tracking-wider mb-1.5 uppercase"
+            htmlFor="subject_select"
           >
-            <option value="">Select a subject</option>
-            <option value="general">General Inquiry</option>
-            <option value="job">Job Opportunity</option>
-            <option value="collaboration">Collaboration</option>
-            <option value="other">Other</option>
-          </select>
+            Subject
+          </label>
+          <div className="relative">
+            <select
+              id="subject_select"
+              {...register("subject")}
+              className={`w-full p-3.5 rounded-xl bg-[#0f172a] border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 appearance-none ${
+                errors.subject
+                  ? "border-lightCrimson bg-lightCrimson/10"
+                  : "border-white/10 focus:border-gold hover:border-white/20"
+              }`}
+              style={{ backgroundColor: '#0f172a' }}
+            >
+              <option value="" className="bg-[#0f172a]">Select a subject</option>
+              <option value="general" className="bg-[#0f172a]">General Inquiry</option>
+              <option value="job" className="bg-[#0f172a]">Job Opportunity</option>
+              <option value="collaboration" className="bg-[#0f172a]">Collaboration</option>
+              <option value="other" className="bg-[#0f172a]">Other</option>
+            </select>
+            {/* Custom Arrow */}
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-silverMist text-xs">
+              ▼
+            </div>
+          </div>
           {errors.subject && (
-            <p className="text-lightCrimson">{errors.subject.message}</p>
+            <p className="text-lightCrimson text-xs mt-1">{errors.subject.message}</p>
           )}
         </div>
 
         <div>
-          <label className="block text-ivoryWhite mb-1" htmlFor="message">
-            Message:
+          <label
+            className="block text-silverMist font-medium text-xs tracking-wider mb-1.5 uppercase"
+            htmlFor="message"
+          >
+            Message
           </label>
           <textarea
             id="message"
+            placeholder="Your message..."
             {...register("message")}
-            className={`w-full p-4 rounded bg-gray-800 text-darkSlate text-xl ${
+            className={`w-full p-3.5 rounded-xl bg-[#0f172a] border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 custom-scrollbar ${
               errors.message
-                ? "border-lightCrimson border-4 bg-pink"
-                : "border-gray-300"
+                ? "border-lightCrimson bg-lightCrimson/10"
+                : "border-white/10 focus:border-gold hover:border-white/20"
             }`}
-            rows={4}
+            rows={6}
+            style={{ backgroundColor: '#0f172a' }}
           />
           {errors.message && (
-            <p className="text-lightCrimson">{errors.message.message}</p>
+            <p className="text-lightCrimson text-xs mt-1">{errors.message.message}</p>
           )}
         </div>
 
-        {/* Honeypot field */}
+        {/* Botcheck field */}
         <input
-          type="text"
+          type="checkbox"
           style={{ display: "none" }}
-          {...register("honeypot")}
+          className="hidden"
+          {...register("botcheck")}
         />
 
-        <div>
+        <div className="flex items-center">
           <input
-            className="mr-2"
+            className="w-4 h-4 rounded border-white/10 bg-[#0f172a] text-gold focus:ring-gold transition-colors hover:border-gold/50 cursor-pointer"
             type="checkbox"
             id="consent"
             {...register("consent")}
           />
-          <label htmlFor="consent" className="text-ivoryWhite italic">
+          <label htmlFor="consent" className="ml-2 text-silverMist text-xs cursor-pointer">
             I agree to the{" "}
             <span
-              className="underline cursor-pointer"
+              className="text-gold hover:text-ivoryWhite underline transition-colors"
               onClick={() => setIsModalOpen(true)}
             >
               privacy policy
             </span>
           </label>
           {errors.consent && (
-            <p className="text-lightCrimson">{errors.consent.message}</p>
+            <p className="text-lightCrimson text-xs ml-4">{errors.consent.message}</p>
           )}
         </div>
 
-        <div>
-          <Button
+
+
+        <div className="pt-2">
+          <button
             type="submit"
             disabled={isSubmitting}
-            variant="primary"
-            className="flex items-center justify-center"
-            label={
-              isSubmitting ? (
-                <>
-                  <svg
-                    className="animate-spin h-5 w-5 mr-2"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                      fill="none"
-                    />
-                    <path
-                      d="M4 12a8 8 0 018-8"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    />
-                  </svg>
-                  Submitting...
-                </>
-              ) : (
-                "Submit"
-              )
-            }
-          />
+            className={`w-full py-3.5 rounded-xl text-base font-bold uppercase tracking-widest transition-all duration-300 flex items-center justify-center ${
+              isSubmitting
+                ? "bg-mediumCharcoal text-silverMist cursor-not-allowed"
+                : "bg-gold text-darkSlate hover:bg-ivoryWhite shadow-[0_4px_20px_rgba(255,215,0,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]"
+            }`}
+          >
+            {isSubmitting ? (
+              <>
+                <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    fill="none"
+                  />
+                  <path
+                    d="M4 12a8 8 0 018-8"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                </svg>
+                Sending...
+              </>
+            ) : (
+              "Submit"
+            )}
+          </button>
         </div>
       </form>
       <ToastContainer ref={toastContainerRef} />

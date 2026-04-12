@@ -1,6 +1,4 @@
 import React from "react";
-import { FaBriefcase, FaAddressCard, FaEnvelope } from "react-icons/fa6";
-import { PiLightningFill, PiGraduationCapFill } from "react-icons/pi";
 
 interface SectionHeaderProps {
   name: string;
@@ -8,25 +6,10 @@ interface SectionHeaderProps {
   subheader?: string;
 }
 
-// Mapping section names to icons
-const iconMapping: { [key: string]: React.ReactNode } = {
-  Experience: <PiGraduationCapFill className="text-3xl text-gold mr-3 mt-1" />,
-  Education: <PiGraduationCapFill className="text-3xl text-gold mr-3 mt-1" />,
-  Skills: <PiLightningFill className="text-3xl text-gold mr-3 mt-1" />,
-  Projects: <FaBriefcase className="text-3xl text-gold mr-3 mt-1" />,
-  About: <FaAddressCard className="text-3xl text-gold mr-3 mt-1" />,
-  Contact: <FaEnvelope className="text-3xl text-gold mr-3 mt-1" />,
-};
-
 const SectionHeader: React.FC<SectionHeaderProps> = ({ name, subheader }) => {
-  // Get the icon for the current section name
-  const Icon = iconMapping[name] || null;
-
   return (
-    <div className="w-full px-4 pb-2 border-t-4 border-gold">
+    <div className="w-full px-6 py-6 transition-all duration-300">
       <div className="flex items-center">
-        {/* Render the icon if it exists */}
-        {Icon}
         <h2 className="text-lg font-primary text-ivoryWhite uppercase font-semibold">
           {name}
         </h2>

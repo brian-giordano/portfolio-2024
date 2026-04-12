@@ -1,55 +1,54 @@
-// components/ExperienceSection.tsx
 import React, { useEffect, useState } from "react";
 import CardsList from "./ui/CardsList";
-import jobData from "../data/jobs.json";
+import jobs from "../data/jobs.json";
+import type { PillCategory } from "./ui/Pill";
 
 const ExperienceSection: React.FC = () => {
   interface StackUsed {
     name: string;
-    category: "Frontend" | "Backend" | "Database" | "DevOps" | "Design";
+    category: PillCategory;
   }
 
   interface Job {
-    logoUrl: string;
+    logoUrl?: string;
     title: string;
-    alt: string;
+    alt?: string;
     orgName: string;
     startMonth: string;
     startYear: string;
-    endMonth: string;
-    endYear: string;
+    endMonth?: string;
+    endYear?: string;
     cityTown?: string;
     locationState?: string;
-    description: string | string[];
+    description: string[];
     stackUsed?: StackUsed[];
   }
 
-  const [jobs, setJobs] = useState<Job[]>([]);
+  const [jobsState, setJobsState] = useState<Job[]>([]);
 
   useEffect(() => {
-    setJobs(jobData as Job[]);
+    // Safe assertion: JSON categories are strings matching PillCategory union
+    setJobsState(jobs as Job[]);
   }, []);
 
-  const renderDescription = (description: string | string[]): JSX.Element => {
-    if (Array.isArray(description)) {
-      return (
-        <ul>
-          {description.map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
-        </ul>
-      );
-    }
-    return <p>{description}</p>;
+  const renderDescription = (description: string[]): JSX.Element => {
+    return (
+      <ul className="list-disc pl-5 space-y-3 text-silverMist text-sm leading-relaxed hyphens-auto">
+        {description.map((item, index) => (
+          <li key={index} className="pl-1">
+            {item}
+          </li>
+        ))}
+      </ul>
+    );
   };
 
   return (
-    <div className="experience-section container mx-auto mb-10 p-4">
+    <div className="container mx-auto mb-10 p-4">
       <CardsList
-        cards={jobs.map((job) => ({
-          imageUrl: job.logoUrl,
+        cards={jobsState.map((job) => ({
           title: job.title,
-          alt: job.alt,
+          alt: job.alt || `${job.orgName} - ${job.title}`,
           orgName: job.orgName,
           startMonth: job.startMonth,
           startYear: job.startYear,
@@ -57,7 +56,6 @@ const ExperienceSection: React.FC = () => {
           endYear: job.endYear,
           description: renderDescription(job.description),
           stackUsed: job.stackUsed,
-          isAccordion: false,
         }))}
       />
     </div>
