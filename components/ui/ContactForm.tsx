@@ -12,7 +12,11 @@ interface FormData {
   subject: string;
   message: string;
   honeypot?: string;
-  consent?: boolean; // New field for consent
+  consent?: boolean;
+  // Web3Forms Hidden Fields
+  access_key: string;
+  redirect: string;
+  botcheck?: string | boolean;
 }
 
 // Validation schema using Yup
@@ -28,7 +32,11 @@ const schema = Yup.object().shape({
     .min(10, "Message must be at least 10 characters")
     .max(1000, "Message is too long"),
   honeypot: Yup.string().max(0, "Honeypot should be empty"),
-  consent: Yup.boolean().oneOf([true], "You must accept the privacy policy"), // Consent validation
+  consent: Yup.boolean().oneOf([true], "You must accept the privacy policy"),
+  // Hidden fields are optional for validation but typed for RHF
+  access_key: Yup.string(),
+  redirect: Yup.string(),
+  botcheck: Yup.string(),
 });
 
 const ContactForm: React.FC = () => {
@@ -43,6 +51,11 @@ const ContactForm: React.FC = () => {
     reset,
   } = useForm<FormData>({
     resolver: yupResolver(schema),
+    defaultValues: {
+      access_key: "96cebeae-a016-4cfe-9063-259effb11937",
+      subject: "New message from briangiordano.com",
+      redirect: "https://briangiordano.com/#thank-you",
+    }
   });
 
   // Security measure: Rate limiting
@@ -87,15 +100,7 @@ const ContactForm: React.FC = () => {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({
-          access_key: "96cebeae-a016-4cfe-9063-259effb11937",
-          name: data.name,
-          email: data.email,
-          subject: "New message from briangiordano.com",
-          message: data.message,
-          redirect: "https://briangiordano.com/#thank-you",
-          botcheck: data.botcheck
-        }),
+        body: JSON.stringify(data),
       });
 
       const result = await response.json();
