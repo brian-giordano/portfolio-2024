@@ -1,5 +1,5 @@
 import { Poppins, Oswald, Montserrat } from "next/font/google";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/react";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import "./globals.css";
@@ -28,6 +28,12 @@ const montserrat = Montserrat({
 
 const BASE_URL = "https://briangiordano.com";
 
+export const viewport: Viewport = {
+  themeColor: "#1A1A2E",
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
@@ -35,32 +41,26 @@ export const metadata: Metadata = {
     template: "%s | Brian Giordano",
   },
   description:
-    "AI product builder with an MS in Computer Science and a BA in Graphic Design. Specializing in RAG systems, LLM integrations, and full-stack web applications. Open to remote freelance, contract, and full-time roles in New England and beyond.",
+    "AI product builder specializing in RAG systems, LLM integrations, and architectural full-stack applications. MS in Computer Science, BA in Graphic Design.",
   keywords: [
     "AI Product Engineer",
-    "AI Product Builder",
     "Creative Technologist",
     "AI Solutions Architect",
     "Technical Product Manager",
-    "Full-Stack Developer",
-    "Next.js Developer",
-    "React Developer",
     "RAG Systems",
     "LLM Integration",
-    "Freelance Developer New England",
-    "Remote Developer Massachusetts",
     "Brian Giordano",
-    "briangiordano.com",
   ],
   authors: [{ name: "Brian Giordano", url: BASE_URL }],
   creator: "Brian Giordano",
+  icons: {
+    icon: "/icon.svg",
+    apple: "/icon.svg",
+    shortcut: "/icon.svg",
+  },
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-    },
   },
   openGraph: {
     type: "website",
@@ -69,13 +69,21 @@ export const metadata: Metadata = {
     siteName: "Brian Giordano",
     title: "Brian Giordano — AI Product Builder & Creative Technologist",
     description:
-      "AI product builder with an MS in CS and a BA in Graphic Design. Specializing in RAG systems, LLM integrations, and full-stack web apps. Open to remote and New England opportunities.",
+      "Expert AI solutions and creative technology. Bridging the gap between high-end design and rigorous engineering logic.",
+    images: [
+      {
+        url: "/og-image.png", // Assuming you'll add one, or use existing
+        width: 1200,
+        height: 630,
+        alt: "Brian Giordano Portfolio",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Brian Giordano — AI Product Builder & Creative Technologist",
     description:
-      "AI product builder with an MS in CS and a BA in Graphic Design. Specializing in RAG systems, LLM integrations, and full-stack web apps.",
+      "AI-augmented product builder and technical consultant. Specializing in RAG systems and high-stakes full-stack apps.",
     creator: "@briangiordano",
   },
   alternates: {
