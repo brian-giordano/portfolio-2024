@@ -143,6 +143,38 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/* Cal.com Global Embed Code */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function (C, A, L) {
+                let p = function (a, ar) { a.q.push(ar); };
+                let d = C.document;
+                C.Cal = C.Cal || function () {
+                  let cal = C.Cal;
+                  let ar = arguments;
+                  if (!cal.loaded) {
+                    cal.ns = {};
+                    cal.q = cal.q || [];
+                    d.head.appendChild(d.createElement("script")).src = A;
+                    cal.loaded = true;
+                  }
+                  if (ar[0] === L) {
+                    const api = function () { p(api, arguments); };
+                    const ns = ar[1];
+                    api.q = api.q || [];
+                    if(typeof ns === "string"){C.Cal.ns[ns] = api; return api;}
+                    p(C.Cal, ar);
+                    return;
+                  }
+                  p(cal, ar);
+                };
+              })(window, "https://app.cal.com/embed/embed.js", "init");
+              Cal("init", {origin:"https://app.cal.com"});
+              Cal("ui", {"styles":{"branding":{"brandColor":"#FFD700"}},"hideEventTypeDetails":false,"layout":"month_view"});
+            `,
+          }}
+        />
       </head>
       <body>
         <GoogleAnalytics />

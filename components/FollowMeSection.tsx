@@ -19,6 +19,21 @@ const FollowMeSection: React.FC = () => {
           <FaGithub />
         </a>
 
+        {/* Cal.com Booking Action */}
+        <button
+          data-cal-link="briangiordano/30min"
+          data-cal-config='{"layout":"month_view","theme":"dark"}'
+          aria-label="Book a session with me"
+          className="group relative flex flex-col items-center justify-center w-20 h-20 md:w-24 md:h-24 bg-gold border border-gold rounded-2xl text-darkSlate hover:bg-ivoryWhite hover:border-ivoryWhite hover:scale-110 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(255,215,0,0.4)] transform transition-all duration-300"
+        >
+
+          <div className="text-3xl md:text-4xl mb-1 leading-none">
+            <span className="block group-hover:hidden translate-y-1">✦</span>
+            <span className="hidden group-hover:block font-bold text-xl md:text-2xl">CAL</span>
+          </div>
+          <span className="text-[10px] md:text-xs font-bold tracking-tighter uppercase opacity-80 group-hover:opacity-100">Book</span>
+        </button>
+
         {/* LinkedIn Link */}
         <a
           href="https://www.linkedin.com/in/briangiordano/"
@@ -30,6 +45,7 @@ const FollowMeSection: React.FC = () => {
           <FaLinkedin />
         </a>
       </div>
+
     </div>
   );
 };

@@ -70,8 +70,8 @@ const ContactForm: React.FC = () => {
   };
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    // Security check: Honeypot
-    if (data.honeypot) {
+    // Security check: Web3Forms Botcheck
+    if (data.botcheck) {
       console.log("Potential bot detected");
       return;
     }
@@ -81,33 +81,30 @@ const ContactForm: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      const formData = new FormData();
-
-      // Append sanitized form data
-      formData.append("name", sanitizeInput(data.name));
-      formData.append("email", sanitizeInput(data.email));
-      formData.append("subject", sanitizeInput(data.subject));
-      formData.append("message", sanitizeInput(data.message));
-
-      // Use FormSubmit's built-in CAPTCHA
-      formData.append("_captcha", "true"); // Ensure this line is included
-
-      const response = await fetch(
-        "https://formsubmit.co/65b50a450eb5648ef931291f1b87e905", // Replace with your FormSubmit endpoint
-        {
-          method: "POST",
-          body: formData,
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
-      );
+        body: JSON.stringify({
+          access_key: "96cebeae-a016-4cfe-9063-259effb11937",
+          name: data.name,
+          email: data.email,
+          subject: "New message from briangiordano.com",
+          message: data.message,
+          redirect: "https://briangiordano.com/#thank-you",
+          botcheck: data.botcheck
+        }),
+      });
 
-      if (response.ok) {
+      const result = await response.json();
+
+      if (result.success) {
         toastContainerRef.current?.addToast("Message sent successfully!");
         reset();
       } else {
-        const errorText = await response.text();
-        throw new Error(
-          `Error sending message. Status: ${response.status}, Response: ${errorText}`,
-        );
+        throw new Error(result.message || "Error sending message");
       }
     } catch (error: unknown) {
       console.error("Error submitting form:", error);
@@ -124,8 +121,13 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <div className="w-full bg-charcoal/40 backdrop-blur-md rounded-2xl border border-white/5 shadow-2xl p-6 md:p-10">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 md:space-y-6">
+    <div className="w-full bg-[#1e1e2f]/80 backdrop-blur-md rounded-2xl border border-white/5 shadow-2xl p-6 md:p-10">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 md:space-y-6" style={{ colorScheme: 'dark' }}>
+        {/* Web3Forms Hidden Fields inside React Logic */}
+        <input type="hidden" value="96cebeae-a016-4cfe-9063-259effb11937" {...register("access_key")} />
+        <input type="hidden" value="New message from briangiordano.com" {...register("subject")} />
+        <input type="hidden" value="https://briangiordano.com/#thank-you" {...register("redirect")} />
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           <div>
             <label
@@ -139,11 +141,12 @@ const ContactForm: React.FC = () => {
               id="name"
               placeholder="Your name"
               {...register("name")}
-              className={`w-full p-3.5 rounded-xl bg-white/5 border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 ${
+              className={`w-full p-3.5 rounded-xl bg-[#0f172a] border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 ${
                 errors.name
                   ? "border-lightCrimson bg-lightCrimson/10"
                   : "border-white/10 focus:border-gold hover:border-white/20"
               }`}
+              style={{ backgroundColor: '#0f172a' }}
             />
             {errors.name && (
               <p className="text-lightCrimson text-xs mt-1">{errors.name.message}</p>
@@ -162,11 +165,12 @@ const ContactForm: React.FC = () => {
               id="email"
               placeholder="Your email"
               {...register("email")}
-              className={`w-full p-3.5 rounded-xl bg-white/5 border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 ${
+              className={`w-full p-3.5 rounded-xl bg-[#0f172a] border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 ${
                 errors.email
                   ? "border-lightCrimson bg-lightCrimson/10"
                   : "border-white/10 focus:border-gold hover:border-white/20"
               }`}
+              style={{ backgroundColor: '#0f172a' }}
             />
             {errors.email && (
               <p className="text-lightCrimson text-xs mt-1">{errors.email.message}</p>
@@ -177,25 +181,32 @@ const ContactForm: React.FC = () => {
         <div>
           <label
             className="block text-silverMist font-medium text-xs tracking-wider mb-1.5 uppercase"
-            htmlFor="subject"
+            htmlFor="subject_select"
           >
             Subject
           </label>
-          <select
-            id="subject"
-            {...register("subject")}
-            className={`w-full p-3.5 rounded-xl bg-white/5 border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 appearance-none ${
-              errors.subject
-                ? "border-lightCrimson bg-lightCrimson/10"
-                : "border-white/10 focus:border-gold hover:border-white/20"
-            }`}
-          >
-            <option value="">Select a subject</option>
-            <option value="general">General Inquiry</option>
-            <option value="job">Job Opportunity</option>
-            <option value="collaboration">Collaboration</option>
-            <option value="other">Other</option>
-          </select>
+          <div className="relative">
+            <select
+              id="subject_select"
+              {...register("subject")}
+              className={`w-full p-3.5 rounded-xl bg-[#0f172a] border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 appearance-none ${
+                errors.subject
+                  ? "border-lightCrimson bg-lightCrimson/10"
+                  : "border-white/10 focus:border-gold hover:border-white/20"
+              }`}
+              style={{ backgroundColor: '#0f172a' }}
+            >
+              <option value="" className="bg-[#0f172a]">Select a subject</option>
+              <option value="general" className="bg-[#0f172a]">General Inquiry</option>
+              <option value="job" className="bg-[#0f172a]">Job Opportunity</option>
+              <option value="collaboration" className="bg-[#0f172a]">Collaboration</option>
+              <option value="other" className="bg-[#0f172a]">Other</option>
+            </select>
+            {/* Custom Arrow */}
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-silverMist text-xs">
+              ▼
+            </div>
+          </div>
           {errors.subject && (
             <p className="text-lightCrimson text-xs mt-1">{errors.subject.message}</p>
           )}
@@ -210,38 +221,40 @@ const ContactForm: React.FC = () => {
           </label>
           <textarea
             id="message"
-            placeholder="How can I help you?"
+            placeholder="Your message..."
             {...register("message")}
-            className={`w-full p-3.5 rounded-xl bg-white/5 border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 custom-scrollbar ${
+            className={`w-full p-3.5 rounded-xl bg-[#0f172a] border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 custom-scrollbar ${
               errors.message
                 ? "border-lightCrimson bg-lightCrimson/10"
                 : "border-white/10 focus:border-gold hover:border-white/20"
             }`}
-            rows={4}
+            rows={6}
+            style={{ backgroundColor: '#0f172a' }}
           />
           {errors.message && (
             <p className="text-lightCrimson text-xs mt-1">{errors.message.message}</p>
           )}
         </div>
 
-        {/* Honeypot field */}
+        {/* Botcheck field */}
         <input
-          type="text"
+          type="checkbox"
           style={{ display: "none" }}
-          {...register("honeypot")}
+          className="hidden"
+          {...register("botcheck")}
         />
 
         <div className="flex items-center">
           <input
-            className="w-4 h-4 rounded border-white/10 bg-white/5 text-gold focus:ring-gold transition-colors"
+            className="w-4 h-4 rounded border-white/10 bg-[#0f172a] text-gold focus:ring-gold transition-colors hover:border-gold/50 cursor-pointer"
             type="checkbox"
             id="consent"
             {...register("consent")}
           />
-          <label htmlFor="consent" className="ml-2 text-silverMist text-xs">
+          <label htmlFor="consent" className="ml-2 text-silverMist text-xs cursor-pointer">
             I agree to the{" "}
             <span
-              className="text-gold hover:text-ivoryWhite underline cursor-pointer transition-colors"
+              className="text-gold hover:text-ivoryWhite underline transition-colors"
               onClick={() => setIsModalOpen(true)}
             >
               privacy policy
@@ -251,6 +264,8 @@ const ContactForm: React.FC = () => {
             <p className="text-lightCrimson text-xs ml-4">{errors.consent.message}</p>
           )}
         </div>
+
+
 
         <div className="pt-2">
           <button
@@ -282,7 +297,7 @@ const ContactForm: React.FC = () => {
                 Sending...
               </>
             ) : (
-              "Send Message"
+              "Submit"
             )}
           </button>
         </div>
