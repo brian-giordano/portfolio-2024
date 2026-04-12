@@ -14,9 +14,9 @@ interface FormData {
   honeypot?: string;
   consent?: boolean;
   // Web3Forms Hidden Fields
-  access_key: string;
-  redirect: string;
-  botcheck?: string | boolean;
+  access_key?: string;
+  redirect?: string;
+  botcheck?: string;
 }
 
 // Validation schema using Yup
@@ -75,12 +75,6 @@ const ContactForm: React.FC = () => {
     return true;
   };
 
-  // Security measure: Input sanitization
-  const sanitizeInput = (input: string): string => {
-    return input.replace(/[^\w. ]/gi, (c) => {
-      return "&#" + c.charCodeAt(0) + ";";
-    });
-  };
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     // Security check: Web3Forms Botcheck
@@ -243,7 +237,7 @@ const ContactForm: React.FC = () => {
 
         {/* Botcheck field */}
         <input
-          type="checkbox"
+          type="text"
           style={{ display: "none" }}
           className="hidden"
           {...register("botcheck")}
