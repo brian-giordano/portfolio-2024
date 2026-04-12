@@ -447,15 +447,15 @@ const Home: React.FC = () => {
               >
                 See my work
               </motion.button>
-              <motion.a
-                href="https://calendly.com/YOUR_USERNAME"
-                target="_blank"
+              <motion.button
+                data-cal-link="briangiordano"
+                data-cal-config='{"layout":"month_view","theme":"dark"}'
                 className="px-10 py-4 border-2 border-gold text-gold font-semibold rounded-xl text-lg hover:bg-gold/10"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
               >
-                Book a call
-              </motion.a>
+                Book a Call
+              </motion.button>
             </motion.div>
 
             <motion.div variants={itemVariants} className="mt-8">
