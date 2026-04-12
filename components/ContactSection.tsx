@@ -12,15 +12,14 @@ const ContactSection: React.FC = () => {
         <p className="text-silverMist mb-4 text-sm md:text-base">
           Prefer to schedule directly?
         </p>
-        <a
-          href="https://calendly.com/YOUR_USERNAME"
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          data-cal-link="briangiordano"
+          data-cal-config='{"layout":"month_view","theme":"dark"}'
           className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gold text-darkSlate font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-300 hover:scale-105 w-full sm:w-auto"
         >
           <FaCalendarAlt />
-          Book a call on Calendly
-        </a>
+          Book a Call
+        </button>
       </div>
     </div>
   );

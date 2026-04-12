@@ -21,7 +21,7 @@ const FollowMeSection: React.FC = () => {
 
         {/* Cal.com Booking Action */}
         <button
-          data-cal-link="briangiordano/30min"
+          data-cal-link="briangiordano"
           data-cal-config='{"layout":"month_view","theme":"dark"}'
           aria-label="Book a session with me"
           className="group relative flex flex-col items-center justify-center w-20 h-20 md:w-24 md:h-24 bg-gold border border-gold rounded-2xl text-darkSlate hover:bg-ivoryWhite hover:border-ivoryWhite hover:scale-110 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(255,215,0,0.4)] transform transition-all duration-300"
