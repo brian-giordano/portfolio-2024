@@ -168,7 +168,8 @@ const ProjectsSection: React.FC = () => {
         title: "Insurance Claims AI System",
         alt: "Insurance Claims AI dashboard screenshot",
         orgName: "AI / Full Stack Development",
-        orgLink: "https://insurance-claim-ai.onrender.com",
+        orgLink:
+          "https://brian-giordano-insurance-claim-ai-srcuiapp-udsijp.streamlit.app/",
         description: (
           <p>
             AI-powered insurance claims processing system featuring document
