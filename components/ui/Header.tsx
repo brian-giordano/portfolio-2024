@@ -52,6 +52,8 @@ const Header: React.FC<HeaderProps> = ({
   const MenuItems = useMemo(
     () => [
       { label: "Projects", sectionId: "projects" },
+      { label: "Services", sectionId: "services" },
+      { label: "Process", sectionId: "process" },
       { label: "Experience", sectionId: "experience" },
       { label: "Education", sectionId: "education" },
       { label: "Skills", sectionId: "skills" },
@@ -200,21 +202,21 @@ const Header: React.FC<HeaderProps> = ({
           >
             <motion.h1
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className={`font-primary font-extrabold tracking-[1px] uppercase text-ivoryWhite cursor-pointer select-none transition-all duration-500 ${
-                isCompact ? "text-3xl" : "text-5xl"
+              className={`font-primary font-extrabold tracking-[1px] uppercase text-ivoryWhite cursor-pointer select-none transition-all duration-500 whitespace-nowrap ${
+                isCompact ? "text-2xl" : "text-5xl"
               }`}
             >
               {name}
             </motion.h1>
 
             <nav className="relative">
-              <ul className="flex items-center gap-8 relative">
+              <ul className="flex items-center gap-4 xl:gap-6 relative">
                 {MenuItems.map((item) => (
                   <li key={item.sectionId}>
                     <button
                       ref={(el) => { buttonRefs.current[item.sectionId] = el; }}
                       onClick={() => scrollToSection(item.sectionId)}
-                      className={`relative text-sm tracking-[0.2em] font-semibold uppercase pb-3 transition-all duration-300 ${
+                      className={`relative text-[11px] xl:text-sm tracking-[0.15em] xl:tracking-[0.2em] font-semibold uppercase pb-3 transition-all duration-300 ${
                         currentSection === item.sectionId
                           ? "text-gold"
                           : "text-ivoryWhite/90 hover:text-gold/80"

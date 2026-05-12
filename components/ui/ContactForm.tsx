@@ -10,6 +10,7 @@ interface FormData {
   name: string;
   email: string;
   subject: string;
+  details: string;
   message: string;
   honeypot?: string;
   consent?: boolean;
@@ -27,6 +28,9 @@ const schema = Yup.object().shape({
     .required("Email is required")
     .max(100, "Email is too long"),
   subject: Yup.string().required("Subject is required"),
+  details: Yup.string()
+    .required("Details are required")
+    .max(1000, "Details are too long"),
   message: Yup.string()
     .required("Message is required")
     .min(10, "Message must be at least 10 characters")
@@ -39,7 +43,11 @@ const schema = Yup.object().shape({
   botcheck: Yup.string(),
 });
 
-const ContactForm: React.FC = () => {
+interface ContactFormProps {
+  prefilledSubject?: string;
+}
+
+const ContactForm: React.FC<ContactFormProps> = ({ prefilledSubject }) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const toastContainerRef = useRef<ToastContainerRef>(null);
@@ -49,14 +57,65 @@ const ContactForm: React.FC = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
+    setValue,
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: {
       access_key: "96cebeae-a016-4cfe-9063-259effb11937",
-      subject: "New message from briangiordano.com",
+      subject: prefilledSubject || "New message from briangiordano.com",
       redirect: "https://briangiordano.com/#thank-you",
     }
   });
+
+  const selectedSubject = watch("subject");
+
+  // Dynamic config for the details field
+  const getDetailsConfig = (subject: string) => {
+    switch (subject) {
+      case "Site Rescue":
+        return {
+          label: "Tell me about your current website",
+          placeholder: "What's broken? How old is the site? Do you have domain access?",
+        };
+      case "Starter Build":
+        return {
+          label: "Tell me about your project",
+          placeholder: "What kind of business? How many pages? Any specific features?",
+        };
+      case "Monthly Care":
+        return {
+          label: "What do you need help with?",
+          placeholder: "Describe your current site and what updates or support you need.",
+        };
+      case "job":
+        return {
+          label: "Role details",
+          placeholder: "Tell me about the role and company.",
+        };
+      case "collaboration":
+        return {
+          label: "Project details",
+          placeholder: "Describe the collaboration opportunity.",
+        };
+      case "general":
+      case "other":
+      default:
+        return {
+          label: "How can I help?",
+          placeholder: "Tell me what you're looking for.",
+        };
+    }
+  };
+
+  const detailsConfig = getDetailsConfig(selectedSubject);
+
+  // Effect to handle pre-filled subject changes
+  React.useEffect(() => {
+    if (prefilledSubject) {
+      setValue("subject", prefilledSubject);
+    }
+  }, [prefilledSubject, setValue]);
 
   // Security measure: Rate limiting
   const checkRateLimit = (): boolean => {
@@ -124,7 +183,7 @@ const ContactForm: React.FC = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 md:space-y-6" style={{ colorScheme: 'dark' }}>
         {/* Web3Forms Hidden Fields inside React Logic */}
         <input type="hidden" value="96cebeae-a016-4cfe-9063-259effb11937" {...register("access_key")} />
-        <input type="hidden" value="New message from briangiordano.com" {...register("subject")} />
+        <input type="hidden" value={selectedSubject || "New message from briangiordano.com"} {...register("subject")} />
         <input type="hidden" value="https://briangiordano.com/#thank-you" {...register("redirect")} />
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
@@ -196,6 +255,9 @@ const ContactForm: React.FC = () => {
               style={{ backgroundColor: '#0f172a' }}
             >
               <option value="" className="bg-[#0f172a]">Select a subject</option>
+              <option value="Site Rescue" className="bg-[#0f172a]">Site Rescue</option>
+              <option value="Starter Build" className="bg-[#0f172a]">Starter Build</option>
+              <option value="Monthly Care" className="bg-[#0f172a]">Monthly Care</option>
               <option value="general" className="bg-[#0f172a]">General Inquiry</option>
               <option value="job" className="bg-[#0f172a]">Job Opportunity</option>
               <option value="collaboration" className="bg-[#0f172a]">Collaboration</option>
@@ -206,8 +268,37 @@ const ContactForm: React.FC = () => {
               ▼
             </div>
           </div>
+          {selectedSubject === "Monthly Care" && (
+            <p className="text-gold text-xs mt-2 italic">
+              I’ll send you the service agreement to review and e-sign. Retainer begins once signed.
+            </p>
+          )}
           {errors.subject && (
             <p className="text-lightCrimson text-xs mt-1">{errors.subject.message}</p>
+          )}
+        </div>
+
+        {/* Dynamic Details Field */}
+        <div className="space-y-1.5">
+          <label
+            className="block text-silverMist font-medium text-xs tracking-wider mb-1.5 uppercase"
+            htmlFor="details"
+          >
+            {detailsConfig.label}
+          </label>
+          <textarea
+            id="details"
+            placeholder={detailsConfig.placeholder}
+            {...register("details")}
+            rows={3}
+            className={`w-full p-3.5 rounded-xl bg-[#0f172a] border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 custom-scrollbar ${
+              errors.details
+                ? "border-lightCrimson bg-lightCrimson/10"
+                : "border-white/10 focus:border-gold hover:border-white/20"
+            }`}
+          />
+          {errors.details && (
+            <p className="text-lightCrimson text-xs mt-1">{errors.details.message}</p>
           )}
         </div>
 

@@ -2,10 +2,14 @@ import React from "react";
 import ContactForm from "./ui/ContactForm";
 import { FaCalendarAlt } from "react-icons/fa";
 
-const ContactSection: React.FC = () => {
+interface ContactSectionProps {
+  subject?: string;
+}
+
+const ContactSection: React.FC<ContactSectionProps> = ({ subject }) => {
   return (
     <div className="container mx-auto bg-darkSlate p-4 md:p-8">
-      <ContactForm />
+      <ContactForm prefilledSubject={subject} />
 
       {/* Calendly CTA */}
       <div className="mt-8 pt-6 border-t border-mediumCharcoal text-center">

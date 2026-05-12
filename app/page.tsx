@@ -13,6 +13,8 @@ import ExperienceSection from "@/components/ExperienceSection";
 import EducationSection from "@/components/EducationSection";
 import SkillsSection from "@/components/SkillsSection";
 import ProjectSection from "@/components/ProjectsSection";
+import ServicesSection from "@/components/ServicesSection";
+import ProcessSection from "@/components/ProcessSection";
 import AboutSection from "@/components/AboutSection";
 import ContactSection from "@/components/ContactSection";
 import FollowMeSection from "@/components/FollowMeSection";
@@ -222,6 +224,7 @@ const MobileFrame = () => {
 
 const Home: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<string>("projects");
+  const [contactSubject, setContactSubject] = useState<string>("");
   const [isAtBottom, setIsAtBottom] = useState(false);
 
   useEffect(() => {
@@ -313,6 +316,11 @@ const Home: React.FC = () => {
     }
   };
 
+  const handleServiceClick = (subject: string) => {
+    setContactSubject(subject);
+    handleNavClick("contact");
+  };
+
   return (
     <div className="p-0">
       <Header
@@ -322,7 +330,7 @@ const Home: React.FC = () => {
         forceCompact={forceHeaderCompact}
       />
 
-      <main className="max-w-6xl mx-auto px-6 lg:pt-2">
+      <main className="w-full lg:pt-2">
         {/* HERO SECTION — restored */}
         <motion.section
           ref={introSectionRef}
@@ -411,8 +419,8 @@ const Home: React.FC = () => {
             </motion.div>
           </div>
 
-          {/* Hero Content */}
-          <div className="relative z-10 text-center max-w-3xl mx-auto py-6">
+            {/* Hero Content */}
+            <div className="relative z-10 text-center max-w-3xl mx-auto py-6 px-6">
             <motion.h1
               className="text-4xl sm:text-5xl md:text-6xl font-primary font-extrabold tracking-tight text-ivoryWhite leading-none"
               variants={itemVariants}
@@ -445,16 +453,15 @@ const Home: React.FC = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
               >
-                See my work
+                View my work
               </motion.button>
               <motion.button
-                data-cal-link="briangiordano"
-                data-cal-config='{"layout":"month_view","theme":"dark"}'
+                onClick={() => handleNavClick("services")}
                 className="px-10 py-4 border-2 border-gold text-gold font-semibold rounded-xl text-lg hover:bg-gold/10"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
               >
-                Book a Call
+                Work with me
               </motion.button>
             </motion.div>
 
@@ -491,8 +498,38 @@ const Home: React.FC = () => {
               <SectionHeader name="Projects" bandColor="gold" />
             </div>
           </div>
-          <div className="max-w-6xl mx-auto section-content md:pb-6 min-h-[50vh]">
+          <div className="max-w-6xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
             <ProjectSection />
+          </div>
+        </section>
+
+        <section
+          id="services"
+          className="scroll-mt-[68px] bg-darkSlate pb-32"
+        >
+          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40">
+            <div className="w-full h-[5px] bg-gold" />
+            <div className="max-w-6xl mx-auto">
+              <SectionHeader name="Services" bandColor="gold" />
+            </div>
+          </div>
+          <div className="max-w-6xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
+            <ServicesSection onServiceClick={handleServiceClick} />
+          </div>
+        </section>
+
+        <section
+          id="process"
+          className="scroll-mt-[68px] bg-darkSlate pb-32"
+        >
+          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40">
+            <div className="w-full h-[5px] bg-gold" />
+            <div className="max-w-6xl mx-auto">
+              <SectionHeader name="Process" bandColor="gold" />
+            </div>
+          </div>
+          <div className="max-w-6xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
+            <ProcessSection onCtaClick={() => handleNavClick("contact")} />
           </div>
         </section>
 
@@ -506,7 +543,7 @@ const Home: React.FC = () => {
               <SectionHeader name="Experience" bandColor="gold" />
             </div>
           </div>
-          <div className="max-w-6xl mx-auto section-content md:pb-6 min-h-[50vh]">
+          <div className="max-w-6xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
             <ExperienceSection />
           </div>
         </section>
@@ -521,7 +558,7 @@ const Home: React.FC = () => {
               <SectionHeader name="Education" bandColor="gold" />
             </div>
           </div>
-          <div className="max-w-6xl mx-auto section-content md:pb-6 min-h-[50vh]">
+          <div className="max-w-6xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
             <EducationSection />
           </div>
         </section>
@@ -536,7 +573,7 @@ const Home: React.FC = () => {
               <SectionHeader name="Skills" bandColor="gold" />
             </div>
           </div>
-          <div className="max-w-6xl mx-auto section-content md:pb-6 min-h-[50vh]">
+          <div className="max-w-6xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
             <SkillsSection />
           </div>
         </section>
@@ -551,7 +588,7 @@ const Home: React.FC = () => {
               <SectionHeader name="About" bandColor="gold" />
             </div>
           </div>
-          <div className="max-w-6xl mx-auto section-content md:pb-6 min-h-[50vh]">
+          <div className="max-w-6xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
             <AboutSection />
           </div>
         </section>
@@ -566,10 +603,10 @@ const Home: React.FC = () => {
               <SectionHeader name="Contact" bandColor="gold" />
             </div>
           </div>
-          <div className="max-w-6xl mx-auto section-content md:pb-6">
+          <div className="max-w-6xl mx-auto px-6 section-content md:pb-6">
             <div className="w-full flex flex-col lg:flex-row gap-12">
               <div className="w-full lg:w-[62%] lg:mb-0">
-                <ContactSection />
+                <ContactSection subject={contactSubject} />
               </div>
               <div className="w-full lg:w-[38%] mx-auto">
                 <FollowMeSection />
@@ -578,7 +615,9 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        <Footer />
+        <div className="max-w-6xl mx-auto px-6">
+          <Footer />
+        </div>
 
         {/* Back-to-Top FAB */}
         <AnimatePresence>
