@@ -1,11 +1,6 @@
 "use client";
 
-import React, {
-  useState,
-  useCallback,
-  useMemo,
-  useRef,
-} from "react";
+import React, { useState, useCallback, useMemo, useRef } from "react";
 import {
   motion,
   useScroll,
@@ -29,7 +24,7 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   const { scrollY } = useScroll();
   const [internalIsHero, setInternalIsHero] = useState(true);
-  
+
   // Real isHero is false if externally forced OR if scrolled down
   const isHero = forceCompact ? false : internalIsHero;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -39,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({
   const headerBackground = useTransform(
     scrollY,
     [0, 80],
-    ["rgba(15, 23, 42, 0)", "rgba(15, 23, 42, 1)"]
+    ["rgba(15, 23, 42, 0)", "rgba(15, 23, 42, 1)"],
   );
 
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -64,7 +59,9 @@ const Header: React.FC<HeaderProps> = ({
   );
 
   // === LINKED-AXIS ENGINE ===
-  const [navCoords, setNavCoords] = useState<{ x: number; width: number; id: string }[]>([]);
+  const [navCoords, setNavCoords] = useState<
+    { x: number; width: number; id: string }[]
+  >([]);
   const [sectionYCoords, setSectionYCoords] = useState<number[]>([]);
   const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
 
@@ -105,9 +102,9 @@ const Header: React.FC<HeaderProps> = ({
       measureCoords();
     });
 
-    const mainContent = document.querySelector('main');
+    const mainContent = document.querySelector("main");
     if (mainContent) observer.observe(mainContent);
-    
+
     window.addEventListener("resize", measureCoords);
     window.addEventListener("load", measureCoords); // Catch late image loads
 
@@ -118,16 +115,15 @@ const Header: React.FC<HeaderProps> = ({
     };
   }, [measureCoords]);
 
-
   // 3. The Segment-Transfer Mapping (X, Width, Opacity)
   // We double each point to create "Dead Zones" where the ribbon stays locked
   const transformedPoints = useMemo(() => {
     if (sectionYCoords.length === 0 || navCoords.length === 0) return null;
-    
+
     const yPoints: number[] = [];
     const xPoints: number[] = [];
     const wPoints: number[] = [];
-    
+
     const GAP = 250; // The 250px "Glide Zone" before each section
 
     sectionYCoords.forEach((y, i) => {
@@ -140,9 +136,9 @@ const Header: React.FC<HeaderProps> = ({
       } else {
         // Add "Glide-Start" and "Lock-In" points
         yPoints.push(y - GAP);
-        xPoints.push(navCoords[i-1].x);
-        wPoints.push(navCoords[i-1].width);
-        
+        xPoints.push(navCoords[i - 1].x);
+        wPoints.push(navCoords[i - 1].width);
+
         yPoints.push(y);
         xPoints.push(coord.x);
         wPoints.push(coord.width);
@@ -155,23 +151,20 @@ const Header: React.FC<HeaderProps> = ({
   const ribbonX = useTransform(
     scrollY,
     transformedPoints?.yPoints || [0, 1000],
-    transformedPoints?.xPoints || [0, 0]
+    transformedPoints?.xPoints || [0, 0],
   );
 
   const ribbonWidth = useTransform(
     scrollY,
     transformedPoints?.yPoints || [0, 1000],
-    transformedPoints?.wPoints || [100, 100]
+    transformedPoints?.wPoints || [100, 100],
   );
-
-
 
   const ribbonOpacity = useTransform(
     scrollY,
     [0, sectionYCoords[0] ? sectionYCoords[0] - 100 : 200],
-    [0, 1]
+    [0, 1],
   );
-
 
   const scrollToSection = useCallback(
     (sectionId: string) => {
@@ -188,7 +181,7 @@ const Header: React.FC<HeaderProps> = ({
         className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 ${
           isCompact ? "py-4 md:py-4" : "py-12"
         }`}
-        style={{ 
+        style={{
           backgroundColor: headerBackground,
           transition: "background-color 0.3s ease",
         }}
@@ -214,7 +207,9 @@ const Header: React.FC<HeaderProps> = ({
                 {MenuItems.map((item) => (
                   <li key={item.sectionId}>
                     <button
-                      ref={(el) => { buttonRefs.current[item.sectionId] = el; }}
+                      ref={(el) => {
+                        buttonRefs.current[item.sectionId] = el;
+                      }}
                       onClick={() => scrollToSection(item.sectionId)}
                       className={`relative text-[11px] xl:text-sm tracking-[0.15em] xl:tracking-[0.2em] font-semibold uppercase pb-3 transition-all duration-300 ${
                         currentSection === item.sectionId

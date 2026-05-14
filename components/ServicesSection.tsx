@@ -52,8 +52,13 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
         <ul className="space-y-3 mb-8">
           {bullets.map((bullet, index) => (
-            <li key={index} className="flex items-start text-silverMist text-sm md:text-base">
-              <span className="text-gold mr-3 mt-1.5 flex-shrink-0 text-[10px]">●</span>
+            <li
+              key={index}
+              className="flex items-start text-silverMist text-sm md:text-base"
+            >
+              <span className="text-gold mr-3 mt-1.5 flex-shrink-0 text-[10px]">
+                ●
+              </span>
               <span>{bullet}</span>
             </li>
           ))}
@@ -75,7 +80,9 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
             </div>
             {(title === "Site Rescue" || title === "Starter") && (
               <span className="text-gold/60 text-[11px] font-mono mt-1 block">
-                Founding client rate: {title === "Site Rescue" ? "$400" : "$1,000"} for first 3 clients
+                Founding client rate:{" "}
+                {title === "Site Rescue" ? "$400" : "$1,000"} for first 3
+                clients
               </span>
             )}
           </div>
@@ -97,11 +104,14 @@ interface ServicesSectionProps {
   onServiceClick: (subject: string) => void;
 }
 
-const ServicesSection: React.FC<ServicesSectionProps> = ({ onServiceClick }) => {
+const ServicesSection: React.FC<ServicesSectionProps> = ({
+  onServiceClick,
+}) => {
   return (
     <div className="space-y-8">
       {/* Main Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Site Rescue */}
         <ServiceCard
           title="Site Rescue"
           subhead="For businesses stuck with broken, outdated, or dying websites."
@@ -115,7 +125,21 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ onServiceClick }) => 
           price="Starting at $600"
           ctaText="Start a Rescue"
           onCtaClick={() => onServiceClick("Site Rescue")}
+          extraContent={
+            <div className="mb-8">
+              <a
+                href="https://buy.stripe.com/test_14AbJ25Vf3oV2mS8527bW02"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full text-center bg-white text-black font-bold py-4 rounded-xl hover:bg-yellow-300 transition-colors mb-4"
+              >
+                Claim Founding Rate — $400 Now
+              </a>
+            </div>
+          }
         />
+
+        {/* Starter */}
         <ServiceCard
           title="Starter"
           subhead="For businesses with no real web presence yet."
@@ -129,42 +153,121 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ onServiceClick }) => 
           price="Starting at $1,500"
           ctaText="Build My Starter"
           onCtaClick={() => onServiceClick("Starter Build")}
+          extraContent={
+            <div className="mb-8">
+              <a
+                href="https://buy.stripe.com/test_6oUcN6dnHgbHbXs1GE7bW04"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full text-center bg-white text-black font-bold py-4 rounded-xl hover:bg-yellow-300 transition-colors mb-4"
+              >
+                Claim Founding Rate — $1,000 Now
+              </a>
+            </div>
+          }
         />
       </div>
 
-      {/* Monthly Care Add-on */}
+      {/* Monthly Care — two tiers with aligned buttons */}
       <ServiceCard
         fullWidth
         title="Monthly Care"
         subhead="Optional retainer to keep your site sharp without thinking about it."
-        bullets={[
-          "Hosting, security & uptime monitoring",
-          "Content updates (text, images, hours)",
-          "Priority turnaround on edit requests",
-        ]}
+        bullets={[]}
         price="$250–$450/month"
         ctaText="Add Monthly Care"
         onCtaClick={() => onServiceClick("Monthly Care")}
         extraContent={
-          <div className="mt-8 space-y-6 pt-8 border-t border-white/5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <div className="mt-8 space-y-8 pt-8 border-t border-white/5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Lite Tier */}
+              <div className="bg-black/50 border border-white/10 rounded-2xl p-6 flex flex-col h-full">
+                <div className="flex justify-between items-baseline mb-6">
+                  <h4 className="text-ivoryWhite font-bold text-xl">
+                    Monthly Care Lite
+                  </h4>
+                  <div className="text-right">
+                    <span className="text-3xl font-bold text-ivoryWhite">
+                      $250
+                    </span>
+                    <span className="text-silverMist">/mo</span>
+                  </div>
+                </div>
+                <ul className="space-y-3 text-silverMist mb-8 flex-1">
+                  <li className="flex items-start">
+                    <span className="text-gold mr-3 mt-1">●</span>
+                    Up to 3 hours of content updates + standard support
+                  </li>
+                </ul>
+                <a
+                  href="https://buy.stripe.com/test_4gMbJ2erLgbHbXs0CA7bW00"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full text-center border-2 border-gold text-gold font-bold py-4 rounded-xl hover:bg-gold/10 transition-colors mt-auto"
+                >
+                  Subscribe — Lite
+                </a>
+              </div>
+
+              {/* Pro Tier */}
+              <div className="bg-black/50 border border-white/10 rounded-2xl p-6 flex flex-col h-full">
+                <div className="flex justify-between items-baseline mb-6">
+                  <h4 className="text-ivoryWhite font-bold text-xl">
+                    Monthly Care Pro
+                  </h4>
+                  <div className="text-right">
+                    <span className="text-3xl font-bold text-ivoryWhite">
+                      $450
+                    </span>
+                    <span className="text-silverMist">/mo</span>
+                  </div>
+                </div>
+                <ul className="space-y-3 text-silverMist mb-8 flex-1">
+                  <li className="flex items-start">
+                    <span className="text-gold mr-3 mt-1">●</span>
+                    Up to 8 hours of updates, priority 48-hour turnaround, and
+                    proactive maintenance
+                  </li>
+                </ul>
+                <a
+                  href="https://buy.stripe.com/test_4gM00k0AV2kRgdI70Y7bW01"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full text-center border-2 border-gold text-gold font-bold py-4 rounded-xl hover:bg-gold/10 transition-colors mt-auto"
+                >
+                  Subscribe — Pro
+                </a>
+              </div>
+            </div>
+
+            {/* Original terms block */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 text-[11px]">
               <div>
-                <h4 className="text-ivoryWhite font-bold uppercase text-[10px] tracking-[0.2em] mb-4 opacity-70">Included:</h4>
-                <p className="text-silverMist text-[11px] leading-relaxed">
-                  Hosting, security, content updates, link checks, priority edits
+                <h4 className="text-ivoryWhite font-bold uppercase tracking-[0.2em] mb-4 opacity-70">
+                  Included:
+                </h4>
+                <p className="text-silverMist leading-relaxed">
+                  Hosting, security, content updates, link checks, priority
+                  edits
                 </p>
               </div>
               <div>
-                <h4 className="text-ivoryWhite font-bold uppercase text-[10px] tracking-[0.2em] mb-4 opacity-70">Not Included:</h4>
-                <p className="text-silverMist text-[11px] leading-relaxed">
-                  Third-party outages, full redesigns, new pages, custom dev beyond Webflow capabilities
+                <h4 className="text-ivoryWhite font-bold uppercase tracking-[0.2em] mb-4 opacity-70">
+                  Not Included:
+                </h4>
+                <p className="text-silverMist leading-relaxed">
+                  Third-party outages, full redesigns, new pages, custom dev
+                  beyond Webflow capabilities
                 </p>
               </div>
             </div>
             <div>
-              <h4 className="text-ivoryWhite font-bold uppercase text-[10px] tracking-[0.2em] mb-2 opacity-70">Terms:</h4>
+              <h4 className="text-ivoryWhite font-bold uppercase tracking-[0.2em] mb-2 opacity-70">
+                Terms:
+              </h4>
               <p className="text-silverMist text-[11px] leading-relaxed">
-                Billed monthly via Stripe, 30-day cancellation notice, service agreement required
+                Billed monthly via Stripe, 30-day cancellation notice, service
+                agreement required
               </p>
             </div>
           </div>
