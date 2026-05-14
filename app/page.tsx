@@ -285,9 +285,17 @@ const Home: React.FC = () => {
     return coordinate;
   };
 
-  const handleNavClick = (sectionId: string) => {
+  const handleNavClick = (sectionId: string, instant = false) => {
     const section = document.getElementById(sectionId);
     if (section) {
+      if (instant) {
+        setForceHeaderCompact(true);
+        setCurrentSection(sectionId);
+        const absoluteTop = getAbsoluteOffsetTop(section);
+        window.scrollTo(0, absoluteTop - 68);
+        return;
+      }
+
       // 1. Instantly Lock Layout & Trigger Nav Glide
       setForceHeaderCompact(true);
       isNavigatingRef.current = true;
@@ -318,7 +326,7 @@ const Home: React.FC = () => {
 
   const handleServiceClick = (subject: string) => {
     setContactSubject(subject);
-    handleNavClick("contact");
+    handleNavClick("contact", true);
   };
 
   return (
@@ -355,7 +363,7 @@ const Home: React.FC = () => {
           <div className="hidden 2xl:block pointer-events-none">
             {/* LEFT CLUSTER */}
             <motion.div
-              className="absolute top-[20%] left-8 z-0 opacity-40 scale-75"
+              className="absolute top-[20%] left-8 z-0 opacity-40 scale-75 optimize-gpu"
               style={{ y: clusterY, rotate: clusterRotate }}
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 0.4, x: 0 }}
@@ -400,7 +408,7 @@ const Home: React.FC = () => {
 
             {/* RIGHT PHONE */}
             <motion.div
-              className="absolute top-[30%] right-8 z-0 opacity-40 scale-100"
+              className="absolute top-[30%] right-8 z-0 opacity-40 scale-100 optimize-gpu"
               style={{ y: phoneY, rotate: phoneRotate }}
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 0.4, x: 0 }}
@@ -490,120 +498,120 @@ const Home: React.FC = () => {
         {/* All other sections */}
         <section
           id="projects"
-          className="scroll-mt-[68px] bg-darkSlate pb-32"
+          className="scroll-mt-[68px] bg-darkSlate pb-32 content-auto"
         >
-          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40">
+          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
             <div className="w-full h-[5px] bg-gold" />
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-7xl mx-auto">
               <SectionHeader name="Projects" bandColor="gold" />
             </div>
           </div>
-          <div className="max-w-6xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
+          <div className="max-w-7xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
             <ProjectSection />
           </div>
         </section>
 
         <section
           id="services"
-          className="scroll-mt-[68px] bg-darkSlate pb-32"
+          className="scroll-mt-[68px] bg-darkSlate pb-32 content-auto"
         >
-          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40">
+          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
             <div className="w-full h-[5px] bg-gold" />
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-7xl mx-auto">
               <SectionHeader name="Services" bandColor="gold" />
             </div>
           </div>
-          <div className="max-w-6xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
+          <div className="max-w-7xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
             <ServicesSection onServiceClick={handleServiceClick} />
           </div>
         </section>
 
         <section
           id="process"
-          className="scroll-mt-[68px] bg-darkSlate pb-32"
+          className="scroll-mt-[68px] bg-darkSlate pb-32 content-auto"
         >
-          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40">
+          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
             <div className="w-full h-[5px] bg-gold" />
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-7xl mx-auto">
               <SectionHeader name="Process" bandColor="gold" />
             </div>
           </div>
-          <div className="max-w-6xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
+          <div className="max-w-7xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
             <ProcessSection onCtaClick={() => handleNavClick("contact")} />
           </div>
         </section>
 
         <section
           id="experience"
-          className="scroll-mt-[68px] bg-darkSlate pb-32"
+          className="scroll-mt-[68px] bg-darkSlate pb-32 content-auto"
         >
-          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40">
+          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
             <div className="w-full h-[5px] bg-gold" />
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-7xl mx-auto">
               <SectionHeader name="Experience" bandColor="gold" />
             </div>
           </div>
-          <div className="max-w-6xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
+          <div className="max-w-7xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
             <ExperienceSection />
           </div>
         </section>
 
         <section
           id="education"
-          className="scroll-mt-[68px] bg-darkSlate pb-32"
+          className="scroll-mt-[68px] bg-darkSlate pb-32 content-auto"
         >
-          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40">
+          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
             <div className="w-full h-[5px] bg-gold" />
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-7xl mx-auto">
               <SectionHeader name="Education" bandColor="gold" />
             </div>
           </div>
-          <div className="max-w-6xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
+          <div className="max-w-7xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
             <EducationSection />
           </div>
         </section>
 
         <section
           id="skills"
-          className="scroll-mt-[68px] bg-darkSlate pb-32"
+          className="scroll-mt-[68px] bg-darkSlate pb-32 content-auto"
         >
-          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40">
+          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
             <div className="w-full h-[5px] bg-gold" />
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-7xl mx-auto">
               <SectionHeader name="Skills" bandColor="gold" />
             </div>
           </div>
-          <div className="max-w-6xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
+          <div className="max-w-7xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
             <SkillsSection />
           </div>
         </section>
 
         <section
           id="about"
-          className="scroll-mt-[68px] bg-darkSlate pb-32"
+          className="scroll-mt-[68px] bg-darkSlate pb-32 content-auto"
         >
-          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40">
+          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
             <div className="w-full h-[5px] bg-gold" />
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-7xl mx-auto">
               <SectionHeader name="About" bandColor="gold" />
             </div>
           </div>
-          <div className="max-w-6xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
+          <div className="max-w-7xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
             <AboutSection />
           </div>
         </section>
 
         <section
           id="contact"
-          className="scroll-mt-[68px] bg-darkSlate pb-32 min-h-screen"
+          className="scroll-mt-[68px] bg-darkSlate pb-32 min-h-screen content-auto"
         >
-          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40">
+          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
             <div className="w-full h-[5px] bg-gold" />
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-7xl mx-auto">
               <SectionHeader name="Contact" bandColor="gold" />
             </div>
           </div>
-          <div className="max-w-6xl mx-auto px-6 section-content md:pb-6">
+          <div className="max-w-7xl mx-auto px-6 section-content md:pb-6">
             <div className="w-full flex flex-col lg:flex-row gap-12">
               <div className="w-full lg:w-[62%] lg:mb-0">
                 <ContactSection subject={contactSubject} />
@@ -615,7 +623,7 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        <div className="max-w-6xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-6">
           <Footer />
         </div>
 

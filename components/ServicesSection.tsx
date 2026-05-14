@@ -200,7 +200,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
                   </li>
                 </ul>
                 <a
-                  href="https://buy.stripe.com/test_4gMbJ2erLgbHbXs0CA7bW00"
+                  href="https://buy.stripe.com/dRm4gA88c0w6f1x4SxfrW01"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block w-full text-center border-2 border-gold text-gold font-bold py-4 rounded-xl hover:bg-gold/10 transition-colors mt-auto"
@@ -230,7 +230,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
                   </li>
                 </ul>
                 <a
-                  href="https://buy.stripe.com/test_4gM00k0AV2kRgdI70Y7bW01"
+                  href="https://buy.stripe.com/00w3cw6047Yyg5BgBffrW02"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block w-full text-center border-2 border-gold text-gold font-bold py-4 rounded-xl hover:bg-gold/10 transition-colors mt-auto"

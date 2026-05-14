@@ -29,6 +29,7 @@ const Header: React.FC<HeaderProps> = ({
   const isHero = forceCompact ? false : internalIsHero;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
+  const ulRef = useRef<HTMLUListElement | null>(null);
 
   // Smooth "Mist-In" Background Logic
   const headerBackground = useTransform(
@@ -65,9 +66,7 @@ const Header: React.FC<HeaderProps> = ({
   const [sectionYCoords, setSectionYCoords] = useState<number[]>([]);
   const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
 
-  // 1. Core Measurement Logic
   const measureCoords = useCallback(() => {
-    // Measure X coordinates in Header
     const coords = MenuItems.map((item) => {
       const btn = buttonRefs.current[item.sectionId];
       if (btn) {
@@ -104,6 +103,7 @@ const Header: React.FC<HeaderProps> = ({
 
     const mainContent = document.querySelector("main");
     if (mainContent) observer.observe(mainContent);
+    if (headerRef.current) observer.observe(headerRef.current);
 
     window.addEventListener("resize", measureCoords);
     window.addEventListener("load", measureCoords); // Catch late image loads
@@ -113,7 +113,7 @@ const Header: React.FC<HeaderProps> = ({
       window.removeEventListener("resize", measureCoords);
       window.removeEventListener("load", measureCoords);
     };
-  }, [measureCoords]);
+  }, [measureCoords, isCompact]);
 
   // 3. The Segment-Transfer Mapping (X, Width, Opacity)
   // We double each point to create "Dead Zones" where the ribbon stays locked
@@ -178,15 +178,15 @@ const Header: React.FC<HeaderProps> = ({
     <>
       <motion.header
         ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 ${
-          isCompact ? "py-4 md:py-4" : "py-12"
+        className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 flex items-center ${
+          isCompact ? "h-[68px]" : "py-12"
         }`}
         style={{
           backgroundColor: headerBackground,
           transition: "background-color 0.3s ease",
         }}
       >
-        <div className="max-w-6xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-6 w-full">
           {/* Desktop Navigation */}
           <div
             className={`hidden lg:flex items-center transition-all duration-500 ${
@@ -203,7 +203,10 @@ const Header: React.FC<HeaderProps> = ({
             </motion.h1>
 
             <nav className="relative">
-              <ul className="flex items-center gap-4 xl:gap-6 relative">
+              <ul
+                ref={ulRef}
+                className="flex items-center gap-4 xl:gap-6 relative"
+              >
                 {MenuItems.map((item) => (
                   <li key={item.sectionId}>
                     <button
@@ -211,7 +214,7 @@ const Header: React.FC<HeaderProps> = ({
                         buttonRefs.current[item.sectionId] = el;
                       }}
                       onClick={() => scrollToSection(item.sectionId)}
-                      className={`relative text-[11px] xl:text-sm tracking-[0.15em] xl:tracking-[0.2em] font-semibold uppercase pb-3 transition-all duration-300 ${
+                      className={`relative text-[11px] xl:text-sm tracking-[0.15em] xl:tracking-[0.2em] font-semibold uppercase px-0 transition-all duration-300 ${
                         currentSection === item.sectionId
                           ? "text-gold"
                           : "text-ivoryWhite/90 hover:text-gold/80"
@@ -221,16 +224,15 @@ const Header: React.FC<HeaderProps> = ({
                     </button>
                   </li>
                 ))}
+                <motion.div
+                  className="absolute bottom-[-24px] h-[6px] bg-gold z-0 will-change-transform pointer-events-none"
+                  style={{
+                    x: ribbonX,
+                    width: ribbonWidth,
+                    opacity: ribbonOpacity,
+                  }}
+                />
               </ul>
-              {/* THE UNIVERSAL LINKED RIBBON */}
-              <motion.div
-                className="absolute md:bottom-[-21px] bottom-[-11px] h-[16px] bg-gold z-0 will-change-transform pointer-events-none"
-                style={{
-                  x: ribbonX,
-                  width: ribbonWidth,
-                  opacity: ribbonOpacity,
-                }}
-              />
             </nav>
           </div>
 
