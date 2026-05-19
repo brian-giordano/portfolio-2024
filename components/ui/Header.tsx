@@ -214,7 +214,7 @@ const Header: React.FC<HeaderProps> = ({
                         buttonRefs.current[item.sectionId] = el;
                       }}
                       onClick={() => scrollToSection(item.sectionId)}
-                      className={`relative text-[11px] xl:text-sm tracking-[0.15em] xl:tracking-[0.2em] font-semibold uppercase px-0 transition-all duration-300 ${
+                      className={`relative text-[11px] xl:text-sm tracking-[0.15em] xl:tracking-[0.2em] font-semibold uppercase pl-[0.15em] xl:pl-[0.2em] pr-0 transition-all duration-300 ${
                         currentSection === item.sectionId
                           ? "text-gold"
                           : "text-ivoryWhite/90 hover:text-gold/80"
@@ -225,7 +225,7 @@ const Header: React.FC<HeaderProps> = ({
                   </li>
                 ))}
                 <motion.div
-                  className="absolute bottom-[-24px] h-[6px] bg-gold z-0 will-change-transform pointer-events-none"
+                  className="absolute left-0 bottom-[-24px] h-[6px] bg-gold z-0 will-change-transform pointer-events-none"
                   style={{
                     x: ribbonX,
                     width: ribbonWidth,
