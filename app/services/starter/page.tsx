@@ -48,6 +48,18 @@ export default function StarterPage() {
           </ul>
         </div>
 
+        {/* Not Just a Template */}
+        <div className="bg-black/30 border border-gold/20 rounded-2xl p-8 mb-16 relative overflow-hidden">
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
+          <h2 className="text-2xl font-bold text-gold mb-4">Beyond the Template</h2>
+          <p className="text-silverMist text-lg leading-relaxed mb-6">
+            A Starter site isn&apos;t a pre-packaged theme where we just swap out logos. Generic templates often come bloated with unused code, resulting in slow load times, clunky mobile experiences, and rigid designs that don&apos;t actually fit your content.
+          </p>
+          <p className="text-silverMist text-lg leading-relaxed">
+            With a Starter site, you&apos;re investing in a <strong className="text-ivoryWhite font-normal">purpose-built sales tool</strong>. Every button placement, whitespace decision, and technical optimization is made to establish instant credibility with your audience, load in under two seconds, and guide visitors smoothly toward contacting you or purchasing your services. No bloat, no friction—just results.
+          </p>
+        </div>
+
         {/* How It Works */}
         <div className="mb-16">
           <h2 className="text-2xl font-bold text-ivoryWhite mb-6 border-b border-white/10 pb-4">How It Works</h2>
@@ -65,30 +77,30 @@ export default function StarterPage() {
             <div className="flex flex-col md:flex-row gap-6">
               <div className="md:w-1/4">
                 <span className="text-gold font-mono uppercase tracking-widest text-sm font-bold">Step 2</span>
-                <h3 className="text-xl font-bold text-ivoryWhite mt-1">Design & Content</h3>
+                <h3 className="text-xl font-bold text-ivoryWhite mt-1">Wireframing & Design</h3>
               </div>
               <div className="md:w-3/4 text-silverMist text-lg leading-relaxed">
-                I&apos;ll design a custom homepage mockup for your review. Once approved, I&apos;ll build out the remaining pages, integrating your written copy and images into a layout optimized for conversions.
+                Before writing any code, I create high-fidelity mockups of your core pages. We focus on visual hierarchy, ensuring your primary calls-to-action are impossible to miss, and we review together until the aesthetic perfectly matches your brand identity.
               </div>
             </div>
 
             <div className="flex flex-col md:flex-row gap-6">
               <div className="md:w-1/4">
                 <span className="text-gold font-mono uppercase tracking-widest text-sm font-bold">Step 3</span>
-                <h3 className="text-xl font-bold text-ivoryWhite mt-1">Development & SEO</h3>
+                <h3 className="text-xl font-bold text-ivoryWhite mt-1">Development & Technical SEO</h3>
               </div>
               <div className="md:w-3/4 text-silverMist text-lg leading-relaxed">
-                I develop the site ensuring it&apos;s blazing fast and mobile-perfect. I also set up fundamental technical SEO, clean URLs, and basic analytics tracking.
+                I translate the approved designs into a responsive, lightweight codebase. During this phase, I implement proper heading structures, semantic HTML, compressed imagery, and custom meta tags so you rank well on Google from day one.
               </div>
             </div>
 
             <div className="flex flex-col md:flex-row gap-6">
               <div className="md:w-1/4">
                 <span className="text-gold font-mono uppercase tracking-widest text-sm font-bold">Step 4</span>
-                <h3 className="text-xl font-bold text-ivoryWhite mt-1">Handoff</h3>
+                <h3 className="text-xl font-bold text-ivoryWhite mt-1">Launch & Handoff</h3>
               </div>
               <div className="md:w-3/4 text-silverMist text-lg leading-relaxed">
-                After up to two rounds of revisions, the site goes live. I provide CMS training and a custom video walkthrough so you know exactly how to manage your content.
+                After comprehensive browser testing and final revisions, we push the site live. I don&apos;t just hand you the keys and leave—I record a personalized, custom video walkthrough and provide a 1-on-1 CMS training session so you feel 100% confident managing your own content moving forward.
               </div>
             </div>
           </div>
