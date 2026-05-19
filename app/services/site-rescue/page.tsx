@@ -1,0 +1,90 @@
+import Link from 'next/link';
+import Footer from '@/components/ui/Footer';
+
+export const metadata = {
+  title: 'Site Rescue',
+  description: 'Diagnose and fix broken, outdated, or underperforming websites with my Site Rescue service.'
+};
+
+export default function SiteRescuePage() {
+  return (
+    <div className="bg-darkSlate min-h-screen flex flex-col pt-8">
+      <header className="px-6 md:px-12 py-4">
+        <Link href="/" className="text-ivoryWhite hover:text-gold font-primary font-bold text-xl uppercase tracking-widest transition-colors">
+          &larr; Brian Giordano
+        </Link>
+      </header>
+
+      <main className="flex-grow max-w-4xl mx-auto px-6 py-16 w-full">
+        <div className="mb-4">
+          <span className="bg-gold/10 text-gold text-xs font-mono font-bold px-3 py-1.5 rounded uppercase tracking-wider border border-gold/20">
+            Fast Turnaround
+          </span>
+        </div>
+        <h1 className="text-4xl md:text-5xl font-primary font-extrabold text-gold uppercase mb-6 leading-tight">
+          Bring your website back to life.
+        </h1>
+        <p className="text-xl text-ivoryWhite font-subheader mb-12">
+          For businesses stuck with broken, outdated, or underperforming websites. I&apos;ll diagnose the issues, fix the code, and get you back on track fast.
+        </p>
+
+        <div className="bg-charcoal border border-white/5 rounded-2xl p-8 md:p-12 mb-12">
+          <h2 className="text-2xl font-bold text-ivoryWhite mb-6">What&apos;s Included:</h2>
+          <ul className="space-y-4 mb-10">
+            <li className="flex items-start text-silverMist text-lg">
+              <span className="text-gold mr-4 mt-1.5 flex-shrink-0">●</span>
+              Full audit & diagnostics of current issues
+            </li>
+            <li className="flex items-start text-silverMist text-lg">
+              <span className="text-gold mr-4 mt-1.5 flex-shrink-0">●</span>
+              Repair or rebuild of up to 5 pages
+            </li>
+            <li className="flex items-start text-silverMist text-lg">
+              <span className="text-gold mr-4 mt-1.5 flex-shrink-0">●</span>
+              Mobile optimization & page speed fixes
+            </li>
+            <li className="flex items-start text-silverMist text-lg">
+              <span className="text-gold mr-4 mt-1.5 flex-shrink-0">●</span>
+              Domain and hosting transfer if needed
+            </li>
+            <li className="flex items-start text-silverMist text-lg">
+              <span className="text-gold mr-4 mt-1.5 flex-shrink-0">●</span>
+              30-day post-launch bug fix support
+            </li>
+          </ul>
+
+          <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div>
+              <p className="text-silverMist font-mono uppercase tracking-widest text-sm mb-2">Starting At</p>
+              <p className="text-3xl font-bold text-ivoryWhite">$600</p>
+            </div>
+            
+            <div className="w-full sm:w-auto text-center sm:text-right">
+              <a
+                href="https://buy.stripe.com/test_14AbJ25Vf3oV2mS8527bW02"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block w-full sm:w-auto bg-gold text-darkSlate font-bold py-4 px-10 rounded-xl hover:bg-yellow-400 hover:-translate-y-1 transition-all duration-300 shadow-[0_0_20px_rgba(255,215,0,0.3)] hover:shadow-[0_0_30px_rgba(255,215,0,0.5)]"
+              >
+                Claim Founding Rate — $400 Now
+              </a>
+              <p className="text-gold/60 text-xs font-mono mt-3">Valid for first 3 clients</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="text-center py-16 mt-8 border-t border-white/5">
+           <h3 className="text-2xl font-bold text-ivoryWhite mb-4">Not sure if a rescue is what you need?</h3>
+           <p className="text-silverMist mb-8 text-lg">Send me a quick message and we can figure out the best approach together.</p>
+           <Link href="/#contact" className="inline-block bg-transparent border-2 border-gold text-gold font-bold py-4 px-10 rounded-xl hover:bg-gold/10 hover:-translate-y-1 transition-all duration-300 shadow-[0_0_15px_rgba(255,215,0,0.1)] hover:shadow-[0_0_25px_rgba(255,215,0,0.2)]">
+              Send me a message
+           </Link>
+        </div>
+      </main>
+
+      <div className="mt-auto px-6 max-w-7xl mx-auto w-full">
+        <Footer />
+      </div>
+    </div>
+  )
+}

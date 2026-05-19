@@ -433,22 +433,21 @@ const Home: React.FC = () => {
               className="text-4xl sm:text-5xl md:text-6xl font-primary font-extrabold tracking-tight text-ivoryWhite leading-none"
               variants={itemVariants}
             >
-              I don&apos;t just write code.
+              High-Converting Websites for Small Businesses.
             </motion.h1>
 
-            <motion.h1
+            <motion.h2
               className="text-2xl sm:text-3xl md:text-4xl font-primary font-extrabold bg-gradient-to-tr from-gold to-ivoryWhite bg-clip-text text-transparent mt-3 leading-tight"
               variants={itemVariants}
             >
-              I use AI to architect and ship entire products.
-            </motion.h1>
+              Expert Website Rescue, Starter Sites, & Monthly Care.
+            </motion.h2>
 
             <motion.p
               className="text-lg md:text-xl text-silverMist mt-6 max-w-md mx-auto"
               variants={itemVariants}
             >
-              Creative technologist and AI product builder. MS in Computer
-              Science meets traditional Fine Arts design.
+              I build and maintain performance-driven websites that help local businesses grow and succeed online.
             </motion.p>
 
             <motion.div

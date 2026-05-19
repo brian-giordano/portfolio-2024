@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 interface ServiceCardProps {
   title: string;
@@ -9,7 +10,7 @@ interface ServiceCardProps {
   bullets: string[];
   price: string;
   ctaText: string;
-  onCtaClick: () => void;
+  href: string;
   fullWidth?: boolean;
   extraContent?: React.ReactNode;
 }
@@ -20,7 +21,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   bullets,
   price,
   ctaText,
-  onCtaClick,
+  href,
   fullWidth = false,
   extraContent,
 }) => {
@@ -86,14 +87,15 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
               </span>
             )}
           </div>
-          <motion.button
-            onClick={onCtaClick}
-            className="px-8 py-3.5 border-2 border-gold text-gold font-bold rounded-xl text-base hover:bg-gold/10 transition-all duration-300 shadow-[0_0_15px_rgba(255,215,0,0.1)] hover:shadow-[0_0_25px_rgba(255,215,0,0.2)]"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            {ctaText}
-          </motion.button>
+          <Link href={href}>
+            <motion.button
+              className="px-8 py-3.5 border-2 border-gold text-gold font-bold rounded-xl text-base hover:bg-gold/10 transition-all duration-300 shadow-[0_0_15px_rgba(255,215,0,0.1)] hover:shadow-[0_0_25px_rgba(255,215,0,0.2)]"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              {ctaText}
+            </motion.button>
+          </Link>
         </div>
       </div>
     </div>
@@ -101,12 +103,10 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 };
 
 interface ServicesSectionProps {
-  onServiceClick: (subject: string) => void;
+  onServiceClick?: (subject: string) => void;
 }
 
-const ServicesSection: React.FC<ServicesSectionProps> = ({
-  onServiceClick,
-}) => {
+const ServicesSection: React.FC<ServicesSectionProps> = () => {
   return (
     <div className="space-y-8">
       {/* Main Grid */}
@@ -123,8 +123,8 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
             "30-day post-launch bug fix support",
           ]}
           price="Starting at $600"
-          ctaText="Start a Rescue"
-          onCtaClick={() => onServiceClick("Site Rescue")}
+          ctaText="See how a rescue works"
+          href="/services/site-rescue"
           extraContent={
             <div className="mb-8">
               <a
@@ -151,8 +151,8 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
             "2 revision rounds included",
           ]}
           price="Starting at $1,500"
-          ctaText="Build My Starter"
-          onCtaClick={() => onServiceClick("Starter Build")}
+          ctaText="What's included in a starter"
+          href="/services/starter"
           extraContent={
             <div className="mb-8">
               <a
@@ -175,8 +175,8 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
         subhead="Optional retainer to keep your site sharp without thinking about it."
         bullets={[]}
         price="$250–$450/month"
-        ctaText="Add Monthly Care"
-        onCtaClick={() => onServiceClick("Monthly Care")}
+        ctaText="Compare care plans"
+        href="/services/monthly-care"
         extraContent={
           <div className="mt-8 space-y-8 pt-8 border-t border-white/5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -36,18 +36,19 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "Brian Giordano — AI Product Builder & Creative Technologist",
+    default: "Brian Giordano | Website Rescue, Starter Sites & Monthly Care",
     template: "%s | Brian Giordano",
   },
   description:
-    "AI product builder specializing in RAG systems, LLM integrations, and architectural full-stack applications. MS in Computer Science, BA in Graphic Design.",
+    "Expert website rescue, starter sites, and monthly care for small businesses. Get a high-converting website built for performance and growth.",
   keywords: [
-    "AI Product Engineer",
-    "Creative Technologist",
-    "AI Solutions Architect",
-    "Technical Product Manager",
-    "RAG Systems",
-    "LLM Integration",
+    "Website Rescue",
+    "Small Business Websites",
+    "Starter Sites",
+    "Website Maintenance",
+    "Monthly Web Care",
+    "Web Design Massachusetts",
+    "Web Design Connecticut",
     "Brian Giordano",
   ],
   authors: [{ name: "Brian Giordano", url: BASE_URL }],
@@ -66,9 +67,9 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: BASE_URL,
     siteName: "Brian Giordano",
-    title: "Brian Giordano — AI Product Builder & Creative Technologist",
+    title: "Brian Giordano | Website Rescue, Starter Sites & Monthly Care",
     description:
-      "Expert AI solutions and creative technology. Bridging the gap between high-end design and rigorous engineering logic.",
+      "Expert website rescue, starter sites, and monthly care for small businesses. Get a high-converting website built for performance and growth.",
     images: [
       {
         url: "/og-image.png", // Assuming you'll add one, or use existing
@@ -80,9 +81,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Brian Giordano — AI Product Builder & Creative Technologist",
+    title: "Brian Giordano | Website Rescue, Starter Sites & Monthly Care",
     description:
-      "AI-augmented product builder and technical consultant. Specializing in RAG systems and high-stakes full-stack apps.",
+      "Expert website rescue, starter sites, and monthly care for small businesses. Get a high-converting website built for performance and growth.",
     creator: "@briangiordano",
   },
   alternates: {
@@ -92,47 +93,48 @@ export const metadata: Metadata = {
 
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "Person",
-  name: "Brian Giordano",
+  "@type": "ProfessionalService",
+  name: "Brian Giordano - Web Design & Development",
   url: BASE_URL,
-  jobTitle: "AI Product Builder & Creative Technologist",
   description:
-    "AI-augmented product builder and technical consultant with an MS in Computer Science and a BA in Graphic Design. Specializing in RAG systems, LLM integrations, and full-stack web applications.",
+    "Expert website rescue, starter sites, and monthly care for small businesses. Specializing in high-converting, performance-optimized websites.",
   sameAs: [
     "https://www.linkedin.com/in/briangiordano/",
     "https://github.com/brian-giordano",
   ],
-  knowsAbout: [
-    "Artificial Intelligence",
-    "RAG Systems",
-    "LLM Integration",
-    "Agent Orchestration",
-    "Next.js",
-    "React",
-    "TypeScript",
-    "Python",
-    "FastAPI",
-    "Full-Stack Development",
-    "UI/UX Design",
-    "Graphic Design",
+  areaServed: ["Massachusetts", "Connecticut", "Rhode Island"],
+  priceRange: "$$",
+  makesOffer: [
+    {
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
+        name: "Website Rescue",
+        description: "Revamp and fix outdated or underperforming websites."
+      }
+    },
+    {
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
+        name: "Starter Sites",
+        description: "Custom, high-converting 5-page websites for new businesses."
+      }
+    },
+    {
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
+        name: "Monthly Care",
+        description: "Ongoing maintenance, hosting, and updates."
+      }
+    }
   ],
   address: {
     "@type": "PostalAddress",
     addressRegion: "New England",
     addressCountry: "US",
   },
-  alumniOf: [
-    {
-      "@type": "CollegeOrUniversity",
-      name: "University of Massachusetts Dartmouth",
-      sameAs: "https://www.umassd.edu",
-    },
-    {
-      "@type": "CollegeOrUniversity",
-      name: "Rhode Island College",
-      sameAs: "https://www.ric.edu",
-    },
-  ],
 };
 
 export default function RootLayout({

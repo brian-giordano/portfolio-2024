@@ -119,7 +119,7 @@ const AboutSection: React.FC = () => {
           >
             <Image
               src={AboutImage}
-              alt="About Me"
+              alt="Brian Giordano - Website Rescue and Development Expert"
               layout="fill"
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 40vw"
