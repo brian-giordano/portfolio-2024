@@ -1,6 +1,5 @@
 import { Poppins, Oswald, Montserrat } from "next/font/google";
 import type { Metadata, Viewport } from "next";
-import { Analytics } from "@vercel/analytics/react";
 import Script from "next/script";
 import "./globals.css";
 import "../components/ui/Button.module.css";
@@ -205,7 +204,6 @@ export default function RootLayout({
           `}
         </Script>
         {children}
-        <Analytics />
       </body>
     </html>
   );
