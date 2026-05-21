@@ -1,3 +1,4 @@
+// components/ui/Header.tsx
 "use client";
 
 import React, { useState, useCallback, useMemo, useRef } from "react";
@@ -10,7 +11,7 @@ import {
 } from "framer-motion";
 
 interface HeaderProps {
-  onNavClick: (id: string) => void;
+  onNavClick: (id: string, instant?: boolean) => void;
   currentSection: string;
   name?: string;
   forceCompact?: boolean;
@@ -25,13 +26,11 @@ const Header: React.FC<HeaderProps> = ({
   const { scrollY } = useScroll();
   const [internalIsHero, setInternalIsHero] = useState(true);
 
-  // Real isHero is false if externally forced OR if scrolled down
   const isHero = forceCompact ? false : internalIsHero;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
   const ulRef = useRef<HTMLUListElement | null>(null);
 
-  // Smooth "Mist-In" Background Logic
   const headerBackground = useTransform(
     scrollY,
     [0, 80],
@@ -39,7 +38,6 @@ const Header: React.FC<HeaderProps> = ({
   );
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    // Only update internal state if not forced
     setInternalIsHero(latest < 10);
   });
 
@@ -80,7 +78,6 @@ const Header: React.FC<HeaderProps> = ({
     });
     setNavCoords(coords);
 
-    // Measure Y coordinates in Page (Absolute Document Top)
     const yCoords = MenuItems.map((item) => {
       const el = document.getElementById(item.sectionId);
       if (el) {
@@ -92,21 +89,15 @@ const Header: React.FC<HeaderProps> = ({
     setSectionYCoords(yCoords);
   }, [MenuItems]);
 
-  // 2. Self-Healing Calibration (Resizes, Layout Shifts, Image Loads)
   React.useEffect(() => {
     measureCoords();
-
-    // Watch for layout shifts in the main container
-    const observer = new ResizeObserver(() => {
-      measureCoords();
-    });
-
+    const observer = new ResizeObserver(() => measureCoords());
     const mainContent = document.querySelector("main");
     if (mainContent) observer.observe(mainContent);
     if (headerRef.current) observer.observe(headerRef.current);
 
     window.addEventListener("resize", measureCoords);
-    window.addEventListener("load", measureCoords); // Catch late image loads
+    window.addEventListener("load", measureCoords);
 
     return () => {
       observer.disconnect();
@@ -115,26 +106,21 @@ const Header: React.FC<HeaderProps> = ({
     };
   }, [measureCoords, isCompact]);
 
-  // 3. The Segment-Transfer Mapping (X, Width, Opacity)
-  // We double each point to create "Dead Zones" where the ribbon stays locked
   const transformedPoints = useMemo(() => {
     if (sectionYCoords.length === 0 || navCoords.length === 0) return null;
 
     const yPoints: number[] = [];
     const xPoints: number[] = [];
     const wPoints: number[] = [];
-
-    const GAP = 250; // The 250px "Glide Zone" before each section
+    const GAP = 250;
 
     sectionYCoords.forEach((y, i) => {
       const coord = navCoords[i];
       if (i === 0) {
-        // First section
         yPoints.push(y);
         xPoints.push(coord.x);
         wPoints.push(coord.width);
       } else {
-        // Add "Glide-Start" and "Lock-In" points
         yPoints.push(y - GAP);
         xPoints.push(navCoords[i - 1].x);
         wPoints.push(navCoords[i - 1].width);
@@ -166,10 +152,14 @@ const Header: React.FC<HeaderProps> = ({
     [0, 1],
   );
 
+  // Mobile = instant jump, Desktop = smooth scroll
   const scrollToSection = useCallback(
-    (sectionId: string) => {
-      onNavClick(sectionId);
+    (sectionId: string, instant = false) => {
       setIsMenuOpen(false);
+
+      setTimeout(() => {
+        onNavClick(sectionId, instant);
+      }, 80);
     },
     [onNavClick],
   );
@@ -207,30 +197,45 @@ const Header: React.FC<HeaderProps> = ({
                 ref={ulRef}
                 className="flex items-center gap-4 xl:gap-6 relative"
               >
-                {MenuItems.map((item) => (
-                  <li key={item.sectionId}>
-                    <button
-                      ref={(el) => {
-                        buttonRefs.current[item.sectionId] = el;
-                      }}
-                      onClick={() => scrollToSection(item.sectionId)}
-                      className={`relative text-[11px] xl:text-sm tracking-[0.15em] xl:tracking-[0.2em] font-semibold uppercase pl-[0.15em] xl:pl-[0.2em] pr-0 transition-all duration-300 ${
-                        currentSection === item.sectionId
-                          ? "text-gold"
-                          : "text-ivoryWhite/90 hover:text-gold/80"
-                      }`}
-                    >
-                      {item.label}
-                    </button>
-                  </li>
-                ))}
+                {MenuItems.map((item) => {
+                  const isActive = currentSection === item.sectionId;
+                  return (
+                    <li key={item.sectionId}>
+                      <button
+                        ref={(el) => {
+                          buttonRefs.current[item.sectionId] = el;
+                        }}
+                        onClick={() => scrollToSection(item.sectionId)} // smooth on desktop
+                        className={`relative text-[11px] xl:text-sm tracking-[0.15em] xl:tracking-[0.2em] font-semibold uppercase pl-[0.15em] xl:pl-[0.2em] pr-0 transition-all duration-300 ${
+                          isActive
+                            ? "text-gold"
+                            : "text-ivoryWhite/90 hover:text-gold/80"
+                        }`}
+                      >
+                        <motion.span
+                          animate={isActive ? { scale: 1.05 } : { scale: 1 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 25,
+                          }}
+                        >
+                          {item.label}
+                        </motion.span>
+                      </button>
+                    </li>
+                  );
+                })}
+
+                {/* Yellow Ribbon */}
                 <motion.div
-                  className="absolute left-0 bottom-[-24px] h-[6px] bg-gold z-0 will-change-transform pointer-events-none"
+                  className="absolute left-0 bottom-[-23px] h-[5px] bg-gold z-0 will-change-transform pointer-events-none"
                   style={{
                     x: ribbonX,
                     width: ribbonWidth,
                     opacity: ribbonOpacity,
                   }}
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 />
               </ul>
             </nav>
@@ -275,10 +280,10 @@ const Header: React.FC<HeaderProps> = ({
               {MenuItems.map((item) => (
                 <button
                   key={item.sectionId}
-                  onClick={() => scrollToSection(item.sectionId)}
-                  className={`text-left ${
+                  onClick={() => scrollToSection(item.sectionId, true)} // ← INSTANT on mobile
+                  className={`text-left transition-colors ${
                     currentSection === item.sectionId
-                      ? "text-yellow-400 font-semibold"
+                      ? "text-gold font-semibold"
                       : "text-ivoryWhite"
                   }`}
                 >

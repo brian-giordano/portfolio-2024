@@ -1,5 +1,7 @@
-// components/ContactForm.tsx
-import React, { useState, useRef } from "react";
+// components/ui/ContactForm.tsx
+"use client";
+
+import React, { useState, useRef, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -14,30 +16,22 @@ interface FormData {
   message: string;
   honeypot?: string;
   consent?: boolean;
-  // Web3Forms Hidden Fields
   access_key?: string;
   redirect?: string;
   botcheck?: string;
 }
 
-// Validation schema using Yup
 const schema = Yup.object().shape({
-  name: Yup.string().required("Name is required").max(100, "Name is too long"),
+  name: Yup.string().required("Name is required").max(100),
   email: Yup.string()
-    .email("Invalid email format")
+    .email("Invalid email")
     .required("Email is required")
-    .max(100, "Email is too long"),
+    .max(100),
   subject: Yup.string().required("Subject is required"),
-  details: Yup.string()
-    .required("Details are required")
-    .max(1000, "Details are too long"),
-  message: Yup.string()
-    .required("Message is required")
-    .min(10, "Message must be at least 10 characters")
-    .max(1000, "Message is too long"),
-  honeypot: Yup.string().max(0, "Honeypot should be empty"),
+  details: Yup.string().required("Details are required").max(1000),
+  message: Yup.string().required("Message is required").min(10).max(1000),
+  honeypot: Yup.string().max(0),
   consent: Yup.boolean().oneOf([true], "You must accept the privacy policy"),
-  // Hidden fields are optional for validation but typed for RHF
   access_key: Yup.string(),
   redirect: Yup.string(),
   botcheck: Yup.string(),
@@ -48,8 +42,8 @@ interface ContactFormProps {
 }
 
 const ContactForm: React.FC<ContactFormProps> = ({ prefilledSubject }) => {
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const toastContainerRef = useRef<ToastContainerRef>(null);
 
   const {
@@ -63,85 +57,59 @@ const ContactForm: React.FC<ContactFormProps> = ({ prefilledSubject }) => {
     resolver: yupResolver(schema),
     defaultValues: {
       access_key: "96cebeae-a016-4cfe-9063-259effb11937",
-      subject: prefilledSubject || "New message from briangiordano.com",
+      subject: prefilledSubject || "",
       redirect: "https://briangiordano.com/#thank-you",
-    }
+    },
   });
 
   const selectedSubject = watch("subject");
 
-  // Dynamic config for the details field
   const getDetailsConfig = (subject: string) => {
     switch (subject) {
       case "Site Rescue":
         return {
           label: "Tell me about your current website",
-          placeholder: "What's broken? How old is the site? Do you have domain access?",
+          placeholder: "What's broken? How old is the site?",
         };
       case "Starter Build":
         return {
-          label: "Tell me about your project",
-          placeholder: "What kind of business? How many pages? Any specific features?",
+          label: "Tell me about your new project",
+          placeholder: "What kind of business? Target audience?",
         };
       case "Monthly Care":
         return {
-          label: "What do you need help with?",
-          placeholder: "Describe your current site and what updates or support you need.",
+          label: "What kind of ongoing support do you need?",
+          placeholder: "Describe your current site and needs",
         };
-      case "job":
-        return {
-          label: "Role details",
-          placeholder: "Tell me about the role and company.",
-        };
-      case "collaboration":
-        return {
-          label: "Project details",
-          placeholder: "Describe the collaboration opportunity.",
-        };
-      case "general":
-      case "other":
       default:
         return {
           label: "How can I help?",
-          placeholder: "Tell me what you're looking for.",
+          placeholder: "Tell me what you're looking for...",
         };
     }
   };
 
   const detailsConfig = getDetailsConfig(selectedSubject);
 
-  // Effect to handle pre-filled subject changes
-  React.useEffect(() => {
-    if (prefilledSubject) {
-      setValue("subject", prefilledSubject);
-    }
+  useEffect(() => {
+    if (prefilledSubject) setValue("subject", prefilledSubject);
   }, [prefilledSubject, setValue]);
 
-  // Security measure: Rate limiting
   const checkRateLimit = (): boolean => {
-    const lastSubmission = localStorage.getItem("lastFormSubmission");
-    const now = new Date().getTime();
-
-    if (lastSubmission && now - parseInt(lastSubmission) < 60000) {
-      // 1 minute
+    const last = localStorage.getItem("lastFormSubmission");
+    const now = Date.now();
+    if (last && now - parseInt(last) < 60000) {
       toastContainerRef.current?.addToast(
         "Please wait before submitting again.",
       );
       return false;
     }
-
     localStorage.setItem("lastFormSubmission", now.toString());
     return true;
   };
 
-
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    // Security check: Web3Forms Botcheck
-    if (data.botcheck) {
-      console.log("Potential bot detected");
-      return;
-    }
-
+    if (data.botcheck) return;
     if (!checkRateLimit()) return;
 
     setIsSubmitting(true);
@@ -155,332 +123,237 @@ const ContactForm: React.FC<ContactFormProps> = ({ prefilledSubject }) => {
         },
         body: JSON.stringify(data),
       });
-
       const result = await response.json();
 
       if (result.success) {
-        toastContainerRef.current?.addToast("Message sent successfully!");
+        toastContainerRef.current?.addToast(
+          "Message sent successfully. I'll reply within 24 hours.",
+        );
         reset();
       } else {
-        throw new Error(result.message || "Error sending message");
+        throw new Error(result.message || "Something went wrong");
       }
     } catch (error: unknown) {
-      console.error("Error submitting form:", error);
-      let errorMessage = "An unknown error occurred. Please try again.";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      toastContainerRef.current?.addToast(
-        `Error sending message: ${errorMessage}. Please try again.`,
-      );
+      let msg = "An unknown error occurred. Please try again.";
+      if (error instanceof Error) msg = error.message;
+      toastContainerRef.current?.addToast(`Error: ${msg}`);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="w-full bg-[#1e1e2f]/80 backdrop-blur-md rounded-2xl border border-white/5 shadow-2xl p-6 md:p-10">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 md:space-y-6" style={{ colorScheme: 'dark' }}>
-        {/* Web3Forms Hidden Fields inside React Logic */}
-        <input type="hidden" value="96cebeae-a016-4cfe-9063-259effb11937" {...register("access_key")} />
-        <input type="hidden" value={selectedSubject || "New message from briangiordano.com"} {...register("subject")} />
-        <input type="hidden" value="https://briangiordano.com/#thank-you" {...register("redirect")} />
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+    <div className="w-full bg-[#161b2a] py-8">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 px-5">
+        <input type="hidden" {...register("access_key")} />
+        <input type="hidden" {...register("redirect")} />
+
+        {/* Name + Email */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label
-              className="block text-silverMist font-medium text-xs tracking-wider mb-1.5 uppercase"
-              htmlFor="name"
-            >
+            <label className="block text-silverMist text-[10px] tracking-[2px] mb-1.5 uppercase font-mono">
               Name
             </label>
             <input
-              type="text"
-              id="name"
-              placeholder="Your name"
               {...register("name")}
-              className={`w-full p-3.5 rounded-xl bg-[#0f172a] border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 ${
-                errors.name
-                  ? "border-lightCrimson bg-lightCrimson/10"
-                  : "border-white/10 focus:border-gold hover:border-white/20"
-              }`}
-              style={{ backgroundColor: '#0f172a' }}
+              placeholder="Your name"
+              className="w-full rounded-2xl bg-[#0f172a] border border-white/10 px-5 py-3.5 text-ivoryWhite placeholder:text-silverMist/40 focus:border-gold transition-all text-[15px]"
             />
             {errors.name && (
-              <p className="text-lightCrimson text-xs mt-1">{errors.name.message}</p>
+              <p className="text-lightCrimson text-xs mt-1">
+                {errors.name.message}
+              </p>
             )}
           </div>
-
           <div>
-            <label
-              className="block text-silverMist font-medium text-xs tracking-wider mb-1.5 uppercase"
-              htmlFor="email"
-            >
+            <label className="block text-silverMist text-[10px] tracking-[2px] mb-1.5 uppercase font-mono">
               Email
             </label>
             <input
               type="email"
-              id="email"
-              placeholder="Your email"
               {...register("email")}
-              className={`w-full p-3.5 rounded-xl bg-[#0f172a] border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 ${
-                errors.email
-                  ? "border-lightCrimson bg-lightCrimson/10"
-                  : "border-white/10 focus:border-gold hover:border-white/20"
-              }`}
-              style={{ backgroundColor: '#0f172a' }}
+              placeholder="you@business.com"
+              className="w-full rounded-2xl bg-[#0f172a] border border-white/10 px-5 py-3.5 text-ivoryWhite placeholder:text-silverMist/40 focus:border-gold transition-all text-[15px]"
             />
             {errors.email && (
-              <p className="text-lightCrimson text-xs mt-1">{errors.email.message}</p>
+              <p className="text-lightCrimson text-xs mt-1">
+                {errors.email.message}
+              </p>
             )}
           </div>
         </div>
 
+        {/* Subject */}
         <div>
-          <label
-            className="block text-silverMist font-medium text-xs tracking-wider mb-1.5 uppercase"
-            htmlFor="subject_select"
-          >
+          <label className="block text-silverMist text-[10px] tracking-[2px] mb-1.5 uppercase font-mono">
             Subject
           </label>
+
           <div className="relative">
             <select
-              id="subject_select"
               {...register("subject")}
-              className={`w-full p-3.5 rounded-xl bg-[#0f172a] border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 appearance-none ${
-                errors.subject
-                  ? "border-lightCrimson bg-lightCrimson/10"
-                  : "border-white/10 focus:border-gold hover:border-white/20"
-              }`}
-              style={{ backgroundColor: '#0f172a' }}
+              className="w-full appearance-none rounded-2xl bg-[#0f172a] border border-white/10 px-5 py-3.5 pr-12 text-ivoryWhite focus:border-gold transition-all text-[15px]"
             >
-              <option value="" className="bg-[#0f172a]">Select a subject</option>
-              <option value="Site Rescue" className="bg-[#0f172a]">Site Rescue</option>
-              <option value="Starter Build" className="bg-[#0f172a]">Starter Build</option>
-              <option value="Monthly Care" className="bg-[#0f172a]">Monthly Care</option>
-              <option value="general" className="bg-[#0f172a]">General Inquiry</option>
-              <option value="job" className="bg-[#0f172a]">Job Opportunity</option>
-              <option value="collaboration" className="bg-[#0f172a]">Collaboration</option>
-              <option value="other" className="bg-[#0f172a]">Other</option>
+              <option value="">Select a subject</option>
+              <option value="Site Rescue">Site Rescue</option>
+              <option value="Starter Build">Starter Build</option>
+              <option value="Monthly Care">Monthly Care</option>
+              <option value="general">General Inquiry</option>
+              <option value="job">Job Opportunity</option>
+              <option value="collaboration">Collaboration</option>
+              <option value="other">Other</option>
             </select>
-            {/* Custom Arrow */}
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-silverMist text-xs">
-              ▼
+
+            {/* Custom chevron */}
+            <div className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-silverMist">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
             </div>
           </div>
+
           {selectedSubject === "Monthly Care" && (
-            <p className="text-gold text-xs mt-2 italic">
-              I’ll send you the service agreement to review and e-sign. Retainer begins once signed.
+            <p className="text-gold text-xs mt-1.5 tracking-wide">
+              I’ll send you the service agreement to review and e-sign.
             </p>
-          )}
-          {errors.subject && (
-            <p className="text-lightCrimson text-xs mt-1">{errors.subject.message}</p>
           )}
         </div>
 
-        {/* Dynamic Details Field */}
-        <div className="space-y-1.5">
-          <label
-            className="block text-silverMist font-medium text-xs tracking-wider mb-1.5 uppercase"
-            htmlFor="details"
-          >
+        {/* Dynamic Details */}
+        <div>
+          <label className="block text-silverMist text-[10px] tracking-[2px] mb-1.5 uppercase font-mono">
             {detailsConfig.label}
           </label>
           <textarea
-            id="details"
-            placeholder={detailsConfig.placeholder}
             {...register("details")}
+            placeholder={detailsConfig.placeholder}
             rows={3}
-            className={`w-full p-3.5 rounded-xl bg-[#0f172a] border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 custom-scrollbar ${
-              errors.details
-                ? "border-lightCrimson bg-lightCrimson/10"
-                : "border-white/10 focus:border-gold hover:border-white/20"
-            }`}
+            className="w-full rounded-2xl bg-[#0f172a] border border-white/10 px-5 py-3.5 text-ivoryWhite placeholder:text-silverMist/40 focus:border-gold transition-all resize-y text-[15px]"
           />
-          {errors.details && (
-            <p className="text-lightCrimson text-xs mt-1">{errors.details.message}</p>
-          )}
         </div>
 
+        {/* Message */}
         <div>
-          <label
-            className="block text-silverMist font-medium text-xs tracking-wider mb-1.5 uppercase"
-            htmlFor="message"
-          >
+          <label className="block text-silverMist text-[10px] tracking-[2px] mb-1.5 uppercase font-mono">
             Message
           </label>
           <textarea
-            id="message"
-            placeholder="Your message..."
             {...register("message")}
-            className={`w-full p-3.5 rounded-xl bg-[#0f172a] border text-ivoryWhite text-base focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 custom-scrollbar ${
-              errors.message
-                ? "border-lightCrimson bg-lightCrimson/10"
-                : "border-white/10 focus:border-gold hover:border-white/20"
-            }`}
-            rows={6}
-            style={{ backgroundColor: '#0f172a' }}
+            placeholder="Tell me more about your project or goals..."
+            rows={5}
+            className="w-full rounded-2xl bg-[#0f172a] border border-white/10 px-5 py-3.5 text-ivoryWhite placeholder:text-silverMist/40 focus:border-gold transition-all resize-y text-[15px]"
           />
           {errors.message && (
-            <p className="text-lightCrimson text-xs mt-1">{errors.message.message}</p>
+            <p className="text-lightCrimson text-xs mt-1">
+              {errors.message.message}
+            </p>
           )}
         </div>
 
-        {/* Botcheck field */}
-        <input
-          type="text"
-          style={{ display: "none" }}
-          className="hidden"
-          {...register("botcheck")}
-        />
+        <input type="text" className="hidden" {...register("botcheck")} />
 
-        <div className="flex items-center">
-          <input
-            className="w-4 h-4 rounded border-white/10 bg-[#0f172a] text-gold focus:ring-gold transition-colors hover:border-gold/50 cursor-pointer"
-            type="checkbox"
-            id="consent"
-            {...register("consent")}
-          />
-          <label htmlFor="consent" className="ml-2 text-silverMist text-xs cursor-pointer">
-            I agree to the{" "}
-            <span
-              className="text-gold hover:text-ivoryWhite underline transition-colors"
-              onClick={() => setIsModalOpen(true)}
+        {/* Consent + Submit */}
+        <div className="pt-1 space-y-5">
+          <div className="flex items-start gap-3">
+            <input
+              type="checkbox"
+              id="consent"
+              {...register("consent")}
+              className="mt-1 h-4 w-4 accent-gold cursor-pointer"
+            />
+            <label
+              htmlFor="consent"
+              className="text-silverMist text-[13px] leading-snug"
             >
-              privacy policy
-            </span>
-          </label>
-          {errors.consent && (
-            <p className="text-lightCrimson text-xs ml-4">{errors.consent.message}</p>
-          )}
-        </div>
+              I agree to the{" "}
+              <button
+                type="button"
+                onClick={() => setShowPrivacyModal(true)}
+                className="text-gold underline hover:text-ivoryWhite transition-colors"
+              >
+                privacy policy
+              </button>
+            </label>
+          </div>
 
-
-
-        <div className="pt-2">
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full py-3.5 rounded-xl text-base font-bold uppercase tracking-widest transition-all duration-300 flex items-center justify-center ${
-              isSubmitting
-                ? "bg-mediumCharcoal text-silverMist cursor-not-allowed"
-                : "bg-gold text-darkSlate hover:bg-ivoryWhite shadow-[0_4px_20px_rgba(255,215,0,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]"
-            }`}
+            className="w-full py-4 rounded-2xl bg-gold text-darkSlate font-bold text-base tracking-[2px] uppercase hover:bg-ivoryWhite active:scale-[0.985] transition-all disabled:opacity-70"
           >
-            {isSubmitting ? (
-              <>
-                <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                    fill="none"
-                  />
-                  <path
-                    d="M4 12a8 8 0 018-8"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                </svg>
-                Sending...
-              </>
-            ) : (
-              "Submit"
-            )}
+            {isSubmitting ? "Sending..." : "Send Message"}
           </button>
         </div>
       </form>
+
       <ToastContainer ref={toastContainerRef} />
 
-      {/* Modal for Privacy Policy */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <div className="container mx-auto mb-10 md:p-4">
-          <div className="flex flex-col md:flex-row bg-charcoal p-4">
-            {" "}
-            {/* Flex layout */}
-            <div className="font-primary text-ivoryWhite flex flex-col justify-between w-full md:w-2/3 p-4">
-              <h1 className="text-xl font-bold mb-2">Privacy Policy</h1>
-              <p>
-                Your privacy is important to us. This privacy policy explains
-                how we collect, use, and protect your information when you
-                submit a form on our website.
-              </p>
+      <Modal
+        isOpen={showPrivacyModal}
+        onClose={() => setShowPrivacyModal(false)}
+        title="Privacy Policy"
+      >
+        <div className="space-y-6 text-[15px] leading-relaxed text-silverMist">
+          <p>
+            Your privacy is important to me. This policy explains how I collect
+            and protect your information.
+          </p>
 
-              {/* Introduction Section */}
-              <h2>Information We Collect</h2>
-              <p>
-                When you submit a form, we may collect the following
-                information:
-              </p>
-              <ul>
-                <li>
-                  Personal identification information (Name and email address.)
-                </li>
-                {/* Add any other data you're collecting via the form */}
-                {/* Example: <li>Phone number, address</li> */}
-              </ul>
+          <div>
+            <h4 className="font-semibold text-ivoryWhite mb-2">
+              Information Collected via Forms
+            </h4>
+            <p>
+              When you submit the contact form, I collect your name, email
+              address, and message details so I can respond to your inquiry.
+            </p>
+          </div>
 
-              <h2>How We Use Your Information</h2>
-              <p>We use the information we collect in the following ways:</p>
-              <ul>
-                <li>To respond to your inquiries or submissions</li>
-                {/* Add any other purposes you use the collected data */}
-                {/* Example: <li>To send promotional emails</li> */}
-              </ul>
+          <div>
+            <h4 className="font-semibold text-ivoryWhite mb-2">
+              Website Analytics
+            </h4>
+            <p>
+              This site uses <strong>Google Analytics 4</strong> and{" "}
+              <strong>Google Tag Manager</strong> to understand how visitors
+              interact with the site. These tools collect anonymous data such as
+              pages visited, time spent, device type, and approximate location.
+              This data is used only to improve the website.
+            </p>
+            <p className="mt-2 text-sm">
+              Learn how Google processes this data:{" "}
+              <a
+                href="https://policies.google.com/technologies/partner-sites"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gold underline hover:text-ivoryWhite"
+              >
+                Google’s partner sites policy
+              </a>
+              .
+            </p>
+          </div>
 
-              <h2>How We Protect Your Information</h2>
-              <p>
-                We implement a variety of security measures to maintain the
-                safety of your personal information when you submit a form on
-                our website. These measures include:
-              </p>
-              <ul>
-                <li>HTTPS Encryption</li>
-                <li>Email Transmission Security</li>
-                <li>Regular security audits and updates</li>
-                {/* Add any other security measures you're taking */}
-                {/* Example: <li>Secure server hosting</li> */}
-              </ul>
-
-              <h2>Sharing Your Information</h2>
-              <p>
-                We do not sell, trade, or otherwise transfer your personally
-                identifiable information to outside parties unless we provide
-                users with advance notice. This does not include website hosting
-                partners and other parties who assist us in operating our
-                website, conducting our business, or serving our users, so long
-                as those parties agree to keep this information confidential.
-              </p>
-
-              {/* Update based on your specific conditions */}
-              <p>
-                We may also release information when its release is appropriate
-                to comply with the law, enforce our site policies, or protect
-                ours or others&apos; rights, property, or safety.
-              </p>
-
-              <h2>Your Consent</h2>
-              <p>
-                By using our site and submitting a form, you consent to our
-                privacy policy.
-              </p>
-
-              <h2>Changes to Our Privacy Policy</h2>
-              <p>
-                We may update this privacy policy from time to time. We will
-                notify you of any changes by posting the new policy on this
-                page. You are advised to review this privacy policy periodically
-                for any changes.
-              </p>
-
-              <h2>Contact Us</h2>
-              <p>
-                If you have any questions regarding this privacy policy, you may
-                contact us using the contact form:
-              </p>
-            </div>
+          <div>
+            <h4 className="font-semibold text-ivoryWhite mb-2">
+              How Your Information Is Used
+            </h4>
+            <p>
+              I only use the information you provide to respond to your inquiry.
+              I do not sell or share your personal information for marketing
+              purposes.
+            </p>
           </div>
         </div>
       </Modal>

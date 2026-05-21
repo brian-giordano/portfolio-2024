@@ -6,7 +6,7 @@ import {
   motion,
   useScroll,
   useTransform,
-  animate,
+  useMotionValueEvent,
 } from "framer-motion";
 import Header from "@/components/ui/Header";
 import ExperienceSection from "@/components/ExperienceSection";
@@ -108,7 +108,7 @@ const CodeSnippet = () => {
       <div className="text-silverMist pl-2">
         return &lt;<span className="text-gold">Dashboard</span> /&gt;
         <span
-          className={`${cursorVisible ? "opacity-100" : "opacity-0"} text-gold`}
+          className={`${cursorVisible ? "opacity: 100" : "opacity-0"} text-gold`}
         >
           |
         </span>
@@ -226,6 +226,13 @@ const Home: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<string>("projects");
   const [contactSubject, setContactSubject] = useState<string>("");
   const [isAtBottom, setIsAtBottom] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    setShowBackToTop(latest > 500);
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -239,7 +246,6 @@ const Home: React.FC = () => {
   }, []);
 
   const introSectionRef = useRef<HTMLElement | null>(null);
-  const { scrollY } = useScroll();
 
   // Parallax
   const clusterY = useTransform(scrollY, [0, 500], [0, 100]);
@@ -247,7 +253,6 @@ const Home: React.FC = () => {
   const clusterRotate = useTransform(scrollY, [0, 500], [0, -5]);
   const phoneRotate = useTransform(scrollY, [0, 500], [3, 10]);
 
-  const [forceHeaderCompact, setForceHeaderCompact] = useState(false);
   const isNavigatingRef = useRef(false);
 
   // === FIXED OBSERVER WITH DELAY + DEFAULT "projects" ===
@@ -256,7 +261,6 @@ const Home: React.FC = () => {
       const sections = document.querySelectorAll("section[id]");
       const observer = new IntersectionObserver(
         (entries) => {
-          // SHIELD: Ignore observer updates if we are in an automated navigation scroll
           if (isNavigatingRef.current) {
             return;
           }
@@ -278,55 +282,29 @@ const Home: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Helper for absolute document coordinates
-  const getAbsoluteOffsetTop = (element: HTMLElement) => {
-    const rect = element.getBoundingClientRect();
-    const coordinate = rect.top + window.scrollY;
-    return coordinate;
-  };
-
-  const handleNavClick = (sectionId: string, instant = false) => {
+  const handleNavClick = (sectionId: string) => {
     const section = document.getElementById(sectionId);
-    if (section) {
-      if (instant) {
-        setForceHeaderCompact(true);
-        setCurrentSection(sectionId);
-        const absoluteTop = getAbsoluteOffsetTop(section);
-        window.scrollTo(0, absoluteTop - 68);
-        return;
+    if (!section) return;
+
+    setCurrentSection(sectionId);
+
+    section.scrollIntoView({ behavior: "auto", block: "start" });
+
+    requestAnimationFrame(() => {
+      const headerHeight = 68;
+      const sectionRect = section.getBoundingClientRect();
+      const currentOffset = sectionRect.top;
+
+      if (currentOffset < headerHeight || currentOffset > headerHeight + 10) {
+        const targetY = window.scrollY + currentOffset - headerHeight;
+        window.scrollTo(0, targetY);
       }
-
-      // 1. Instantly Lock Layout & Trigger Nav Glide
-      setForceHeaderCompact(true);
-      isNavigatingRef.current = true;
-      setCurrentSection(sectionId);
-
-      // 2. Immediate Measurement & Launch
-      // Since our Header's compact height is stable (68px), we measure instantly
-      const absoluteTop = getAbsoluteOffsetTop(section);
-      const targetY = absoluteTop - 68;
-      
-      // 3. High-Velocity Kinetic Scroll
-      const controls = animate(window.scrollY, targetY, {
-        duration: 0.85,
-        ease: [0.16, 1, 0.3, 1],
-        onUpdate: (latest) => window.scrollTo(0, latest)
-      });
-
-      // 4. Unlock once the animation settles
-      controls.then(() => {
-        // Stay forced compact for a moment to ensure stability
-        setTimeout(() => {
-          setForceHeaderCompact(false);
-          isNavigatingRef.current = false;
-        }, 150);
-      });
-    }
+    });
   };
 
   const handleServiceClick = (subject: string) => {
     setContactSubject(subject);
-    handleNavClick("contact", true);
+    handleNavClick("contact");
   };
 
   return (
@@ -335,11 +313,10 @@ const Home: React.FC = () => {
         name="Brian Giordano"
         currentSection={currentSection}
         onNavClick={handleNavClick}
-        forceCompact={forceHeaderCompact}
       />
 
       <main className="w-full lg:pt-2">
-        {/* HERO SECTION — restored */}
+        {/* HERO SECTION */}
         <motion.section
           ref={introSectionRef}
           id="hero"
@@ -350,7 +327,6 @@ const Home: React.FC = () => {
         >
           <HeroBackground />
 
-          {/* Background gradient (Optimized for GPU) */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
@@ -359,9 +335,7 @@ const Home: React.FC = () => {
             }}
           />
 
-          {/* Your original floating cards (DashboardCard, CodeSnippet, etc.) */}
           <div className="hidden 2xl:block pointer-events-none">
-            {/* LEFT CLUSTER */}
             <motion.div
               className="absolute top-[20%] left-8 z-0 opacity-40 scale-75 optimize-gpu"
               style={{ y: clusterY, rotate: clusterRotate }}
@@ -406,7 +380,6 @@ const Home: React.FC = () => {
               </motion.div>
             </motion.div>
 
-            {/* RIGHT PHONE */}
             <motion.div
               className="absolute top-[30%] right-8 z-0 opacity-40 scale-100 optimize-gpu"
               style={{ y: phoneY, rotate: phoneRotate }}
@@ -427,8 +400,7 @@ const Home: React.FC = () => {
             </motion.div>
           </div>
 
-            {/* Hero Content */}
-            <div className="relative z-10 text-center max-w-3xl mx-auto py-6 px-6">
+          <div className="relative z-10 text-center max-w-3xl mx-auto py-6 px-6">
             <motion.h1
               className="text-4xl sm:text-5xl md:text-6xl font-primary font-extrabold tracking-tight text-ivoryWhite leading-none"
               variants={itemVariants}
@@ -440,14 +412,15 @@ const Home: React.FC = () => {
               className="text-2xl sm:text-3xl md:text-4xl font-primary font-extrabold bg-gradient-to-tr from-gold to-ivoryWhite bg-clip-text text-transparent mt-3 leading-tight"
               variants={itemVariants}
             >
-              Expert Website Rescue, Starter Sites, & Monthly Care.
+              Expert Website Rescue, Starter Sites, &amp; Monthly Care.
             </motion.h2>
 
             <motion.p
               className="text-lg md:text-xl text-silverMist mt-6 max-w-md mx-auto"
               variants={itemVariants}
             >
-              I build and maintain performance-driven websites that help local businesses grow and succeed online.
+              I build and maintain performance-driven websites that help local
+              businesses grow and succeed online.
             </motion.p>
 
             <motion.div
@@ -477,28 +450,25 @@ const Home: React.FC = () => {
             </motion.div>
           </div>
         </motion.section>
-        
-        {/* Bottom Focus Blur Overlay (Tinted Frosted Glass with smooth mask gradient) */}
-        <motion.div 
+
+        {/* Subtle Bottom Glass Fade — Premium & Contained */}
+        <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: isAtBottom ? 0 : 1 }}
-          transition={{ duration: 1.2, ease: "easeInOut" }}
-          className="fixed bottom-0 left-0 right-0 h-32 pointer-events-none z-[45]" 
-          style={{ 
-            background: 'linear-gradient(to top, rgba(15, 23, 42, 0.4) 0%, rgba(20, 184, 166, 0.05) 50%, transparent 100%)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
-            maskImage: 'linear-gradient(to top, black 0%, transparent 100%)', 
-            WebkitMaskImage: 'linear-gradient(to top, black 0%, transparent 100%)' 
+          animate={{ opacity: isAtBottom ? 0 : 0.85 }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+          className="fixed bottom-0 left-0 right-0 h-16 md:h-20 pointer-events-none z-[45]"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(15, 23, 42, 0.35) 0%, rgba(15, 23, 42, 0.12) 55%, transparent 100%)",
+            backdropFilter: "blur(6px)",
+            WebkitBackdropFilter: "blur(6px)",
+            maskImage: "linear-gradient(to top, black 0%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(to top, black 0%, transparent 100%)",
           }}
         />
 
-
-        {/* All other sections */}
-        <section
-          id="projects"
-          className="scroll-mt-[68px] bg-darkSlate pb-32 content-auto"
-        >
+        <section id="projects" className="scroll-mt-[68px] bg-darkSlate pb-32">
           <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
             <div className="w-full h-[5px] bg-gold" />
             <div className="max-w-7xl mx-auto">
@@ -510,10 +480,7 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        <section
-          id="services"
-          className="scroll-mt-[68px] bg-darkSlate pb-32 content-auto"
-        >
+        <section id="services" className="scroll-mt-[68px] bg-darkSlate pb-32">
           <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
             <div className="w-full h-[5px] bg-gold" />
             <div className="max-w-7xl mx-auto">
@@ -525,10 +492,7 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        <section
-          id="process"
-          className="scroll-mt-[68px] bg-darkSlate pb-32 content-auto"
-        >
+        <section id="process" className="scroll-mt-[68px] bg-darkSlate pb-32">
           <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
             <div className="w-full h-[5px] bg-gold" />
             <div className="max-w-7xl mx-auto">
@@ -542,7 +506,7 @@ const Home: React.FC = () => {
 
         <section
           id="experience"
-          className="scroll-mt-[68px] bg-darkSlate pb-32 content-auto"
+          className="scroll-mt-[68px] bg-darkSlate pb-32"
         >
           <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
             <div className="w-full h-[5px] bg-gold" />
@@ -555,10 +519,7 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        <section
-          id="education"
-          className="scroll-mt-[68px] bg-darkSlate pb-32 content-auto"
-        >
+        <section id="education" className="scroll-mt-[68px] bg-darkSlate pb-32">
           <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
             <div className="w-full h-[5px] bg-gold" />
             <div className="max-w-7xl mx-auto">
@@ -570,10 +531,7 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        <section
-          id="skills"
-          className="scroll-mt-[68px] bg-darkSlate pb-32 content-auto"
-        >
+        <section id="skills" className="scroll-mt-[68px] bg-darkSlate pb-32">
           <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
             <div className="w-full h-[5px] bg-gold" />
             <div className="max-w-7xl mx-auto">
@@ -585,10 +543,7 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        <section
-          id="about"
-          className="scroll-mt-[68px] bg-darkSlate pb-32 content-auto"
-        >
+        <section id="about" className="scroll-mt-[68px] bg-darkSlate pb-32">
           <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
             <div className="w-full h-[5px] bg-gold" />
             <div className="max-w-7xl mx-auto">
@@ -602,7 +557,7 @@ const Home: React.FC = () => {
 
         <section
           id="contact"
-          className="scroll-mt-[68px] bg-darkSlate pb-32 min-h-screen content-auto"
+          className="scroll-mt-[68px] bg-darkSlate pb-32 min-h-screen"
         >
           <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
             <div className="w-full h-[5px] bg-gold" />
@@ -610,7 +565,8 @@ const Home: React.FC = () => {
               <SectionHeader name="Contact" bandColor="gold" />
             </div>
           </div>
-          <div className="max-w-7xl mx-auto px-6 section-content md:pb-6">
+
+          <div className="w-full max-w-7xl mx-auto px-0 md:px-6 section-content md:pb-6">
             <div className="w-full flex flex-col lg:flex-row gap-12">
               <div className="w-full lg:w-[62%] lg:mb-0">
                 <ContactSection subject={contactSubject} />
@@ -628,16 +584,29 @@ const Home: React.FC = () => {
 
         {/* Back-to-Top FAB */}
         <AnimatePresence>
-          {scrollY.get() > 500 && (
+          {showBackToTop && (
             <motion.button
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="fixed bottom-6 right-6 z-50 p-3 bg-gold text-darkSlate rounded-full shadow-lg shadow-gold/30 hover:scale-110 transition-transform"
+              className="fixed bottom-6 right-6 z-50 flex h-11 w-11 items-center justify-center rounded-full bg-gold text-darkSlate shadow-[0_4px_20px_rgba(255,215,0,0.25)] hover:scale-110 active:scale-95 transition-all duration-200"
               aria-label="Back to top"
             >
-              ↑
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.75}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M5 10l7-7m0 0l7 7m-7-7v18"
+                />
+              </svg>
             </motion.button>
           )}
         </AnimatePresence>

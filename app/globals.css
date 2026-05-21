@@ -166,10 +166,6 @@ header {
   will-change: transform;
 }
 
-.content-auto {
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 1000px; /* placeholder size to prevent jump */
-}
 
 .duration-3000 {
   transition-duration: var(--transition-duration-long);
