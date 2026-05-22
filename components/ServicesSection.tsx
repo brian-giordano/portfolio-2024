@@ -128,7 +128,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = () => {
           extraContent={
             <div className="mb-8">
               <a
-                href="https://buy.stripe.com/test_14AbJ25Vf3oV2mS8527bW02"
+                href="https://buy.stripe.com/6oUfZidsw4Mm6v11GlfrW00"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block w-full text-center bg-white text-black font-bold py-4 rounded-xl hover:bg-yellow-300 transition-colors mb-4"
@@ -156,7 +156,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = () => {
           extraContent={
             <div className="mb-8">
               <a
-                href="https://buy.stripe.com/test_6oUcN6dnHgbHbXs1GE7bW04"
+                href="https://buy.stripe.com/8x200k1JO92C2eL70FfrW03"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block w-full text-center bg-white text-black font-bold py-4 rounded-xl hover:bg-yellow-300 transition-colors mb-4"
