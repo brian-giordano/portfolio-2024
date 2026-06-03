@@ -7,6 +7,7 @@ import CardsList from "./ui/CardsList";
 // Import your new thumbnail PNGs
 import VisionDashboardThumbnail from "../assets/images/vision-dashboard-thumbnail-v2.png";
 import GaspThumbnail from "../assets/images/portfolio-GASP-thumbnail-v2.png";
+import NeatThumbnail from "../assets/images/neat-thumbnail.png";
 import InsuranceAIThumbnail from "../assets/images/insurance-ai-thumbnail.png";
 import HIISonarThumbnail from "../assets/images/hii-sonar-thumbnail.png";
 
@@ -123,34 +124,49 @@ const ProjectsSection: React.FC = () => {
       // },
 
       {
-        imageUrl: GaspThumbnail,
-        title: "Grand Anse Surgery Project",
-        alt: "Grand Anse Surgery Project website screenshot",
-        orgName: "Web Consulting & Management",
-        orgLink: "https://www.grandansesurgeryproject.org",
+        imageUrl: NeatThumbnail,
+        videoUrl: "/videos/neat-loop.mp4",
+        title: "NEAT Browser Extension",
+        alt: "NEAT Browser Extension",
+        orgName: "Full-Stack Product Development",
+        orgLink: "https://getneat.io",
         description: (
           <p className="text-gray-200">
-            I consulted with the Grand Anse Surgery Project to curate a
-            Squarespace website that would meet their donation and communication
-            needs, while allowing their team flexibility in design updates and
-            ease of administration.
+            Designed and built the core functionality, UI/UX, and user experience
+            for a privacy-focused Chrome extension, guiding it from initial
+            concept to approval on the Chrome Web Store.
           </p>
         ),
         stackUsed: [
-          { name: "Squarespace", category: "Frontend" },
-          { name: "Adobe CS", category: "Design" },
+          { name: "Chrome Extension API", category: "Frontend" },
+          { name: "UI/UX Design", category: "Design" },
         ],
         moreDetails: (
           <div className="text-gray-200">
             <p>
-              Provided web consulting and management services to help the
-              nonprofit effectively communicate their mission and accept
-              donations online.
+              Managed the entire product lifecycle including development, beta
+              testing, marketing, and the Web Store submission process.
             </p>
-            <p>
-              The site is designed for ease of use and flexibility for the
-              client&apos;s team.
-            </p>
+            <ul className="list-disc list-inside mt-2">
+              <li>
+                Designed and built the core functionality and user experience for the extension.
+              </li>
+              <li>
+                Set up and managed private beta testing infrastructure, including
+                a dedicated Discord server for controlled tester onboarding and feedback.
+              </li>
+              <li>
+                Created all marketing and onboarding materials for the beta program.
+              </li>
+              <li>
+                Prepared, submitted, and successfully received approval on the
+                Google Chrome Web Store.
+              </li>
+              <li>
+                Currently managing a private/unlisted beta rollout to maintain
+                testing control.
+              </li>
+            </ul>
           </div>
         ),
         sizes: "(max-width: 1024px) 100vw, 1024px",
@@ -158,9 +174,9 @@ const ProjectsSection: React.FC = () => {
           useStyled: true,
           accentColor: "gold",
           bgGradient: "from-mediumCharcoal to-darkSlate",
-          thumbnailType: "grandAnse",
+          thumbnailType: "neatBrowser", // Updated type
           animationKey: "scanLine",
-          projectImageUrl: GaspThumbnail.src,
+          projectImageUrl: NeatThumbnail.src,
         },
       },
       {
@@ -383,15 +399,26 @@ const ProjectsSection: React.FC = () => {
                     </button>
                   </div>
 
-                  <div className="relative w-full aspect-video mb-6 overflow-hidden rounded group">
-                    <NextImage
-                      src={selected.imageUrl as string}
-                      alt={selected.alt}
-                      fill
-                      style={{ objectFit: "cover" }}
-                      sizes="(max-width: 1024px) 100vw, 1024px"
-                      className="group-hover:scale-105 transition-transform duration-500"
-                    />
+                  <div className="relative w-full aspect-video mb-6 overflow-hidden rounded group bg-black">
+                    {selected.videoUrl ? (
+                      <video
+                        src={selected.videoUrl}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <NextImage
+                        src={selected.imageUrl as string}
+                        alt={selected.alt}
+                        fill
+                        style={{ objectFit: "cover" }}
+                        sizes="(max-width: 1024px) 100vw, 1024px"
+                        className="group-hover:scale-105 transition-transform duration-500"
+                      />
+                    )}
                   </div>
 
                   {stack.length > 0 && (

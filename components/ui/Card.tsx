@@ -19,6 +19,7 @@ export interface StyledThumbnailConfig {
 export interface CardProps {
   imageUrl?: string | StaticImageData;
   logoUrl?: string;
+  videoUrl?: string;
   title: string;
   alt: string;
   orgName: string;
