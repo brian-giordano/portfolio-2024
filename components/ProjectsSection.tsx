@@ -6,7 +6,9 @@ import CardsList from "./ui/CardsList";
 
 // Import your new thumbnail PNGs
 import VisionDashboardThumbnail from "../assets/images/vision-dashboard-thumbnail-v2.png";
-import GaspThumbnail from "../assets/images/portfolio-GASP-thumbnail-v2.png";
+import GaspDesktopHero from "../assets/images/gasp-desktop-hero.png";
+import GaspMobileJoin from "../assets/images/gasp-mobile-join.png";
+import GaspDesktopTakeAction from "../assets/images/gasp-desktop-take-action.png";
 import NeatThumbnail from "../assets/images/neat-thumbnail.png";
 import InsuranceAIThumbnail from "../assets/images/insurance-ai-thumbnail.png";
 import HIISonarThumbnail from "../assets/images/hii-sonar-thumbnail.png";
@@ -29,100 +31,54 @@ const ProjectsSection: React.FC = () => {
   const projects: CardProps[] = useMemo(
     () => [
       {
-        imageUrl: VisionDashboardThumbnail,
-        title: "Crypto AI Dashboard (Beta)",
-        alt: "Crypto AI Dashboard interface screenshot",
-        orgName: "Full Stack Development",
-        orgLink: "https://crypto-ai-dashboard-lovat.vercel.app/",
+        imageUrl: GaspDesktopHero,
+        title: "Grand Anse Surgery Project",
+        alt: "GASP Haiti website redesign hero section",
+        orgName: "UI/UX & Full Stack Development",
+        orgLink: "https://gasp-haiti.vercel.app/",
         description: (
           <p className="text-gray-200">
-            An in-development cryptocurrency dashboard combining real-time
-            market data with AI-powered analysis. This beta version allows users
-            to track cryptocurrencies, view basic market trends, and experiment
-            with the AI conversational interface that&apos;s currently being
-            refined.
+            Led the complete digital redesign and front-end development for the Grand Anse Surgery Project (GASP), an organization dedicated to providing life-saving surgical care in Jeremie, Haiti. The new platform translates their holistic, passionate mission into a modern, accessible web experience designed to drive volunteer engagement and donor support.
           </p>
         ),
         stackUsed: [
           { name: "Next.js", category: "Frontend" },
           { name: "TypeScript", category: "Frontend" },
           { name: "Tailwind CSS", category: "Frontend" },
-          { name: "Shadcn UI", category: "Frontend" },
-          { name: "CoinGecko API", category: "Backend" },
-          { name: "FastAPI", category: "Backend" },
-          { name: "Python", category: "Backend" },
-          { name: "Vercel", category: "DevOps" },
+          { name: "UI/UX Design", category: "Design" },
         ],
         moreDetails: (
           <div className="text-gray-200">
             <p>
-              This beta dashboard provides real-time market data, AI-driven
-              insights, and a conversational interface to help users analyze
-              cryptocurrency trends.
+              The redesign focused on creating an empathetic, premium aesthetic that honors the organization&apos;s critical work while modernizing their digital presence.
             </p>
-            <ul className="list-disc list-inside mt-2">
-              <li>Real-time price tracking</li>
-              <li>AI-powered market predictions</li>
-              <li>Interactive chat interface</li>
-              <li>Built with Next.js, FastAPI, and Python</li>
-              <li>Deployed on Vercel</li>
+            <ul className="list-disc list-inside mt-4 mb-6 space-y-2">
+              <li>Designed a vibrant, responsive interface reflecting the spirit of the Caribbean.</li>
+              <li>Built with modern Next.js features for optimal performance and SEO.</li>
+              <li>Implemented smooth, scroll-driven animations to enhance storytelling.</li>
+              <li>Optimized accessibility to ensure the mission reaches a wider audience.</li>
             </ul>
+            <div className="relative mt-8 mb-6 w-full group">
+              <div className="relative w-[90%] sm:w-[85%] aspect-[16/10] sm:aspect-[16/9] rounded-lg overflow-hidden border border-gold/20 shadow-lg bg-black">
+                <NextImage src={GaspDesktopTakeAction.src} alt="GASP Take Action Page" fill style={{ objectFit: "cover", objectPosition: "top" }} sizes="(max-width: 640px) 100vw, 85vw" />
+              </div>
+              <div className="absolute bottom-0 right-0 w-[35%] sm:w-[25%] md:w-[22%] aspect-[9/16] rounded-xl overflow-hidden border-[6px] border-darkSlate shadow-[0_20px_50px_rgba(0,0,0,0.5)] bg-black z-10">
+                <NextImage src={GaspMobileJoin.src} alt="GASP Mobile View" fill style={{ objectFit: "cover", objectPosition: "top" }} sizes="(max-width: 640px) 35vw, 25vw" />
+              </div>
+            </div>
           </div>
         ),
         sizes: "(max-width: 1024px) 100vw, 1024px",
+        objectPosition: "top",
         thumbnailConfig: {
           useStyled: true,
           accentColor: "gold",
           bgGradient: "from-mediumCharcoal to-darkSlate",
-          thumbnailType: "cryptoDashboard",
+          thumbnailType: "portfolioRedesign",
           animationKey: "scanLine",
-          projectImageUrl: VisionDashboardThumbnail.src,
+          projectImageUrl: GaspDesktopHero.src,
         },
       },
-      // {
-      //   imageUrl: PortfolioWebsiteThumbnail,
-      //   title: "Portfolio Redesign (This website!)",
-      //   alt: "Portfolio website screenshot",
-      //   orgName: "Full Stack Development",
-      //   orgLink: "",
-      //   description: (
-      //     <p className="text-gray-200">
-      //       This portfolio website represents my creative vision brought to
-      //       life, designed and built entirely by myself. It showcases my work
-      //       through custom animations, interactive elements, and thoughtful UI
-      //       design that reflects my personal aesthetic and technical abilities.
-      //     </p>
-      //   ),
-      //   stackUsed: [
-      //     { name: "React", category: "Frontend" },
-      //     { name: "TypeScript", category: "Frontend" },
-      //     { name: "Next.js", category: "Frontend" },
-      //     { name: "Tailwind CSS", category: "Frontend" },
-      //     { name: "Adobe CS", category: "Design" },
-      //   ],
-      //   moreDetails: (
-      //     <div className="text-gray-200">
-      //       <p>
-      //         The site features custom animations, interactive UI elements, and
-      //         a clean, modern design that highlights my skills and projects.
-      //       </p>
-      //       <p>
-      //         Built with React and Next.js, styled with Tailwind CSS, and
-      //         designed with Adobe Creative Suite.
-      //       </p>
-      //     </div>
-      //   ),
-      //   sizes: "(max-width: 1024px) 100vw, 1024px",
-      //   thumbnailConfig: {
-      //     useStyled: true,
-      //     accentColor: "gold",
-      //     bgGradient: "from-mediumCharcoal to-darkSlate",
-      //     thumbnailType: "portfolioRedesign",
-      //     animationKey: "scanLine",
-      //     projectImageUrl: PortfolioWebsiteThumbnail.src,
-      //   },
-      // },
-
       {
         imageUrl: NeatThumbnail,
         videoUrl: "/videos/neat-loop.mp4",
@@ -177,6 +133,57 @@ const ProjectsSection: React.FC = () => {
           thumbnailType: "neatBrowser", // Updated type
           animationKey: "scanLine",
           projectImageUrl: NeatThumbnail.src,
+        },
+      },
+      {
+        imageUrl: VisionDashboardThumbnail,
+        title: "Crypto AI Dashboard (Beta)",
+        alt: "Crypto AI Dashboard interface screenshot",
+        orgName: "Full Stack Development",
+        orgLink: "https://crypto-ai-dashboard-lovat.vercel.app/",
+        description: (
+          <p className="text-gray-200">
+            An in-development cryptocurrency dashboard combining real-time
+            market data with AI-powered analysis. This beta version allows users
+            to track cryptocurrencies, view basic market trends, and experiment
+            with the AI conversational interface that&apos;s currently being
+            refined.
+          </p>
+        ),
+        stackUsed: [
+          { name: "Next.js", category: "Frontend" },
+          { name: "TypeScript", category: "Frontend" },
+          { name: "Tailwind CSS", category: "Frontend" },
+          { name: "Shadcn UI", category: "Frontend" },
+          { name: "CoinGecko API", category: "Backend" },
+          { name: "FastAPI", category: "Backend" },
+          { name: "Python", category: "Backend" },
+          { name: "Vercel", category: "DevOps" },
+        ],
+        moreDetails: (
+          <div className="text-gray-200">
+            <p>
+              This beta dashboard provides real-time market data, AI-driven
+              insights, and a conversational interface to help users analyze
+              cryptocurrency trends.
+            </p>
+            <ul className="list-disc list-inside mt-2">
+              <li>Real-time price tracking</li>
+              <li>AI-powered market predictions</li>
+              <li>Interactive chat interface</li>
+              <li>Built with Next.js, FastAPI, and Python</li>
+              <li>Deployed on Vercel</li>
+            </ul>
+          </div>
+        ),
+        sizes: "(max-width: 1024px) 100vw, 1024px",
+        thumbnailConfig: {
+          useStyled: true,
+          accentColor: "gold",
+          bgGradient: "from-mediumCharcoal to-darkSlate",
+          thumbnailType: "cryptoDashboard",
+          animationKey: "scanLine",
+          projectImageUrl: VisionDashboardThumbnail.src,
         },
       },
       {
@@ -278,6 +285,49 @@ const ProjectsSection: React.FC = () => {
           projectImageUrl: HIISonarThumbnail.src,
         },
       },
+      // {
+      //   imageUrl: PortfolioWebsiteThumbnail,
+      //   title: "Portfolio Redesign (This website!)",
+      //   alt: "Portfolio website screenshot",
+      //   orgName: "Full Stack Development",
+      //   orgLink: "",
+      //   description: (
+      //     <p className="text-gray-200">
+      //       This portfolio website represents my creative vision brought to
+      //       life, designed and built entirely by myself. It showcases my work
+      //       through custom animations, interactive elements, and thoughtful UI
+      //       design that reflects my personal aesthetic and technical abilities.
+      //     </p>
+      //   ),
+      //   stackUsed: [
+      //     { name: "React", category: "Frontend" },
+      //     { name: "TypeScript", category: "Frontend" },
+      //     { name: "Next.js", category: "Frontend" },
+      //     { name: "Tailwind CSS", category: "Frontend" },
+      //     { name: "Adobe CS", category: "Design" },
+      //   ],
+      //   moreDetails: (
+      //     <div className="text-gray-200">
+      //       <p>
+      //         The site features custom animations, interactive UI elements, and
+      //         a clean, modern design that highlights my skills and projects.
+      //       </p>
+      //       <p>
+      //         Built with React and Next.js, styled with Tailwind CSS, and
+      //         designed with Adobe Creative Suite.
+      //       </p>
+      //     </div>
+      //   ),
+      //   sizes: "(max-width: 1024px) 100vw, 1024px",
+      //   thumbnailConfig: {
+      //     useStyled: true,
+      //     accentColor: "gold",
+      //     bgGradient: "from-mediumCharcoal to-darkSlate",
+      //     thumbnailType: "portfolioRedesign",
+      //     animationKey: "scanLine",
+      //     projectImageUrl: PortfolioWebsiteThumbnail.src,
+      //   },
+      // },
     ],
     [],
   );
@@ -414,7 +464,7 @@ const ProjectsSection: React.FC = () => {
                         src={selected.imageUrl as string}
                         alt={selected.alt}
                         fill
-                        style={{ objectFit: "cover" }}
+                        style={{ objectFit: "cover", objectPosition: selected.objectPosition || "center" }}
                         sizes="(max-width: 1024px) 100vw, 1024px"
                         className="group-hover:scale-105 transition-transform duration-500"
                       />

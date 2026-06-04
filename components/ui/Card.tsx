@@ -32,6 +32,7 @@ export interface CardProps {
   stackUsed?: StackUsed[];
   moreDetails?: JSX.Element;
   sizes?: string;
+  objectPosition?: string;
   thumbnailConfig?: StyledThumbnailConfig;
   onOpen?: () => void;
 }
@@ -51,6 +52,7 @@ const Card: React.FC<CardProps> = ({
   stackUsed = [],
   moreDetails,
   sizes = "(max-width: 1024px) 100vw, 1024px",
+  objectPosition = "center",
   thumbnailConfig,
   onOpen,
 }) => {
@@ -69,9 +71,10 @@ const Card: React.FC<CardProps> = ({
             <>
               {thumbnailConfig?.projectImageUrl && (
                 <div
-                  className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-500 group-hover:scale-105"
+                  className="absolute inset-0 bg-cover bg-no-repeat transition-all duration-500 group-hover:scale-105"
                   style={{
                     backgroundImage: `url(${thumbnailConfig.projectImageUrl})`,
+                    backgroundPosition: objectPosition,
                   }}
                 />
               )}
@@ -96,7 +99,7 @@ const Card: React.FC<CardProps> = ({
                 alt={alt}
                 layout="fill"
                 objectFit="cover"
-                objectPosition="center"
+                objectPosition={objectPosition}
                 className="transition-transform duration-500 group-hover:scale-105"
                 sizes={sizes}
               />
