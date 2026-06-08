@@ -12,6 +12,7 @@ import GaspDesktopTakeAction from "../assets/images/gasp-desktop-take-action.png
 import NeatThumbnail from "../assets/images/neat-thumbnail.png";
 import InsuranceAIThumbnail from "../assets/images/insurance-ai-thumbnail.png";
 import HIISonarThumbnail from "../assets/images/hii-sonar-thumbnail.png";
+import OrderUpCard from "./ui/OrderUpCard";
 
 import NextImage from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -36,10 +37,15 @@ const ProjectsSection: React.FC = () => {
         alt: "GASP Haiti website redesign hero section",
         orgName: "UI/UX & Full Stack Development",
         orgLink: "https://gasp-haiti.vercel.app/",
+        actionText: "View Preview",
+        actionIconPrefix: "✨",
+        preTitleElement: <OrderUpCard />,
         description: (
-          <p className="text-gray-200">
-            Led the complete digital redesign and front-end development for the Grand Anse Surgery Project (GASP), an organization dedicated to providing life-saving surgical care in Jeremie, Haiti. The new platform translates their holistic, passionate mission into a modern, accessible web experience designed to drive volunteer engagement and donor support.
-          </p>
+          <div className="text-gray-200">
+            <p>
+              Led the complete digital redesign and front-end development for the Grand Anse Surgery Project (GASP), an organization dedicated to providing life-saving surgical care in Jeremie, Haiti. The new platform translates their holistic, passionate mission into a modern, accessible web experience designed to drive volunteer engagement and donor support.
+            </p>
+          </div>
         ),
         stackUsed: [
           { name: "Next.js", category: "Frontend" },

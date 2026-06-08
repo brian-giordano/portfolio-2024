@@ -35,6 +35,9 @@ export interface CardProps {
   objectPosition?: string;
   thumbnailConfig?: StyledThumbnailConfig;
   onOpen?: () => void;
+  preTitleElement?: JSX.Element;
+  actionText?: string;
+  actionIconPrefix?: string;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -55,6 +58,9 @@ const Card: React.FC<CardProps> = ({
   objectPosition = "center",
   thumbnailConfig,
   onOpen,
+  preTitleElement,
+  actionText = "Visit Site",
+  actionIconPrefix,
 }) => {
   const imageSource = imageUrl || logoUrl;
   const isProjectCard = !startMonth && !startYear && !endMonth && !endYear;
@@ -80,14 +86,14 @@ const Card: React.FC<CardProps> = ({
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
               {orgLink && (
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:bg-black/70 group-hover:backdrop-blur-sm transition-all duration-300">
                   <a
                     href={orgLink}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-gold text-darkSlate font-bold py-3 px-6 rounded-full flex items-center shadow-xl"
                   >
-                    Visit Site <FaExternalLinkAlt className="ml-3" />
+                    {actionText} {actionIconPrefix && <span className="ml-2 mr-1">{actionIconPrefix}</span>} <FaExternalLinkAlt className="ml-3" />
                   </a>
                 </div>
               )}
@@ -105,14 +111,14 @@ const Card: React.FC<CardProps> = ({
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
               {orgLink && (
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:bg-black/70 group-hover:backdrop-blur-sm transition-all duration-300">
                   <a
                     href={orgLink}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-gold text-darkSlate font-bold py-3 px-6 rounded-full flex items-center shadow-xl"
                   >
-                    Visit Site <FaExternalLinkAlt className="ml-3" />
+                    {actionText} {actionIconPrefix && <span className="ml-2 mr-1">{actionIconPrefix}</span>} <FaExternalLinkAlt className="ml-3" />
                   </a>
                 </div>
               )}
@@ -120,6 +126,8 @@ const Card: React.FC<CardProps> = ({
           )}
         </div>
       )}
+
+      {preTitleElement}
 
       <h2 className="font-primary font-semibold text-gold uppercase text-lg mb-3">
         {title}
