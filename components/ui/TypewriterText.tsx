@@ -4,10 +4,10 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const phrases = [
-  "AI Product Builder",
-  "Technical Product Manager",
-  "AI Solutions Architect",
-  "Creative Technologist",
+  "Websites that load in under 2 seconds",
+  "Sites your customers can actually find on Google",
+  "Designs that look great on every phone",
+  "Built by one person who designs and codes",
 ];
 
 export default function TypewriterText() {

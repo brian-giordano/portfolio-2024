@@ -30,7 +30,6 @@
 
 /* ===== BASE STYLES ===== */
 html {
-  height: 100%;
   scroll-padding-top: 0 !important;
 }
 
@@ -38,8 +37,6 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: var(--font-poppins), Arial, Helvetica, sans-serif;
-  height: 100%;
-  overflow-y: auto;
 }
 
 /* Typography */
@@ -385,4 +382,18 @@ main {
   box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
 }
 
-
+/* Global yellow bullets */
+.global-bullet {
+  position: relative;
+  padding-left: 1.25rem;
+  list-style: none !important;
+}
+.global-bullet::before {
+  content: '●';
+  color: var(--color-gold);
+  font-size: 0.65em;
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  line-height: 1;
+}

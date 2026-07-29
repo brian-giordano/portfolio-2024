@@ -36,11 +36,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "Brian Giordano | Website Rescue, Starter Sites & Monthly Care",
+    default: "Brian Giordano | Web Designer & Developer for Local Businesses",
     template: "%s | Brian Giordano",
   },
   description:
-    "Expert website rescue, starter sites, and monthly care for small businesses. Get a high-converting website built for performance and growth.",
+    "I build outcome-driven websites for local small businesses. Get a Free Site Health Check, Website Rescue, or Foundation Site.",
   keywords: [
     "Website Rescue",
     "Small Business Websites",
@@ -67,9 +67,9 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: BASE_URL,
     siteName: "Brian Giordano",
-    title: "Brian Giordano | Website Rescue, Starter Sites & Monthly Care",
+    title: "Brian Giordano | Web Designer & Developer for Local Businesses",
     description:
-      "Expert website rescue, starter sites, and monthly care for small businesses. Get a high-converting website built for performance and growth.",
+      "I build outcome-driven websites for local small businesses. Get a Free Site Health Check, Website Rescue, or Foundation Site.",
     images: [
       {
         url: "/og-image.png", // Assuming you'll add one, or use existing
@@ -81,9 +81,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Brian Giordano | Website Rescue, Starter Sites & Monthly Care",
+    title: "Brian Giordano | Web Designer & Developer for Local Businesses",
     description:
-      "Expert website rescue, starter sites, and monthly care for small businesses. Get a high-converting website built for performance and growth.",
+      "I build outcome-driven websites for local small businesses. Get a Free Site Health Check, Website Rescue, or Foundation Site.",
     creator: "@briangiordano",
   },
   alternates: {
@@ -97,36 +97,44 @@ const jsonLd = {
   name: "Brian Giordano - Web Design & Development",
   url: BASE_URL,
   description:
-    "Expert website rescue, starter sites, and monthly care for small businesses. Specializing in high-converting, performance-optimized websites.",
+    "I build outcome-driven websites for local small businesses. Get a Free Site Health Check, Website Rescue, or Foundation Site.",
   sameAs: [
     "https://www.linkedin.com/in/briangiordano/",
     "https://github.com/brian-giordano",
   ],
   areaServed: ["Massachusetts", "Connecticut", "Rhode Island"],
-  priceRange: "$$",
+  priceRange: "$$$",
   makesOffer: [
     {
       "@type": "Offer",
       itemOffered: {
         "@type": "Service",
+        name: "Site Health Check",
+        description: "A free audit of your website's performance, design, and SEO."
+      }
+    },
+    {
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
         name: "Website Rescue",
-        description: "Revamp and fix outdated or underperforming websites."
+        description: "Fixing, optimizing, and saving your current website."
       }
     },
     {
       "@type": "Offer",
       itemOffered: {
         "@type": "Service",
-        name: "Starter Sites",
-        description: "Custom, high-converting 5-page websites for new businesses."
+        name: "Foundation Site",
+        description: "A brand new, custom-built, fast website designed to convert."
       }
     },
     {
       "@type": "Offer",
       itemOffered: {
         "@type": "Service",
-        name: "Monthly Care",
-        description: "Ongoing maintenance, hosting, and updates."
+        name: "Ongoing Care",
+        description: "Maintenance, updates, and priority support to keep your site healthy."
       }
     }
   ],

@@ -6,16 +6,15 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import ToastContainer, { ToastContainerRef } from "./ToastContainer";
-import Modal from "./Modal";
 
 interface FormData {
   name: string;
+  businessName: string;
   email: string;
+  websiteUrl?: string;
   subject: string;
-  details: string;
   message: string;
   honeypot?: string;
-  consent?: boolean;
   access_key?: string;
   redirect?: string;
   botcheck?: string;
@@ -23,15 +22,15 @@ interface FormData {
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Name is required").max(100),
+  businessName: Yup.string().required("Business name is required").max(100),
   email: Yup.string()
     .email("Invalid email")
     .required("Email is required")
     .max(100),
+  websiteUrl: Yup.string(),
   subject: Yup.string().required("Subject is required"),
-  details: Yup.string().required("Details are required").max(1000),
-  message: Yup.string().required("Message is required").min(10).max(1000),
+  message: Yup.string().required("Message is required").max(1000),
   honeypot: Yup.string().max(0),
-  consent: Yup.boolean().oneOf([true], "You must accept the privacy policy"),
   access_key: Yup.string(),
   redirect: Yup.string(),
   botcheck: Yup.string(),
@@ -43,7 +42,7 @@ interface ContactFormProps {
 
 const ContactForm: React.FC<ContactFormProps> = ({ prefilledSubject }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const toastContainerRef = useRef<ToastContainerRef>(null);
 
   const {
@@ -51,7 +50,6 @@ const ContactForm: React.FC<ContactFormProps> = ({ prefilledSubject }) => {
     handleSubmit,
     formState: { errors },
     reset,
-    watch,
     setValue,
   } = useForm<FormData>({
     resolver: yupResolver(schema),
@@ -61,35 +59,6 @@ const ContactForm: React.FC<ContactFormProps> = ({ prefilledSubject }) => {
       redirect: "https://briangiordano.com/#thank-you",
     },
   });
-
-  const selectedSubject = watch("subject");
-
-  const getDetailsConfig = (subject: string) => {
-    switch (subject) {
-      case "Site Rescue":
-        return {
-          label: "Tell me about your current website",
-          placeholder: "What's broken? How old is the site?",
-        };
-      case "Starter Build":
-        return {
-          label: "Tell me about your new project",
-          placeholder: "What kind of business? Target audience?",
-        };
-      case "Monthly Care":
-        return {
-          label: "What kind of ongoing support do you need?",
-          placeholder: "Describe your current site and needs",
-        };
-      default:
-        return {
-          label: "How can I help?",
-          placeholder: "Tell me what you're looking for...",
-        };
-    }
-  };
-
-  const detailsConfig = getDetailsConfig(selectedSubject);
 
   useEffect(() => {
     if (prefilledSubject) setValue("subject", prefilledSubject);
@@ -126,9 +95,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ prefilledSubject }) => {
       const result = await response.json();
 
       if (result.success) {
-        toastContainerRef.current?.addToast(
-          "Message sent successfully. I'll reply within 24 hours.",
-        );
+        setIsSuccess(true);
         reset();
       } else {
         throw new Error(result.message || "Something went wrong");
@@ -142,21 +109,53 @@ const ContactForm: React.FC<ContactFormProps> = ({ prefilledSubject }) => {
     }
   };
 
+  if (isSuccess) {
+    return (
+      <div className="w-full bg-[#161b2a] py-8 px-5 text-center">
+        <div className="bg-[#0f172a] border border-gold/20 p-8 rounded-2xl">
+          <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-green-400 text-2xl">✓</span>
+          </div>
+          <h4 className="text-ivoryWhite font-bold text-2xl mb-3">Got it!</h4>
+          <p className="text-silverMist text-base mb-6 leading-relaxed">
+            I'll review your message and reply within one business day with next steps. In the meantime, you can also book a call directly:
+          </p>
+          <a
+            href="https://cal.com/briangiordano"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block py-3 px-8 rounded-xl bg-gold text-darkSlate font-bold text-sm tracking-[1px] uppercase hover:bg-ivoryWhite active:scale-[0.985] transition-all shadow-[0_0_15px_rgba(212,175,55,0.3)] mb-6"
+          >
+            Book a Call
+          </a>
+          <div>
+            <button
+              onClick={() => setIsSuccess(false)}
+              className="text-gold hover:text-ivoryWhite text-sm font-semibold underline transition-colors"
+            >
+              Submit another inquiry
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full bg-[#161b2a] py-8">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 px-5">
         <input type="hidden" {...register("access_key")} />
         <input type="hidden" {...register("redirect")} />
 
-        {/* Name + Email */}
+        {/* Name + Business Name */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-silverMist text-[10px] tracking-[2px] mb-1.5 uppercase font-mono">
-              Name
+              Your Name *
             </label>
             <input
               {...register("name")}
-              placeholder="Your name"
+              placeholder="Jane Doe"
               className="w-full rounded-2xl bg-[#0f172a] border border-white/10 px-5 py-3.5 text-ivoryWhite placeholder:text-silverMist/40 focus:border-gold transition-all text-[15px]"
             />
             {errors.name && (
@@ -167,12 +166,31 @@ const ContactForm: React.FC<ContactFormProps> = ({ prefilledSubject }) => {
           </div>
           <div>
             <label className="block text-silverMist text-[10px] tracking-[2px] mb-1.5 uppercase font-mono">
-              Email
+              Business Name *
+            </label>
+            <input
+              {...register("businessName")}
+              placeholder="Acme Co."
+              className="w-full rounded-2xl bg-[#0f172a] border border-white/10 px-5 py-3.5 text-ivoryWhite placeholder:text-silverMist/40 focus:border-gold transition-all text-[15px]"
+            />
+            {errors.businessName && (
+              <p className="text-lightCrimson text-xs mt-1">
+                {errors.businessName.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Email + Website URL */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-silverMist text-[10px] tracking-[2px] mb-1.5 uppercase font-mono">
+              Email *
             </label>
             <input
               type="email"
               {...register("email")}
-              placeholder="you@business.com"
+              placeholder="jane@acme.com"
               className="w-full rounded-2xl bg-[#0f172a] border border-white/10 px-5 py-3.5 text-ivoryWhite placeholder:text-silverMist/40 focus:border-gold transition-all text-[15px]"
             />
             {errors.email && (
@@ -181,12 +199,22 @@ const ContactForm: React.FC<ContactFormProps> = ({ prefilledSubject }) => {
               </p>
             )}
           </div>
+          <div>
+            <label className="block text-silverMist text-[10px] tracking-[2px] mb-1.5 uppercase font-mono">
+              Current Website URL (optional)
+            </label>
+            <input
+              {...register("websiteUrl")}
+              placeholder="e.g., www.acme.com (or 'none yet')"
+              className="w-full rounded-2xl bg-[#0f172a] border border-white/10 px-5 py-3.5 text-ivoryWhite placeholder:text-silverMist/40 focus:border-gold transition-all text-[15px]"
+            />
+          </div>
         </div>
 
-        {/* Subject */}
+        {/* Service Interest */}
         <div>
           <label className="block text-silverMist text-[10px] tracking-[2px] mb-1.5 uppercase font-mono">
-            Subject
+            Service Interest
           </label>
 
           <div className="relative">
@@ -194,14 +222,13 @@ const ContactForm: React.FC<ContactFormProps> = ({ prefilledSubject }) => {
               {...register("subject")}
               className="w-full appearance-none rounded-2xl bg-[#0f172a] border border-white/10 px-5 py-3.5 pr-12 text-ivoryWhite focus:border-gold transition-all text-[15px]"
             >
-              <option value="">Select a subject</option>
-              <option value="Site Rescue">Site Rescue</option>
-              <option value="Starter Build">Starter Build</option>
-              <option value="Monthly Care">Monthly Care</option>
-              <option value="general">General Inquiry</option>
-              <option value="job">Job Opportunity</option>
-              <option value="collaboration">Collaboration</option>
-              <option value="other">Other</option>
+              <option value="">Select a service</option>
+              <option value="Site Health Check">Site Health Check</option>
+              <option value="Website Rescue">Website Rescue</option>
+              <option value="Foundation Site">Foundation Site</option>
+              <option value="Ongoing Care">Ongoing Care</option>
+              <option value="Full-time Employment">Full-time Employment</option>
+              <option value="General Question">General Question</option>
             </select>
 
             {/* Custom chevron */}
@@ -222,36 +249,17 @@ const ContactForm: React.FC<ContactFormProps> = ({ prefilledSubject }) => {
               </svg>
             </div>
           </div>
-
-          {selectedSubject === "Monthly Care" && (
-            <p className="text-gold text-xs mt-1.5 tracking-wide">
-              I’ll send you the service agreement to review and e-sign.
-            </p>
-          )}
         </div>
 
-        {/* Dynamic Details */}
+        {/* Problem */}
         <div>
           <label className="block text-silverMist text-[10px] tracking-[2px] mb-1.5 uppercase font-mono">
-            {detailsConfig.label}
-          </label>
-          <textarea
-            {...register("details")}
-            placeholder={detailsConfig.placeholder}
-            rows={3}
-            className="w-full rounded-2xl bg-[#0f172a] border border-white/10 px-5 py-3.5 text-ivoryWhite placeholder:text-silverMist/40 focus:border-gold transition-all resize-y text-[15px]"
-          />
-        </div>
-
-        {/* Message */}
-        <div>
-          <label className="block text-silverMist text-[10px] tracking-[2px] mb-1.5 uppercase font-mono">
-            Message
+            What's the biggest problem you're trying to solve? *
           </label>
           <textarea
             {...register("message")}
-            placeholder="Tell me more about your project or goals..."
-            rows={5}
+            placeholder="In a sentence or two — what's frustrating you about your current website or online presence?"
+            rows={4}
             className="w-full rounded-2xl bg-[#0f172a] border border-white/10 px-5 py-3.5 text-ivoryWhite placeholder:text-silverMist/40 focus:border-gold transition-all resize-y text-[15px]"
           />
           {errors.message && (
@@ -263,100 +271,22 @@ const ContactForm: React.FC<ContactFormProps> = ({ prefilledSubject }) => {
 
         <input type="text" className="hidden" {...register("botcheck")} />
 
-        {/* Consent + Submit */}
+        {/* Submit */}
         <div className="pt-1 space-y-5">
-          <div className="flex items-start gap-3">
-            <input
-              type="checkbox"
-              id="consent"
-              {...register("consent")}
-              className="mt-1 h-4 w-4 accent-gold cursor-pointer"
-            />
-            <label
-              htmlFor="consent"
-              className="text-silverMist text-[13px] leading-snug"
-            >
-              I agree to the{" "}
-              <button
-                type="button"
-                onClick={() => setShowPrivacyModal(true)}
-                className="text-gold underline hover:text-ivoryWhite transition-colors"
-              >
-                privacy policy
-              </button>
-            </label>
-          </div>
-
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-4 rounded-2xl bg-gold text-darkSlate font-bold text-base tracking-[2px] uppercase hover:bg-ivoryWhite active:scale-[0.985] transition-all disabled:opacity-70"
+            className="w-full py-4 rounded-2xl bg-gold text-darkSlate font-bold text-base tracking-[2px] uppercase hover:bg-ivoryWhite active:scale-[0.985] transition-all disabled:opacity-70 shadow-[0_0_15px_rgba(212,175,55,0.2)]"
           >
-            {isSubmitting ? "Sending..." : "Send Message"}
+            {isSubmitting ? "Sending..." : "Send My Inquiry"}
           </button>
+          <p className="text-center text-silverMist/60 text-xs font-mono">
+            No obligation · Fixed prices · I reply within one business day
+          </p>
         </div>
       </form>
 
       <ToastContainer ref={toastContainerRef} />
-
-      <Modal
-        isOpen={showPrivacyModal}
-        onClose={() => setShowPrivacyModal(false)}
-        title="Privacy Policy"
-      >
-        <div className="space-y-6 text-[15px] leading-relaxed text-silverMist">
-          <p>
-            Your privacy is important to me. This policy explains how I collect
-            and protect your information.
-          </p>
-
-          <div>
-            <h4 className="font-semibold text-ivoryWhite mb-2">
-              Information Collected via Forms
-            </h4>
-            <p>
-              When you submit the contact form, I collect your name, email
-              address, and message details so I can respond to your inquiry.
-            </p>
-          </div>
-
-          <div>
-            <h4 className="font-semibold text-ivoryWhite mb-2">
-              Website Analytics
-            </h4>
-            <p>
-              This site uses <strong>Google Analytics 4</strong> and{" "}
-              <strong>Google Tag Manager</strong> to understand how visitors
-              interact with the site. These tools collect anonymous data such as
-              pages visited, time spent, device type, and approximate location.
-              This data is used only to improve the website.
-            </p>
-            <p className="mt-2 text-sm">
-              Learn how Google processes this data:{" "}
-              <a
-                href="https://policies.google.com/technologies/partner-sites"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gold underline hover:text-ivoryWhite"
-              >
-                Google’s partner sites policy
-              </a>
-              .
-            </p>
-          </div>
-
-          <div>
-            <h4 className="font-semibold text-ivoryWhite mb-2">
-              How Your Information Is Used
-            </h4>
-            <p>
-              I only use the information you provide to respond to your inquiry.
-              I do not sell or share your personal information for marketing
-              purposes.
-            </p>
-          </div>
-        </div>
-      </Modal>
     </div>
   );
 };

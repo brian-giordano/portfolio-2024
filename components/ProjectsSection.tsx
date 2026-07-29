@@ -93,11 +93,14 @@ const ProjectsSection: React.FC = () => {
         orgName: "Full-Stack Product Development",
         orgLink: "https://getneat.io",
         description: (
-          <p className="text-gray-200">
-            Designed and built the core functionality, UI/UX, and user experience
-            for a privacy-focused Chrome extension, guiding it from initial
-            concept to approval on the Chrome Web Store.
-          </p>
+          <div className="text-gray-200 space-y-2">
+            <p className="text-gold text-sm font-semibold tracking-wide uppercase">Chrome Extension · Concept to Web Store · 0 → launched</p>
+            <p>
+              Designed and built the core functionality, UI/UX, and user experience
+              for a privacy-focused Chrome extension, guiding it from initial
+              concept to approval on the Chrome Web Store.
+            </p>
+          </div>
         ),
         stackUsed: [
           { name: "Chrome Extension API", category: "Frontend" },
@@ -392,10 +395,25 @@ const ProjectsSection: React.FC = () => {
 
   const portalRoot = typeof document !== "undefined" ? document.body : null;
 
+  const clientProjects = projects.slice(0, 2);
+  const technicalProjects = projects.slice(2);
+
   return (
     <section className="py-8 md:py-16 bg-darkSlate">
-      <div className="container mx-auto px-4">
-        <CardsList cards={projects} onCardOpen={openModal} />
+      <div className="container mx-auto px-4 space-y-20">
+        <div>
+          <h3 className="text-2xl font-primary font-bold text-ivoryWhite mb-8 border-b border-white/10 pb-4">
+            Client & Business Work
+          </h3>
+          <CardsList cards={clientProjects} onCardOpen={(idx) => openModal(idx)} />
+        </div>
+        
+        <div>
+          <h3 className="text-2xl font-primary font-bold text-ivoryWhite mb-8 border-b border-white/10 pb-4">
+            Product & Technical Work
+          </h3>
+          <CardsList cards={technicalProjects} onCardOpen={(idx) => openModal(idx + 2)} />
+        </div>
       </div>
 
       {selected && portalRoot

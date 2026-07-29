@@ -6,27 +6,25 @@ import {
   motion,
   useScroll,
   AnimatePresence,
-  useMotionValueEvent,
   useTransform,
 } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 interface HeaderProps {
   onNavClick: (id: string, instant?: boolean) => void;
   currentSection: string;
   name?: string;
-  forceCompact?: boolean;
 }
 
 const Header: React.FC<HeaderProps> = ({
   name = "Brian Giordano",
   onNavClick,
   currentSection,
-  forceCompact = false,
 }) => {
+  const router = useRouter();
   const { scrollY } = useScroll();
-  const [internalIsHero, setInternalIsHero] = useState(true);
 
-  const isHero = forceCompact ? false : internalIsHero;
+  const isHero = false; // Force compact mode always to prevent vertical stacking
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
   const ulRef = useRef<HTMLUListElement | null>(null);
@@ -37,20 +35,13 @@ const Header: React.FC<HeaderProps> = ({
     ["rgba(15, 23, 42, 0)", "rgba(15, 23, 42, 1)"],
   );
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    setInternalIsHero(latest < 10);
-  });
 
   const isCompact = !isHero;
 
   const MenuItems = useMemo(
     () => [
-      { label: "Projects", sectionId: "projects" },
       { label: "Services", sectionId: "services" },
-      { label: "Process", sectionId: "process" },
-      { label: "Experience", sectionId: "experience" },
-      { label: "Education", sectionId: "education" },
-      { label: "Skills", sectionId: "skills" },
+      { label: "Work", sectionId: "work" },
       { label: "About", sectionId: "about" },
       { label: "Contact", sectionId: "contact" },
     ],
@@ -184,7 +175,7 @@ const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <motion.h1
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              onClick={() => router.push("/")}
               className={`font-primary font-extrabold tracking-[1px] uppercase text-ivoryWhite cursor-pointer select-none transition-all duration-500 whitespace-nowrap ${
                 isCompact ? "text-2xl" : "text-5xl"
               }`}
@@ -192,59 +183,68 @@ const Header: React.FC<HeaderProps> = ({
               {name}
             </motion.h1>
 
-            <nav className="relative">
-              <ul
-                ref={ulRef}
-                className="flex items-center gap-4 xl:gap-6 relative"
-              >
-                {MenuItems.map((item) => {
-                  const isActive = currentSection === item.sectionId;
-                  return (
-                    <li key={item.sectionId}>
-                      <button
-                        ref={(el) => {
-                          buttonRefs.current[item.sectionId] = el;
-                        }}
-                        onClick={() => scrollToSection(item.sectionId)} // smooth on desktop
-                        className={`relative text-[11px] xl:text-sm tracking-[0.15em] xl:tracking-[0.2em] font-semibold uppercase pl-[0.15em] xl:pl-[0.2em] pr-0 transition-all duration-300 ${
-                          isActive
-                            ? "text-gold"
-                            : "text-ivoryWhite/90 hover:text-gold/80"
-                        }`}
-                      >
-                        <motion.span
-                          animate={isActive ? { scale: 1.05 } : { scale: 1 }}
-                          transition={{
-                            type: "spring",
-                            stiffness: 400,
-                            damping: 25,
+            <div className={`flex items-center ${isCompact ? "gap-6 xl:gap-8" : "flex-col gap-6"}`}>
+              <nav className="relative">
+                <ul
+                  ref={ulRef}
+                  className="flex items-center gap-4 xl:gap-6 relative"
+                >
+                  {MenuItems.map((item) => {
+                    const isActive = currentSection === item.sectionId;
+                    return (
+                      <li key={item.sectionId}>
+                        <button
+                          ref={(el) => {
+                            buttonRefs.current[item.sectionId] = el;
                           }}
+                          onClick={() => scrollToSection(item.sectionId)} // smooth on desktop
+                          className={`relative text-[11px] xl:text-sm tracking-[0.15em] xl:tracking-[0.2em] font-semibold uppercase pl-[0.15em] xl:pl-[0.2em] pr-0 transition-all duration-300 ${
+                            isActive
+                              ? "text-gold"
+                              : "text-ivoryWhite/90 hover:text-gold/80"
+                          }`}
                         >
-                          {item.label}
-                        </motion.span>
-                      </button>
-                    </li>
-                  );
-                })}
+                          <motion.span
+                            animate={isActive ? { scale: 1.05 } : { scale: 1 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 25,
+                            }}
+                          >
+                            {item.label}
+                          </motion.span>
+                        </button>
+                      </li>
+                    );
+                  })}
 
-                {/* Yellow Ribbon */}
-                <motion.div
-                  className="absolute left-0 bottom-[-23px] h-[5px] bg-gold z-0 will-change-transform pointer-events-none"
-                  style={{
-                    x: ribbonX,
-                    width: ribbonWidth,
-                    opacity: ribbonOpacity,
-                  }}
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-              </ul>
-            </nav>
+                  {/* Yellow Ribbon */}
+                  <motion.div
+                    className="absolute left-0 bottom-[-23px] h-[5px] bg-gold z-0 will-change-transform pointer-events-none"
+                    style={{
+                      x: ribbonX,
+                      width: ribbonWidth,
+                      opacity: ribbonOpacity,
+                    }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
+                </ul>
+              </nav>
+
+              <button
+                onClick={() => router.push("/site-health-check")}
+                className="px-5 py-2.5 bg-gold text-darkSlate text-[11px] xl:text-xs font-bold rounded-full uppercase tracking-wider hover:bg-gold/90 transition-colors shadow-[0_0_15px_rgba(212,175,55,0.3)]"
+              >
+                Free Site Check
+              </button>
+            </div>
           </div>
 
           {/* Mobile Navigation */}
           <div className="flex lg:hidden items-center justify-between">
             <button
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              onClick={() => router.push("/")}
               className="font-primary font-extrabold tracking-widest uppercase text-2xl text-ivoryWhite"
             >
               {name}
@@ -281,7 +281,7 @@ const Header: React.FC<HeaderProps> = ({
                 <button
                   key={item.sectionId}
                   onClick={() => scrollToSection(item.sectionId, true)} // ← INSTANT on mobile
-                  className={`text-left transition-colors ${
+                  className={`text-left transition-colors uppercase tracking-[0.2em] hover:text-gold ${
                     currentSection === item.sectionId
                       ? "text-gold font-semibold"
                       : "text-ivoryWhite"
@@ -290,6 +290,17 @@ const Header: React.FC<HeaderProps> = ({
                   {item.label}
                 </button>
               ))}
+              <div className="pt-6 mt-2 border-t border-white/10">
+                <button
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    router.push("/site-health-check");
+                  }}
+                  className="w-full py-4 bg-gold text-darkSlate font-bold rounded-xl text-center uppercase tracking-wider"
+                >
+                  Free Site Check
+                </button>
+              </div>
             </nav>
           </motion.div>
         )}

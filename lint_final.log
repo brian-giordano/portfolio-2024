@@ -1,0 +1,3 @@
+Cannot read config file: /Users/Brian/package.json
+Error: Cannot read config file: /Users/Brian/package.json
+Error: EPERM: operation not permitted, open '/Users/Brian/package.json'

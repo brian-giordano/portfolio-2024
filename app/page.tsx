@@ -8,10 +8,8 @@ import {
   useTransform,
   useMotionValueEvent,
 } from "framer-motion";
+import { useRouter } from "next/navigation";
 import Header from "@/components/ui/Header";
-import ExperienceSection from "@/components/ExperienceSection";
-import EducationSection from "@/components/EducationSection";
-import SkillsSection from "@/components/SkillsSection";
 import ProjectSection from "@/components/ProjectsSection";
 import ServicesSection from "@/components/ServicesSection";
 import ProcessSection from "@/components/ProcessSection";
@@ -21,7 +19,6 @@ import FollowMeSection from "@/components/FollowMeSection";
 import Footer from "@/components/ui/Footer";
 import SectionHeader from "@/components/ui/SectionHeader";
 import HeroBackground from "@/components/HeroBackground";
-import TypewriterText from "@/components/ui/TypewriterText";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -61,9 +58,9 @@ const DashboardCard = () => {
   }, []);
 
   return (
-    <div className="bg-darkSlate/95 backdrop-blur-md border border-gold/30 rounded-xl p-4 w-44 shadow-2xl shadow-gold/10">
+    <div className="bg-darkSlate/95 backdrop-blur-md border border-gold/30 rounded-xl p-4 w-44 shadow-2xl shadow-gold/10 pointer-events-auto">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-[10px] text-silverMist">Revenue</span>
+        <span className="text-[10px] text-silverMist">Website Visitors</span>
         <motion.span
           className="text-[10px] text-green-400"
           animate={{ opacity: [1, 0.5, 1] }}
@@ -72,7 +69,7 @@ const DashboardCard = () => {
           ● Live
         </motion.span>
       </div>
-      <div className="text-lg font-bold text-ivoryWhite mb-3">$24,500</div>
+      <div className="text-lg font-bold text-ivoryWhite mb-3">1,450</div>
       <div className="flex items-end gap-1 h-10">
         {bars.map((h, i) => (
           <motion.div
@@ -96,7 +93,7 @@ const CodeSnippet = () => {
   }, []);
 
   return (
-    <div className="bg-darkSlate/95 backdrop-blur-md border border-purple-500/30 rounded-xl p-3 w-48 shadow-2xl shadow-purple-500/10 font-mono text-[10px]">
+    <div className="bg-darkSlate/95 backdrop-blur-md border border-purple-500/30 rounded-xl p-3 w-48 shadow-2xl shadow-purple-500/10 font-mono text-[10px] pointer-events-auto">
       <div className="flex gap-1.5 mb-2">
         <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
         <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
@@ -127,7 +124,7 @@ const TerminalWindow = () => {
   }, []);
 
   return (
-    <div className="bg-darkSlate/95 backdrop-blur-md border border-green-500/30 rounded-xl p-3 w-40 shadow-2xl shadow-green-500/10 font-mono text-[9px]">
+    <div className="bg-darkSlate/95 backdrop-blur-md border border-green-500/30 rounded-xl p-3 w-40 shadow-2xl shadow-green-500/10 font-mono text-[9px] pointer-events-auto">
       <div className="flex gap-1.5 mb-2">
         <div className="w-2 h-2 rounded-full bg-red-400" />
         <div className="w-2 h-2 rounded-full bg-yellow-400" />
@@ -167,7 +164,7 @@ const MobileFrame = () => {
   }, []);
 
   return (
-    <div className="bg-gradient-to-b from-charcoal to-darkSlate border-4 border-silverMist/30 rounded-[2.5rem] p-2.5 w-44 shadow-2xl shadow-mysticTeal/20">
+    <div className="bg-gradient-to-b from-charcoal to-darkSlate border-4 border-silverMist/30 rounded-[2.5rem] p-2.5 w-44 shadow-2xl shadow-mysticTeal/20 pointer-events-auto">
       <div className="bg-darkSlate rounded-[2rem] p-4 h-80 overflow-hidden relative">
         <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 bg-charcoal rounded-full" />
         <div className="flex justify-between items-center mt-4 mb-4 text-[9px] text-silverMist/60">
@@ -223,6 +220,7 @@ const MobileFrame = () => {
 };
 
 const Home: React.FC = () => {
+  const router = useRouter();
   const [currentSection, setCurrentSection] = useState<string>("projects");
   const [contactSubject, setContactSubject] = useState<string>("");
   const [isAtBottom, setIsAtBottom] = useState(false);
@@ -400,56 +398,62 @@ const Home: React.FC = () => {
             </motion.div>
           </div>
 
-          <div className="relative z-10 text-center max-w-3xl mx-auto py-6 px-6">
+          <div className="relative z-10 text-center max-w-4xl mx-auto py-6 px-6">
             <motion.h1
-              className="text-4xl sm:text-5xl md:text-6xl font-primary font-extrabold tracking-tight text-ivoryWhite leading-none"
+              className="text-5xl sm:text-6xl md:text-7xl font-primary font-extrabold tracking-tight text-ivoryWhite leading-none mb-8"
               variants={itemVariants}
             >
-              High-Converting Websites for Small Businesses.
+              Your website should be your <span className="text-gold">hardest-working</span> employee.
             </motion.h1>
 
-            <motion.h2
-              className="text-2xl sm:text-3xl md:text-4xl font-primary font-extrabold bg-gradient-to-tr from-gold to-ivoryWhite bg-clip-text text-transparent mt-3 leading-tight"
-              variants={itemVariants}
-            >
-              Expert Website Rescue, Starter Sites, &amp; Monthly Care.
-            </motion.h2>
-
             <motion.p
-              className="text-lg md:text-xl text-silverMist mt-6 max-w-md mx-auto"
+              className="text-xl md:text-2xl text-silverMist max-w-2xl mx-auto mb-12 leading-relaxed"
               variants={itemVariants}
             >
-              I build and maintain performance-driven websites that help local
-              businesses grow and succeed online.
+              I build fast, outcome-driven websites for local businesses in New England.
+              <span className="block mt-4">No agency overhead, no surprises.</span>
             </motion.p>
 
             <motion.div
-              className="flex flex-col sm:flex-row gap-4 justify-center mt-10"
+              className="flex flex-col sm:flex-row gap-6 justify-center items-center"
               variants={itemVariants}
             >
               <motion.button
-                onClick={() => handleNavClick("projects")}
-                className="px-10 py-4 bg-gold text-darkSlate font-semibold rounded-xl text-lg"
+                onClick={() => router.push("/site-health-check")}
+                className="px-10 py-5 bg-gold text-darkSlate font-extrabold rounded-full text-lg shadow-[0_0_30px_rgba(212,175,55,0.4)] hover:shadow-[0_0_40px_rgba(212,175,55,0.6)] transition-all"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
               >
-                View my work
+                Book Free Check
               </motion.button>
               <motion.button
                 onClick={() => handleNavClick("services")}
-                className="px-10 py-4 border-2 border-gold text-gold font-semibold rounded-xl text-lg hover:bg-gold/10"
-                whileHover={{ scale: 1.05 }}
+                className="px-8 py-4 text-silverMist font-bold text-lg hover:text-white transition-colors flex items-center gap-2"
+                whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                Work with me
+                View Services <span>&rarr;</span>
               </motion.button>
-            </motion.div>
-
-            <motion.div variants={itemVariants} className="mt-8">
-              <TypewriterText />
             </motion.div>
           </div>
         </motion.section>
+
+        {/* Elegant Separator */}
+        <div className="w-full z-20 relative py-8 mt-12">
+          <div className="max-w-4xl mx-auto px-6 flex flex-col items-center text-center">
+            <p className="text-silverMist text-[14px] flex flex-col sm:flex-row items-center justify-center gap-2 mb-4">
+              <span className="font-normal text-ivoryWhite/80">Not sure what your site needs?</span>
+              <button 
+                onClick={() => router.push("/site-health-check")}
+                className="text-gold font-normal hover:text-ivoryWhite transition-colors flex items-center gap-1"
+              >
+                Book a free Site Health Check <span aria-hidden="true">&rarr;</span>
+              </button>
+            </p>
+            {/* Elegant 1.5px gold rule */}
+            <div className="w-full h-[1.5px] bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
+          </div>
+        </div>
 
         {/* Subtle Bottom Glass Fade — Premium & Contained */}
         <motion.div
@@ -467,18 +471,6 @@ const Home: React.FC = () => {
               "linear-gradient(to top, black 0%, transparent 100%)",
           }}
         />
-
-        <section id="projects" className="scroll-mt-[68px] bg-darkSlate pb-32">
-          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
-            <div className="w-full h-[5px] bg-gold" />
-            <div className="max-w-7xl mx-auto">
-              <SectionHeader name="Projects" bandColor="gold" />
-            </div>
-          </div>
-          <div className="max-w-7xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
-            <ProjectSection />
-          </div>
-        </section>
 
         <section id="services" className="scroll-mt-[68px] bg-darkSlate pb-32">
           <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
@@ -504,42 +496,15 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        <section
-          id="experience"
-          className="scroll-mt-[68px] bg-darkSlate pb-32"
-        >
+        <section id="work" className="scroll-mt-[68px] bg-darkSlate pb-32">
           <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
             <div className="w-full h-[5px] bg-gold" />
             <div className="max-w-7xl mx-auto">
-              <SectionHeader name="Experience" bandColor="gold" />
+              <SectionHeader name="Work" bandColor="gold" />
             </div>
           </div>
           <div className="max-w-7xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
-            <ExperienceSection />
-          </div>
-        </section>
-
-        <section id="education" className="scroll-mt-[68px] bg-darkSlate pb-32">
-          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
-            <div className="w-full h-[5px] bg-gold" />
-            <div className="max-w-7xl mx-auto">
-              <SectionHeader name="Education" bandColor="gold" />
-            </div>
-          </div>
-          <div className="max-w-7xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
-            <EducationSection />
-          </div>
-        </section>
-
-        <section id="skills" className="scroll-mt-[68px] bg-darkSlate pb-32">
-          <div className="w-full section-header-container bg-darkSlate sticky top-[68px] z-40 optimize-gpu">
-            <div className="w-full h-[5px] bg-gold" />
-            <div className="max-w-7xl mx-auto">
-              <SectionHeader name="Skills" bandColor="gold" />
-            </div>
-          </div>
-          <div className="max-w-7xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
-            <SkillsSection />
+            <ProjectSection />
           </div>
         </section>
 
@@ -551,9 +516,15 @@ const Home: React.FC = () => {
             </div>
           </div>
           <div className="max-w-7xl mx-auto px-6 section-content md:pb-6 min-h-[50vh]">
-            <AboutSection />
+            <AboutSection 
+              onJobClick={() => handleServiceClick("Full-time Employment")} 
+              onHealthCheckClick={() => router.push("/site-health-check")} 
+            />
           </div>
         </section>
+
+        {/* Trust / Credibility Strip - Commented out for now */}
+        {/* <TrustSection /> */}
 
         <section
           id="contact"
@@ -578,9 +549,7 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        <div className="max-w-7xl mx-auto px-6">
-          <Footer />
-        </div>
+        <Footer />
 
         {/* Back-to-Top FAB */}
         <AnimatePresence>
